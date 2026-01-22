@@ -82,13 +82,7 @@ python scripts/daily_prediction.py
 # Model retraining
 python scripts/retrain_model.py
 ```
-
-## Documentation
-
-- [API Documentation](database/course_export_apis.md)
-- [AI Model Recommendation](ai_model_recommendation.md)
-- [ML Pipeline Walkthrough](walkthrough.md)
-
+ 
 ## License
 
 MIT
