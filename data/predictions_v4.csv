@@ -1,0 +1,922 @@
+user_id,course_id,mooc_grade_percentage,fail_risk_score,risk_level,suggestions
+4,course-v1:DHQG-HCM+FM101+2025_S2,9.0,80.46361812996288,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+5,course-v1:DHQG-HCM+FM101+2025_S2,9.0,87.00848687886842,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+7,course-v1:DHQG-HCM+FM101+2025_S2,2.0,90.85578014225861,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+8,course-v1:DHQG-HCM+FM101+2025_S2,0.0,95.39449902451261,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+9,course-v1:DHQG-HCM+FM101+2025_S2,9.0,87.41485011197487,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+18,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+19,course-v1:DHQG-HCM+FM101+2025_S2,6.0,88.62690142116783,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+44,course-v1:DHQG-HCM+FM101+2025_S2,0.0,64.38590380567196,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+65,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+102,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+113,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+114,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+122,course-v1:DHQG-HCM+FM101+2025_S2,0.0,95.42324935230064,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+127,course-v1:DHQG-HCM+FM101+2025_S2,91.0,1.1374896131475856,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+128,course-v1:DHQG-HCM+FM101+2025_S2,90.0,5.589782830388841,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+130,course-v1:DHQG-HCM+FM101+2025_S2,76.0,0.8523856315094033,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+131,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+132,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.5284292955276522,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+133,course-v1:DHQG-HCM+FM101+2025_S2,9.0,73.16518372685306,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+137,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.6586101333914504,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+140,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.6510541399182027,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+141,course-v1:DHQG-HCM+FM101+2025_S2,89.0,1.8370595694947933,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+142,course-v1:DHQG-HCM+FM101+2025_S2,83.0,8.528463044353014,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+143,course-v1:DHQG-HCM+FM101+2025_S2,89.0,1.5160637936492651,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+144,course-v1:DHQG-HCM+FM101+2025_S2,94.0,0.8341651262379197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+147,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+149,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+150,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+151,course-v1:DHQG-HCM+FM101+2025_S2,85.0,1.3699587551902952,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+152,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+153,course-v1:DHQG-HCM+FM101+2025_S2,72.0,1.5160478987411266,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+154,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+155,course-v1:DHQG-HCM+FM101+2025_S2,79.0,1.4303468135067705,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+157,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.1745470953923156,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+158,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.7989505119974168,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+160,course-v1:DHQG-HCM+FM101+2025_S2,80.0,2.8920243997159054,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+161,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+163,course-v1:DHQG-HCM+FM101+2025_S2,0.0,82.90261456572269,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+164,course-v1:DHQG-HCM+FM101+2025_S2,30.0,58.75257647204353,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+166,course-v1:DHQG-HCM+FM101+2025_S2,87.0,45.558980927374805,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+168,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.11369648372713,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+169,course-v1:DHQG-HCM+FM101+2025_S2,86.0,1.2510888044857547,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+170,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.6693596155522977,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+175,course-v1:DHQG-HCM+FM101+2025_S2,80.0,17.038226302856522,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+179,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.8622579550754348,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+180,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+181,course-v1:DHQG-HCM+FM101+2025_S2,28.0,3.4450367486043674,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+182,course-v1:DHQG-HCM+FM101+2025_S2,85.0,3.101835067813472,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+184,course-v1:DHQG-HCM+FM101+2025_S2,90.0,1.3108305552940744,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+185,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+186,course-v1:DHQG-HCM+FM101+2025_S2,87.0,1.2247239869225295,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+188,course-v1:DHQG-HCM+FM101+2025_S2,49.0,11.720665922225384,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+190,course-v1:DHQG-HCM+FM101+2025_S2,85.0,1.3194705035146157,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+191,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.7812092564245064,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+193,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.42795669987062,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+196,course-v1:DHQG-HCM+FM101+2025_S2,85.0,1.2259763383316562,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+199,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+200,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.6060489877523078,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+201,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+202,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+209,course-v1:DHQG-HCM+FM101+2025_S2,95.0,1.376054778943707,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+210,course-v1:DHQG-HCM+FM101+2025_S2,21.0,10.899016065871942,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+211,course-v1:DHQG-HCM+FM101+2025_S2,78.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+213,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+214,course-v1:DHQG-HCM+FM101+2025_S2,9.0,73.72729772221064,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+216,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+217,course-v1:DHQG-HCM+FM101+2025_S2,93.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+218,course-v1:DHQG-HCM+FM101+2025_S2,94.0,1.332523905479441,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+219,course-v1:DHQG-HCM+FM101+2025_S2,94.0,1.1770841472710565,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+220,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.861814510364228,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+222,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+226,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.1034639433829916,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+228,course-v1:DHQG-HCM+FM101+2025_S2,83.0,1.7579223824739305,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+229,course-v1:DHQG-HCM+FM101+2025_S2,79.0,1.2247239869225295,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+230,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+234,course-v1:DHQG-HCM+FM101+2025_S2,87.0,1.2766133254500913,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+235,course-v1:DHQG-HCM+FM101+2025_S2,73.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+237,course-v1:DHQG-HCM+FM101+2025_S2,8.0,96.22995413117901,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+238,course-v1:DHQG-HCM+FM101+2025_S2,94.0,1.788655181937607,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+239,course-v1:DHQG-HCM+FM101+2025_S2,89.0,1.0484755978276485,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+242,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+243,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.8829841604108123,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+245,course-v1:DHQG-HCM+FM101+2025_S2,0.0,95.39449902451261,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+246,course-v1:DHQG-HCM+FM101+2025_S2,88.0,3.779218878803962,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+249,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+250,course-v1:DHQG-HCM+FM101+2025_S2,89.0,13.374488033424106,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+251,course-v1:DHQG-HCM+FM101+2025_S2,77.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+252,course-v1:DHQG-HCM+FM101+2025_S2,91.0,12.791904380552902,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+254,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+255,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.1600802938597654,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+256,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+258,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+259,course-v1:DHQG-HCM+FM101+2025_S2,95.0,8.655196434577341,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+260,course-v1:DHQG-HCM+FM101+2025_S2,89.0,10.555631014452334,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+261,course-v1:DHQG-HCM+FM101+2025_S2,79.0,1.6739557604993922,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+262,course-v1:DHQG-HCM+FM101+2025_S2,82.0,2.095990026310247,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+263,course-v1:DHQG-HCM+FM101+2025_S2,77.0,1.2194092515761503,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+264,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+265,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+266,course-v1:DHQG-HCM+FM101+2025_S2,8.0,21.225802939269133,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+267,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+268,course-v1:DHQG-HCM+FM101+2025_S2,85.0,1.797783278684545,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+269,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.89722979412898,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+271,course-v1:DHQG-HCM+FM101+2025_S2,0.0,95.51913027575173,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+273,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+274,course-v1:DHQG-HCM+FM101+2025_S2,86.0,2.238214529215874,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+276,course-v1:DHQG-HCM+FM101+2025_S2,6.0,81.07699899922555,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+277,course-v1:DHQG-HCM+FM101+2025_S2,93.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+278,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+280,course-v1:DHQG-HCM+FM101+2025_S2,66.0,15.644788278868408,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+281,course-v1:DHQG-HCM+FM101+2025_S2,77.0,1.421267499414823,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+282,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.6395224094350009,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+285,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+288,course-v1:DHQG-HCM+FM101+2025_S2,93.0,1.272669284607157,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+290,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+292,course-v1:DHQG-HCM+FM101+2025_S2,77.0,23.12686961943698,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+293,course-v1:DHQG-HCM+FM101+2025_S2,8.0,88.07341079279011,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+294,course-v1:DHQG-HCM+FM101+2025_S2,74.0,53.41836140600046,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+295,course-v1:DHQG-HCM+FM101+2025_S2,89.0,14.756077674123114,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+296,course-v1:DHQG-HCM+FM101+2025_S2,35.0,73.12604652770067,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+297,course-v1:DHQG-HCM+FM101+2025_S2,72.0,38.502671135745246,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+298,course-v1:DHQG-HCM+FM101+2025_S2,32.0,95.72335686064729,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+299,course-v1:DHQG-HCM+FM101+2025_S2,32.0,86.87814446908577,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+300,course-v1:DHQG-HCM+FM101+2025_S2,52.0,41.864124447158055,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+301,course-v1:DHQG-HCM+FM101+2025_S2,9.0,94.06535524041722,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+302,course-v1:DHQG-HCM+FM101+2025_S2,9.0,96.67881583363351,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+304,course-v1:DHQG-HCM+FM101+2025_S2,28.0,78.58357742176362,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+305,course-v1:DHQG-HCM+FM101+2025_S2,0.0,95.26726363321141,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+306,course-v1:DHQG-HCM+FM101+2025_S2,82.0,11.357087351473528,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+307,course-v1:DHQG-HCM+FM101+2025_S2,31.0,76.90693833690074,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+308,course-v1:DHQG-HCM+FM101+2025_S2,9.0,92.82933069729962,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+309,course-v1:DHQG-HCM+FM101+2025_S2,65.0,18.934574821316012,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+312,course-v1:DHQG-HCM+FM101+2025_S2,31.0,94.70539762594485,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+313,course-v1:DHQG-HCM+FM101+2025_S2,33.0,95.72335686064729,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+314,course-v1:DHQG-HCM+FM101+2025_S2,51.0,60.48171502773988,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+317,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.3003423536603387,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+318,course-v1:DHQG-HCM+FM101+2025_S2,51.0,37.03504962609889,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+321,course-v1:DHQG-HCM+FM101+2025_S2,59.0,17.809100047837386,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+322,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+323,course-v1:DHQG-HCM+FM101+2025_S2,87.0,41.080073575796675,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+325,course-v1:DHQG-HCM+FM101+2025_S2,29.0,71.15282299947981,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+326,course-v1:DHQG-HCM+FM101+2025_S2,91.0,1.0269784228107526,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+327,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.272669284607157,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+328,course-v1:DHQG-HCM+FM101+2025_S2,79.0,8.061342978152844,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+330,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+331,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+332,course-v1:DHQG-HCM+FM101+2025_S2,29.0,78.44016868440983,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+333,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.9759275453170111,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+334,course-v1:DHQG-HCM+FM101+2025_S2,86.0,2.1510844372726163,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+336,course-v1:DHQG-HCM+FM101+2025_S2,78.0,20.899037190201362,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+337,course-v1:DHQG-HCM+FM101+2025_S2,82.0,31.73824739199167,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+338,course-v1:DHQG-HCM+FM101+2025_S2,76.0,14.80992796614963,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+340,course-v1:DHQG-HCM+FM101+2025_S2,85.0,3.1257014159710392,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+342,course-v1:DHQG-HCM+FM101+2025_S2,56.0,35.994254008937524,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+344,course-v1:DHQG-HCM+FM101+2025_S2,80.0,6.0676836048073675,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+345,course-v1:DHQG-HCM+FM101+2025_S2,84.0,3.751197657640093,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+347,course-v1:DHQG-HCM+FM101+2025_S2,89.0,1.3948222473275518,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+350,course-v1:DHQG-HCM+FM101+2025_S2,86.0,1.129014113164962,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+352,course-v1:DHQG-HCM+FM101+2025_S2,92.0,20.170694131510043,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+353,course-v1:DHQG-HCM+FM101+2025_S2,30.0,41.080073575796675,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+356,course-v1:DHQG-HCM+FM101+2025_S2,85.0,16.908212126572348,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+357,course-v1:DHQG-HCM+FM101+2025_S2,73.0,1.6739557604993922,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+359,course-v1:DHQG-HCM+FM101+2025_S2,81.0,8.895577460013737,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+360,course-v1:DHQG-HCM+FM101+2025_S2,53.0,17.741764437739665,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+362,course-v1:DHQG-HCM+FM101+2025_S2,0.0,96.63324742933096,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+363,course-v1:DHQG-HCM+FM101+2025_S2,30.0,58.208682747580944,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+364,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+365,course-v1:DHQG-HCM+FM101+2025_S2,76.0,18.868258228344498,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+366,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+367,course-v1:DHQG-HCM+FM101+2025_S2,95.0,1.6629309289482535,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+368,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+369,course-v1:DHQG-HCM+FM101+2025_S2,28.0,86.79043844362458,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+370,course-v1:DHQG-HCM+FM101+2025_S2,64.0,14.536861964742004,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+371,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.8373178923449629,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+373,course-v1:DHQG-HCM+FM101+2025_S2,92.0,1.4599051530706528,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+374,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.8373178923449629,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+376,course-v1:DHQG-HCM+FM101+2025_S2,9.0,77.23031475160991,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+377,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.1666259137791621,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+378,course-v1:DHQG-HCM+FM101+2025_S2,85.0,16.814581074556408,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+379,course-v1:DHQG-HCM+FM101+2025_S2,47.0,9.718362350772644,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+380,course-v1:DHQG-HCM+FM101+2025_S2,93.0,2.1025570442224097,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+381,course-v1:DHQG-HCM+FM101+2025_S2,0.0,91.36176324061634,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+382,course-v1:DHQG-HCM+FM101+2025_S2,87.0,6.38452108181366,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+383,course-v1:DHQG-HCM+FM101+2025_S2,68.0,19.92074087471681,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+384,course-v1:DHQG-HCM+FM101+2025_S2,51.0,13.825693483496456,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+385,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+387,course-v1:DHQG-HCM+FM101+2025_S2,93.0,9.471475689571207,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+388,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+389,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+390,course-v1:DHQG-HCM+FM101+2025_S2,55.0,37.039305671661246,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+391,course-v1:DHQG-HCM+FM101+2025_S2,81.0,1.1353578572725298,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+393,course-v1:DHQG-HCM+FM101+2025_S2,7.0,89.04853899548314,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+395,course-v1:DHQG-HCM+FM101+2025_S2,52.0,20.87409863078706,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+397,course-v1:DHQG-HCM+FM101+2025_S2,29.0,86.693251925755,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+398,course-v1:DHQG-HCM+FM101+2025_S2,88.0,20.03225181954688,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+399,course-v1:DHQG-HCM+FM101+2025_S2,83.0,21.57604342609329,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+400,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.6019578221722461,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+401,course-v1:DHQG-HCM+FM101+2025_S2,94.0,1.247569827692389,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+402,course-v1:DHQG-HCM+FM101+2025_S2,94.0,1.4599051530706528,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+403,course-v1:DHQG-HCM+FM101+2025_S2,29.0,81.09458516884281,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+405,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+409,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.5922888461554825,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+410,course-v1:DHQG-HCM+FM101+2025_S2,30.0,78.85151355550364,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+414,course-v1:DHQG-HCM+FM101+2025_S2,72.0,7.364034537672046,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+415,course-v1:DHQG-HCM+FM101+2025_S2,89.0,2.7397894039235693,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+416,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.6019578221722461,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+417,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.7408162232849664,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+418,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.6395224094350009,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+419,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+420,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.8735790396151852,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+421,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.8051649434541789,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+422,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.1353578572725298,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+423,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.7572566811733741,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+424,course-v1:DHQG-HCM+FM101+2025_S2,93.0,1.1770841472710565,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+425,course-v1:DHQG-HCM+FM101+2025_S2,88.0,3.3730280987474597,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+426,course-v1:DHQG-HCM+FM101+2025_S2,80.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+427,course-v1:DHQG-HCM+FM101+2025_S2,87.0,13.472021256003647,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+428,course-v1:DHQG-HCM+FM101+2025_S2,53.0,57.11955357106173,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+429,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+430,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+431,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.9458166919780174,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+432,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+433,course-v1:DHQG-HCM+FM101+2025_S2,82.0,4.08762553515119,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+434,course-v1:DHQG-HCM+FM101+2025_S2,0.0,95.66390943269352,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+435,course-v1:DHQG-HCM+FM101+2025_S2,27.0,79.03785536010871,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+436,course-v1:DHQG-HCM+FM101+2025_S2,75.0,4.979629641654515,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+437,course-v1:DHQG-HCM+FM101+2025_S2,0.0,9.212618904138772,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+438,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.74214800538196,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+439,course-v1:DHQG-HCM+FM101+2025_S2,78.0,45.00491025308437,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+440,course-v1:DHQG-HCM+FM101+2025_S2,87.0,11.517617967207002,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+441,course-v1:DHQG-HCM+FM101+2025_S2,8.0,66.38119031041316,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+442,course-v1:DHQG-HCM+FM101+2025_S2,82.0,3.7186072487345583,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+443,course-v1:DHQG-HCM+FM101+2025_S2,78.0,0.6586101333914504,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+444,course-v1:DHQG-HCM+FM101+2025_S2,9.0,82.20575417020915,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+445,course-v1:DHQG-HCM+FM101+2025_S2,89.0,5.424228699217747,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+446,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.11369648372713,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+447,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.11369648372713,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+448,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.2454906127360108,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+449,course-v1:DHQG-HCM+FM101+2025_S2,10.0,63.08734071641604,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+450,course-v1:DHQG-HCM+FM101+2025_S2,89.0,7.135627205536421,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+451,course-v1:DHQG-HCM+FM101+2025_S2,20.0,62.21133016803335,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+452,course-v1:DHQG-HCM+FM101+2025_S2,89.0,19.41001027381894,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+453,course-v1:DHQG-HCM+FM101+2025_S2,55.0,43.24764678552294,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+454,course-v1:DHQG-HCM+FM101+2025_S2,0.0,73.35659617250408,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+456,course-v1:DHQG-HCM+FM101+2025_S2,76.0,1.8909711485098462,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+459,course-v1:DHQG-HCM+FM101+2025_S2,72.0,17.115593711289915,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+460,course-v1:DHQG-HCM+FM101+2025_S2,80.0,1.4383084861478042,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+461,course-v1:DHQG-HCM+FM101+2025_S2,30.0,40.77692844335205,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+462,course-v1:DHQG-HCM+FM101+2025_S2,25.0,82.27274244526748,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+465,course-v1:DHQG-HCM+FM101+2025_S2,76.0,20.665594239929487,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+466,course-v1:DHQG-HCM+FM101+2025_S2,80.0,3.103805303673432,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+467,course-v1:DHQG-HCM+FM101+2025_S2,86.0,29.195856738897437,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+468,course-v1:DHQG-HCM+FM101+2025_S2,7.0,97.42795669987062,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+470,course-v1:DHQG-HCM+FM101+2025_S2,85.0,22.179379013875774,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+471,course-v1:DHQG-HCM+FM101+2025_S2,31.0,82.41067386551688,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+472,course-v1:DHQG-HCM+FM101+2025_S2,59.0,46.690424802566106,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+473,course-v1:DHQG-HCM+FM101+2025_S2,56.0,47.62391976525779,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+474,course-v1:DHQG-HCM+FM101+2025_S2,10.0,96.9206833060968,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+475,course-v1:DHQG-HCM+FM101+2025_S2,55.0,38.46549179360053,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+476,course-v1:DHQG-HCM+FM101+2025_S2,7.0,95.83931455088887,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+477,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+478,course-v1:DHQG-HCM+FM101+2025_S2,52.0,43.819381226857566,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+479,course-v1:DHQG-HCM+FM101+2025_S2,10.0,96.20358167210789,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+480,course-v1:DHQG-HCM+FM101+2025_S2,30.0,81.57965803964726,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+481,course-v1:DHQG-HCM+FM101+2025_S2,61.0,38.23610755949544,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+482,course-v1:DHQG-HCM+FM101+2025_S2,46.0,43.819381226857566,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+483,course-v1:DHQG-HCM+FM101+2025_S2,7.0,89.48251430529163,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+484,course-v1:DHQG-HCM+FM101+2025_S2,31.0,79.84920704734677,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+485,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.44842390231945,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+486,course-v1:DHQG-HCM+FM101+2025_S2,8.0,87.98420551865355,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+487,course-v1:DHQG-HCM+FM101+2025_S2,67.0,63.79908688089325,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+488,course-v1:DHQG-HCM+FM101+2025_S2,52.0,59.85357041972219,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+489,course-v1:DHQG-HCM+FM101+2025_S2,0.0,94.46575830065986,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+490,course-v1:DHQG-HCM+FM101+2025_S2,4.0,87.39821433263977,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+491,course-v1:DHQG-HCM+FM101+2025_S2,31.0,79.5117439905447,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+492,course-v1:DHQG-HCM+FM101+2025_S2,84.0,42.58862684877532,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+497,course-v1:DHQG-HCM+FM101+2025_S2,80.0,7.966147831703715,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+503,course-v1:DHQG-HCM+FM101+2025_S2,42.0,29.307100446335483,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+505,course-v1:DHQG-HCM+FM101+2025_S2,4.0,97.3896311468112,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+506,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.85682088719734,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+509,course-v1:DHQG-HCM+FM101+2025_S2,80.0,1.2247239869225295,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+510,course-v1:DHQG-HCM+FM101+2025_S2,86.0,1.4991004312528942,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+511,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.2601947296470062,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+512,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.6371096207229765,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+513,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+514,course-v1:DHQG-HCM+FM101+2025_S2,64.0,0.679668158769941,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+515,course-v1:DHQG-HCM+FM101+2025_S2,87.0,12.106855158367926,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+516,course-v1:DHQG-HCM+FM101+2025_S2,90.0,1.7408162232849664,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+517,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+518,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+519,course-v1:DHQG-HCM+FM101+2025_S2,93.0,0.6494584219029006,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+520,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.6586101333914504,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+521,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+523,course-v1:DHQG-HCM+FM101+2025_S2,93.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+524,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+525,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.143299282240791,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+526,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+528,course-v1:DHQG-HCM+FM101+2025_S2,87.0,1.6310879239208254,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+529,course-v1:DHQG-HCM+FM101+2025_S2,92.0,27.52451964445545,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+530,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.1802218612968827,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+531,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+533,course-v1:DHQG-HCM+FM101+2025_S2,89.0,1.3194705035146157,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+534,course-v1:DHQG-HCM+FM101+2025_S2,89.0,1.2208496425262538,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+535,course-v1:DHQG-HCM+FM101+2025_S2,85.0,1.7408162232849664,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+536,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+537,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+538,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8622579550754348,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+539,course-v1:DHQG-HCM+FM101+2025_S2,71.0,1.842045997732231,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+540,course-v1:DHQG-HCM+FM101+2025_S2,94.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+541,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+542,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.40525396824592,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+543,course-v1:DHQG-HCM+FM101+2025_S2,80.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+544,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.4915879911263545,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+545,course-v1:DHQG-HCM+FM101+2025_S2,93.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+547,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+548,course-v1:DHQG-HCM+FM101+2025_S2,83.0,1.2823529919400163,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+549,course-v1:DHQG-HCM+FM101+2025_S2,90.0,1.2622981778088131,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+550,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+551,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+552,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+553,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+554,course-v1:DHQG-HCM+FM101+2025_S2,86.0,1.247569827692389,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+555,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+556,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8373178923449629,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+557,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+559,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.6586101333914504,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+561,course-v1:DHQG-HCM+FM101+2025_S2,90.0,1.0918502406903086,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+562,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+563,course-v1:DHQG-HCM+FM101+2025_S2,0.0,96.60526091919887,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+564,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+565,course-v1:DHQG-HCM+FM101+2025_S2,94.0,1.1948478076982259,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+567,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.1948478076982259,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+568,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+569,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+570,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.6672754044843304,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+571,course-v1:DHQG-HCM+FM101+2025_S2,90.0,14.013240361783197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+572,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.6395224094350009,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+573,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+574,course-v1:DHQG-HCM+FM101+2025_S2,8.0,96.21243576350227,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+575,course-v1:DHQG-HCM+FM101+2025_S2,93.0,1.6283672175360264,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+577,course-v1:DHQG-HCM+FM101+2025_S2,86.0,1.272669284607157,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+578,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+579,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.175404314755749,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+580,course-v1:DHQG-HCM+FM101+2025_S2,77.0,13.434156801324454,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+581,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+583,course-v1:DHQG-HCM+FM101+2025_S2,0.0,95.39449902451261,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+584,course-v1:DHQG-HCM+FM101+2025_S2,80.0,0.7342081736513946,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+585,course-v1:DHQG-HCM+FM101+2025_S2,83.0,1.6713163325125506,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+586,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6060489877523078,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+588,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+590,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+591,course-v1:DHQG-HCM+FM101+2025_S2,85.0,3.4701806013339103,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+592,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+593,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.332207077983905,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+594,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.6698016635131576,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+596,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+597,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.8051649434541789,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+598,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+599,course-v1:DHQG-HCM+FM101+2025_S2,80.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+600,course-v1:DHQG-HCM+FM101+2025_S2,46.0,58.678918687727574,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+601,course-v1:DHQG-HCM+FM101+2025_S2,86.0,1.131081302311617,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+602,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.3473042125119055,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+603,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+605,course-v1:DHQG-HCM+FM101+2025_S2,82.0,5.624461134889064,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+606,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.8051649434541789,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+607,course-v1:DHQG-HCM+FM101+2025_S2,92.0,1.0484755978276485,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+608,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+609,course-v1:DHQG-HCM+FM101+2025_S2,23.0,81.40175828558765,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+610,course-v1:DHQG-HCM+FM101+2025_S2,89.0,1.508011044487849,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+611,course-v1:DHQG-HCM+FM101+2025_S2,81.0,1.1638719004574063,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+612,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+613,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.7342081736513946,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+614,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.6019578221722461,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+615,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.8622579550754348,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+616,course-v1:DHQG-HCM+FM101+2025_S2,80.0,1.8752860397532032,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+617,course-v1:DHQG-HCM+FM101+2025_S2,84.0,3.272943318692349,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+618,course-v1:DHQG-HCM+FM101+2025_S2,92.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+619,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.332207077983905,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+622,course-v1:DHQG-HCM+FM101+2025_S2,90.0,1.2510888044857547,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+624,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.7414728045546102,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+625,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.1353578572725298,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+626,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+628,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.117193503041,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+629,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.8622579550754348,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+630,course-v1:DHQG-HCM+FM101+2025_S2,76.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+631,course-v1:DHQG-HCM+FM101+2025_S2,19.0,92.1253049677839,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+632,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.9168668503786861,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+634,course-v1:DHQG-HCM+FM101+2025_S2,90.0,1.332523905479441,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+636,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.6586101333914504,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+637,course-v1:DHQG-HCM+FM101+2025_S2,75.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+638,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+640,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+641,course-v1:DHQG-HCM+FM101+2025_S2,76.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+644,course-v1:DHQG-HCM+FM101+2025_S2,58.0,0.956106506177705,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+657,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+670,course-v1:DHQG-HCM+FM101+2025_S2,50.0,7.447039809959328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+674,course-v1:DHQG-HCM+FM101+2025_S2,76.0,1.2601947296470062,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+683,course-v1:DHQG-HCM+FM101+2025_S2,84.0,17.685800813362164,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+686,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+687,course-v1:DHQG-HCM+FM101+2025_S2,80.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+688,course-v1:DHQG-HCM+FM101+2025_S2,81.0,12.73907448763586,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+689,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.5074309540398274,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+692,course-v1:DHQG-HCM+FM101+2025_S2,87.0,1.1353578572725298,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+693,course-v1:DHQG-HCM+FM101+2025_S2,85.0,8.179581443173415,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+694,course-v1:DHQG-HCM+FM101+2025_S2,83.0,1.1802218612968827,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+696,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+697,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+698,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+699,course-v1:DHQG-HCM+FM101+2025_S2,8.0,77.69904794364176,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+700,course-v1:DHQG-HCM+FM101+2025_S2,85.0,12.02883742971858,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+702,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.24031332734236,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+703,course-v1:DHQG-HCM+FM101+2025_S2,92.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+704,course-v1:DHQG-HCM+FM101+2025_S2,91.0,1.1638719004574063,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+705,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+707,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+708,course-v1:DHQG-HCM+FM101+2025_S2,90.0,3.6399280411561734,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+709,course-v1:DHQG-HCM+FM101+2025_S2,81.0,1.1600802938597654,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+711,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.6962218133293621,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+712,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+714,course-v1:DHQG-HCM+FM101+2025_S2,31.0,92.64687089391022,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+716,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6586101333914504,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+717,course-v1:DHQG-HCM+FM101+2025_S2,78.0,1.2601947296470062,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+718,course-v1:DHQG-HCM+FM101+2025_S2,80.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+719,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.8373178923449629,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+720,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+721,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+722,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.8622579550754348,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+724,course-v1:DHQG-HCM+FM101+2025_S2,58.0,1.1353578572725298,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+725,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+726,course-v1:DHQG-HCM+FM101+2025_S2,87.0,4.073911440523345,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+727,course-v1:DHQG-HCM+FM101+2025_S2,0.0,89.74651076813298,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+728,course-v1:DHQG-HCM+FM101+2025_S2,68.0,21.180019456053373,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+729,course-v1:DHQG-HCM+FM101+2025_S2,87.0,1.3948222473275518,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+730,course-v1:DHQG-HCM+FM101+2025_S2,88.0,45.19604936552972,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+731,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+732,course-v1:DHQG-HCM+FM101+2025_S2,87.0,1.175404314755749,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+733,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.8622579550754348,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+735,course-v1:DHQG-HCM+FM101+2025_S2,81.0,1.1888323783316601,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+736,course-v1:DHQG-HCM+FM101+2025_S2,85.0,1.2601947296470062,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+737,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+738,course-v1:DHQG-HCM+FM101+2025_S2,55.0,41.675106402705644,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+740,course-v1:DHQG-HCM+FM101+2025_S2,92.0,1.6429977568002196,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+741,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.129014113164962,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+742,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+743,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.24031332734236,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+744,course-v1:DHQG-HCM+FM101+2025_S2,0.0,74.93255718732314,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+745,course-v1:DHQG-HCM+FM101+2025_S2,76.0,1.2304485852178242,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+746,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.8373178923449629,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+748,course-v1:DHQG-HCM+FM101+2025_S2,90.0,21.92104493250261,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+749,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.7342081736513946,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+750,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+751,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+752,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.18525709124283,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+753,course-v1:DHQG-HCM+FM101+2025_S2,86.0,1.2601947296470062,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+754,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.258571561251122,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+755,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+756,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+757,course-v1:DHQG-HCM+FM101+2025_S2,86.0,1.1353578572725298,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+759,course-v1:DHQG-HCM+FM101+2025_S2,10.0,84.25202351483733,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+760,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+761,course-v1:DHQG-HCM+FM101+2025_S2,69.0,41.27398518553535,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+762,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.634803949733694,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+763,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+764,course-v1:DHQG-HCM+FM101+2025_S2,31.0,87.74343678977019,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+765,course-v1:DHQG-HCM+FM101+2025_S2,9.0,97.29457984846965,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+766,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.29202460274603,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+767,course-v1:DHQG-HCM+FM101+2025_S2,93.0,14.691348975617945,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+768,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+769,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+772,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.24031332734236,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+773,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.14356913619346,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+774,course-v1:DHQG-HCM+FM101+2025_S2,28.0,53.746378745263534,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+776,course-v1:DHQG-HCM+FM101+2025_S2,80.0,1.2744863309482868,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+782,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.117193503041,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+783,course-v1:DHQG-HCM+FM101+2025_S2,0.0,95.1546007910337,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+784,course-v1:DHQG-HCM+FM101+2025_S2,8.0,58.38678708695228,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+786,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+787,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.124054421651962,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+803,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+806,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.8051649434541789,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+807,course-v1:DHQG-HCM+FM101+2025_S2,94.0,1.111499085092817,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+808,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+810,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.6019578221722461,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+811,course-v1:DHQG-HCM+FM101+2025_S2,34.0,87.98229444107291,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+812,course-v1:DHQG-HCM+FM101+2025_S2,54.0,24.783948439717474,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+813,course-v1:DHQG-HCM+FM101+2025_S2,92.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+814,course-v1:DHQG-HCM+FM101+2025_S2,93.0,1.6720779743362089,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+816,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.7342081736513946,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+818,course-v1:DHQG-HCM+FM101+2025_S2,74.0,14.554297097493373,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+820,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+822,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+824,course-v1:DHQG-HCM+FM101+2025_S2,88.0,20.938885546658913,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+825,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.7342081736513946,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+826,course-v1:DHQG-HCM+FM101+2025_S2,80.0,23.980669366992522,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+827,course-v1:DHQG-HCM+FM101+2025_S2,31.0,3.4450367486043674,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+828,course-v1:DHQG-HCM+FM101+2025_S2,0.0,84.7952115327263,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+830,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6395224094350009,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+831,course-v1:DHQG-HCM+FM101+2025_S2,29.0,87.86952323672256,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+832,course-v1:DHQG-HCM+FM101+2025_S2,69.0,9.910577261680086,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+833,course-v1:DHQG-HCM+FM101+2025_S2,93.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+834,course-v1:DHQG-HCM+FM101+2025_S2,93.0,1.7929229880824356,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+836,course-v1:DHQG-HCM+FM101+2025_S2,85.0,1.1802218612968827,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+837,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+838,course-v1:DHQG-HCM+FM101+2025_S2,89.0,1.3473042125119055,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+839,course-v1:DHQG-HCM+FM101+2025_S2,78.0,1.263173754002614,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+840,course-v1:DHQG-HCM+FM101+2025_S2,80.0,1.2601947296470062,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+841,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+842,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.220123965700454,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+844,course-v1:DHQG-HCM+FM101+2025_S2,90.0,1.2267689648479085,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+845,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+848,course-v1:DHQG-HCM+FM101+2025_S2,29.0,62.95495427713944,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+850,course-v1:DHQG-HCM+FM101+2025_S2,0.0,95.5650970919004,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+851,course-v1:DHQG-HCM+FM101+2025_S2,26.0,85.89682812282514,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+852,course-v1:DHQG-HCM+FM101+2025_S2,94.0,0.6019578221722461,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+853,course-v1:DHQG-HCM+FM101+2025_S2,90.0,1.2510888044857547,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+854,course-v1:DHQG-HCM+FM101+2025_S2,74.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+856,course-v1:DHQG-HCM+FM101+2025_S2,83.0,11.679365711663621,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+858,course-v1:DHQG-HCM+FM101+2025_S2,61.0,14.00566016760378,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+861,course-v1:DHQG-HCM+FM101+2025_S2,0.0,96.40787677135097,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+862,course-v1:DHQG-HCM+FM101+2025_S2,77.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+863,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.1271302294046248,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+864,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+865,course-v1:DHQG-HCM+FM101+2025_S2,89.0,1.5284292955276522,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+867,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+873,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.7342081736513946,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+875,course-v1:DHQG-HCM+FM101+2025_S2,9.0,95.25010161531164,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+876,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+880,course-v1:DHQG-HCM+FM101+2025_S2,93.0,1.2652821108708727,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+885,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.24031332734236,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+888,course-v1:DHQG-HCM+FM101+2025_S2,0.0,94.51248286238109,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+893,course-v1:DHQG-HCM+FM101+2025_S2,80.0,0.6060489877523078,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+895,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.85682088719734,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+899,course-v1:DHQG-HCM+FM101+2025_S2,0.0,88.86817602982518,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+902,course-v1:DHQG-HCM+FM101+2025_S2,4.0,96.44830868177536,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+904,course-v1:DHQG-HCM+FM101+2025_S2,27.0,64.82237605922178,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+912,course-v1:DHQG-HCM+FM101+2025_S2,94.0,1.0484755978276485,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+916,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6019578221722461,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+917,course-v1:DHQG-HCM+FM101+2025_S2,94.0,1.6989438635665897,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+918,course-v1:DHQG-HCM+FM101+2025_S2,83.0,38.54308264615268,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+920,course-v1:DHQG-HCM+FM101+2025_S2,91.0,1.1758941199153206,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+921,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.85682088719734,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+922,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.2744863309482868,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+923,course-v1:DHQG-HCM+FM101+2025_S2,62.0,1.1502785978502643,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+924,course-v1:DHQG-HCM+FM101+2025_S2,83.0,1.143299282240791,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+925,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.8617375357545202,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+927,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+928,course-v1:DHQG-HCM+FM101+2025_S2,80.0,7.050593373434777,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+929,course-v1:DHQG-HCM+FM101+2025_S2,72.0,1.361156895099393,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+931,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.7342081736513946,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+934,course-v1:DHQG-HCM+FM101+2025_S2,93.0,0.7090487269110382,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+935,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+936,course-v1:DHQG-HCM+FM101+2025_S2,86.0,1.8010783204616168,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+937,course-v1:DHQG-HCM+FM101+2025_S2,83.0,25.814762523414082,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+939,course-v1:DHQG-HCM+FM101+2025_S2,68.0,1.361156895099393,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+940,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.7442635510092517,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+942,course-v1:DHQG-HCM+FM101+2025_S2,38.0,45.324827789784145,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+943,course-v1:DHQG-HCM+FM101+2025_S2,78.0,1.5963469553918248,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+945,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+946,course-v1:DHQG-HCM+FM101+2025_S2,52.0,40.328476967135536,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+947,course-v1:DHQG-HCM+FM101+2025_S2,51.0,1.3473042125119055,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+948,course-v1:DHQG-HCM+FM101+2025_S2,10.0,87.18195881305978,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+949,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+950,course-v1:DHQG-HCM+FM101+2025_S2,7.0,97.3896311468112,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+951,course-v1:DHQG-HCM+FM101+2025_S2,83.0,39.653977970496754,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+952,course-v1:DHQG-HCM+FM101+2025_S2,10.0,95.26131679081364,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+953,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.6060489877523078,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+954,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.6627820439824608,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+955,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.8711155955827095,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+956,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+957,course-v1:DHQG-HCM+FM101+2025_S2,9.0,80.83026325809548,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+958,course-v1:DHQG-HCM+FM101+2025_S2,94.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+959,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.1353578572725298,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+960,course-v1:DHQG-HCM+FM101+2025_S2,72.0,1.5143483486706693,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+962,course-v1:DHQG-HCM+FM101+2025_S2,28.0,85.69930516962498,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+963,course-v1:DHQG-HCM+FM101+2025_S2,28.0,79.98102293407547,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+964,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.25173068577921,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+965,course-v1:DHQG-HCM+FM101+2025_S2,92.0,17.809100047837386,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+966,course-v1:DHQG-HCM+FM101+2025_S2,0.0,96.38828600362233,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+967,course-v1:DHQG-HCM+FM101+2025_S2,54.0,76.92586621027314,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+968,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.31297701300734,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+970,course-v1:DHQG-HCM+FM101+2025_S2,31.0,73.37164202621827,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+971,course-v1:DHQG-HCM+FM101+2025_S2,91.0,19.92074087471681,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+972,course-v1:DHQG-HCM+FM101+2025_S2,9.0,86.34867491428,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+974,course-v1:DHQG-HCM+FM101+2025_S2,87.0,1.334425253854328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+975,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.85682088719734,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+976,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+979,course-v1:DHQG-HCM+FM101+2025_S2,83.0,3.6033305797421096,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+981,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+982,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+983,course-v1:DHQG-HCM+FM101+2025_S2,87.0,2.6154400517015115,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+986,course-v1:DHQG-HCM+FM101+2025_S2,75.0,5.508657491107663,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+988,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.7301928524728678,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+993,course-v1:DHQG-HCM+FM101+2025_S2,91.0,1.2823529919400163,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+997,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+998,course-v1:DHQG-HCM+FM101+2025_S2,81.0,1.0001391625763796,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+999,course-v1:DHQG-HCM+FM101+2025_S2,78.0,0.7342081736513946,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1000,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1003,course-v1:DHQG-HCM+FM101+2025_S2,59.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1005,course-v1:DHQG-HCM+FM101+2025_S2,89.0,1.0484755978276485,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1008,course-v1:DHQG-HCM+FM101+2025_S2,92.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1009,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1010,course-v1:DHQG-HCM+FM101+2025_S2,77.0,3.8168400389030612,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1013,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1015,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.6586101333914504,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1016,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.5922888461554825,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1017,course-v1:DHQG-HCM+FM101+2025_S2,91.0,1.332207077983905,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1020,course-v1:DHQG-HCM+FM101+2025_S2,60.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1021,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1023,course-v1:DHQG-HCM+FM101+2025_S2,78.0,1.5610897676807116,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1026,course-v1:DHQG-HCM+FM101+2025_S2,85.0,1.7980533096155975,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1027,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.6253466449291278,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1030,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1031,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1032,course-v1:DHQG-HCM+FM101+2025_S2,80.0,1.2247239869225295,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1033,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1038,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1039,course-v1:DHQG-HCM+FM101+2025_S2,87.0,5.495896985250131,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1041,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.7342081736513946,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1043,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1044,course-v1:DHQG-HCM+FM101+2025_S2,89.0,1.0940085474206835,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1045,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.7342081736513946,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1052,course-v1:DHQG-HCM+FM101+2025_S2,83.0,22.329221413512236,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1054,course-v1:DHQG-HCM+FM101+2025_S2,80.0,1.1948478076982259,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1055,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1058,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1062,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1064,course-v1:DHQG-HCM+FM101+2025_S2,92.0,1.3194705035146157,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1065,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1309,course-v1:DHQG-HCM+FM101+2025_S2,81.0,3.249670088667738,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1314,course-v1:DHQG-HCM+FM101+2025_S2,71.0,2.7374591722248076,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1315,course-v1:DHQG-HCM+FM101+2025_S2,82.0,1.263173754002614,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1316,course-v1:DHQG-HCM+FM101+2025_S2,29.0,56.444927854609816,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1318,course-v1:DHQG-HCM+FM101+2025_S2,81.0,16.84531966278913,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1325,course-v1:DHQG-HCM+FM101+2025_S2,84.0,5.948220833449698,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1329,course-v1:DHQG-HCM+FM101+2025_S2,92.0,0.9439828782564991,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1332,course-v1:DHQG-HCM+FM101+2025_S2,5.0,94.86954529345297,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1333,course-v1:DHQG-HCM+FM101+2025_S2,74.0,35.994254008937524,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1335,course-v1:DHQG-HCM+FM101+2025_S2,8.0,86.44682517248718,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1337,course-v1:DHQG-HCM+FM101+2025_S2,87.0,1.2744863309482868,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1338,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.334425253854328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1346,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1347,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.8341651262379197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1349,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1353,course-v1:DHQG-HCM+FM101+2025_S2,57.0,48.918656185435424,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1357,course-v1:DHQG-HCM+FM101+2025_S2,81.0,1.1034639433829916,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1358,course-v1:DHQG-HCM+FM101+2025_S2,7.0,11.078784450900667,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1359,course-v1:DHQG-HCM+FM101+2025_S2,76.0,23.423911635950848,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1381,course-v1:DHQG-HCM+FM101+2025_S2,22.0,26.486478099800525,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1382,course-v1:DHQG-HCM+FM101+2025_S2,7.0,79.08560759182944,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1383,course-v1:DHQG-HCM+FM101+2025_S2,84.0,9.018174050058429,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1384,course-v1:DHQG-HCM+FM101+2025_S2,89.0,17.207799262813833,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1385,course-v1:DHQG-HCM+FM101+2025_S2,82.0,10.457698548110345,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1386,course-v1:DHQG-HCM+FM101+2025_S2,71.0,1.4587328800929191,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1387,course-v1:DHQG-HCM+FM101+2025_S2,88.0,37.8950441740862,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1388,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1389,course-v1:DHQG-HCM+FM101+2025_S2,53.0,1.4791630286228865,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1390,course-v1:DHQG-HCM+FM101+2025_S2,83.0,18.233280546023416,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1391,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.2823529919400163,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1392,course-v1:DHQG-HCM+FM101+2025_S2,89.0,83.97844501138331,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1393,course-v1:DHQG-HCM+FM101+2025_S2,84.0,2.428931155279455,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1394,course-v1:DHQG-HCM+FM101+2025_S2,72.0,1.1271302294046248,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1395,course-v1:DHQG-HCM+FM101+2025_S2,87.0,1.2885632923718047,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1396,course-v1:DHQG-HCM+FM101+2025_S2,43.0,44.21060825888345,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1397,course-v1:DHQG-HCM+FM101+2025_S2,84.0,7.177350090457765,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1398,course-v1:DHQG-HCM+FM101+2025_S2,0.0,54.85694236605163,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1399,course-v1:DHQG-HCM+FM101+2025_S2,86.0,52.08043249637782,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1400,course-v1:DHQG-HCM+FM101+2025_S2,79.0,1.4599051530706528,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1401,course-v1:DHQG-HCM+FM101+2025_S2,93.0,19.92074087471681,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1402,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1403,course-v1:DHQG-HCM+FM101+2025_S2,89.0,63.340297525307044,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1404,course-v1:DHQG-HCM+FM101+2025_S2,87.0,24.441801604239206,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1405,course-v1:DHQG-HCM+FM101+2025_S2,37.0,75.07612362007036,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1406,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.42478860605867,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1407,course-v1:DHQG-HCM+FM101+2025_S2,78.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1408,course-v1:DHQG-HCM+FM101+2025_S2,87.0,50.210412862444365,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1409,course-v1:DHQG-HCM+FM101+2025_S2,6.0,53.50820719364745,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1410,course-v1:DHQG-HCM+FM101+2025_S2,9.0,80.41615623710776,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1411,course-v1:DHQG-HCM+FM101+2025_S2,0.0,81.82600273181848,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1412,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1413,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1414,course-v1:DHQG-HCM+FM101+2025_S2,54.0,11.776546808963541,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1415,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.8051649434541789,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1416,course-v1:DHQG-HCM+FM101+2025_S2,89.0,61.10221882870407,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1417,course-v1:DHQG-HCM+FM101+2025_S2,27.0,63.23055136447358,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1418,course-v1:DHQG-HCM+FM101+2025_S2,0.0,48.49754779126401,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1419,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1422,course-v1:DHQG-HCM+FM101+2025_S2,88.0,7.414631974813042,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1423,course-v1:DHQG-HCM+FM101+2025_S2,31.0,50.179524203762135,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1425,course-v1:DHQG-HCM+FM101+2025_S2,0.0,94.74348200041322,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1426,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.73103121649407,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1427,course-v1:DHQG-HCM+FM101+2025_S2,86.0,11.107445282810142,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1428,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1429,course-v1:DHQG-HCM+FM101+2025_S2,0.0,69.18611229146174,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1430,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1431,course-v1:DHQG-HCM+FM101+2025_S2,0.0,89.33753751175416,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1432,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.334425253854328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1436,course-v1:DHQG-HCM+FM101+2025_S2,71.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1437,course-v1:DHQG-HCM+FM101+2025_S2,79.0,30.42642263209897,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1439,course-v1:DHQG-HCM+FM101+2025_S2,89.0,0.6586101333914504,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1440,course-v1:DHQG-HCM+FM101+2025_S2,41.0,24.227440281222364,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1441,course-v1:DHQG-HCM+FM101+2025_S2,81.0,2.001930457868906,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1443,course-v1:DHQG-HCM+FM101+2025_S2,80.0,0.8051649434541789,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1444,course-v1:DHQG-HCM+FM101+2025_S2,76.0,1.8752860397532032,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1446,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.1034639433829916,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1451,course-v1:DHQG-HCM+FM101+2025_S2,50.0,34.19697235094516,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1452,course-v1:DHQG-HCM+FM101+2025_S2,90.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1453,course-v1:DHQG-HCM+FM101+2025_S2,90.0,6.181603460109378,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1454,course-v1:DHQG-HCM+FM101+2025_S2,9.0,12.941248595750663,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1455,course-v1:DHQG-HCM+FM101+2025_S2,85.0,8.666221565646623,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1457,course-v1:DHQG-HCM+FM101+2025_S2,42.0,69.19849367931099,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1458,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1459,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1460,course-v1:DHQG-HCM+FM101+2025_S2,88.0,7.534201354023651,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1462,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1469,course-v1:DHQG-HCM+FM101+2025_S2,87.0,20.976480885021342,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1474,course-v1:DHQG-HCM+FM101+2025_S2,53.0,45.133342067261864,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1476,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.6019578221722461,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1485,course-v1:DHQG-HCM+FM101+2025_S2,50.0,11.38412115686132,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1495,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1499,course-v1:DHQG-HCM+FM101+2025_S2,70.0,71.64766781105595,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1504,course-v1:DHQG-HCM+FM101+2025_S2,7.0,83.16633183827248,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1505,course-v1:DHQG-HCM+FM101+2025_S2,0.0,80.06451695433616,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1506,course-v1:DHQG-HCM+FM101+2025_S2,0.0,62.68194653259529,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1507,course-v1:DHQG-HCM+FM101+2025_S2,15.0,93.14965159148359,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1508,course-v1:DHQG-HCM+FM101+2025_S2,8.0,70.78320081503081,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1509,course-v1:DHQG-HCM+FM101+2025_S2,0.0,87.22546230850628,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1510,course-v1:DHQG-HCM+FM101+2025_S2,82.0,4.008435695616472,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1511,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.5976466900593322,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1512,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.54211645315979,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1513,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.175404314755749,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1514,course-v1:DHQG-HCM+FM101+2025_S2,88.0,78.33475920546812,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1515,course-v1:DHQG-HCM+FM101+2025_S2,7.0,59.056512356226655,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1516,course-v1:DHQG-HCM+FM101+2025_S2,0.0,91.185415944529,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1517,course-v1:DHQG-HCM+FM101+2025_S2,76.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1518,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.11369648372713,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1519,course-v1:DHQG-HCM+FM101+2025_S2,8.0,37.02168681580116,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1520,course-v1:DHQG-HCM+FM101+2025_S2,0.0,95.39449902451261,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1521,course-v1:DHQG-HCM+FM101+2025_S2,5.0,93.18764420609891,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1522,course-v1:DHQG-HCM+FM101+2025_S2,28.0,43.295405249888766,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1526,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.27298612350872,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1528,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.8051649434541789,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1529,course-v1:DHQG-HCM+FM101+2025_S2,6.0,89.36670159155832,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1530,course-v1:DHQG-HCM+FM101+2025_S2,32.0,71.75970102622425,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1531,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.5976466900593322,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1537,course-v1:DHQG-HCM+FM101+2025_S2,30.0,87.34215151330082,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1538,course-v1:DHQG-HCM+FM101+2025_S2,77.0,0.7922579595274268,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1539,course-v1:DHQG-HCM+FM101+2025_S2,84.0,2.5721758329165714,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1540,course-v1:DHQG-HCM+FM101+2025_S2,78.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1541,course-v1:DHQG-HCM+FM101+2025_S2,85.0,2.5609597083319193,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1542,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1543,course-v1:DHQG-HCM+FM101+2025_S2,64.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1544,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1546,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1553,course-v1:DHQG-HCM+FM101+2025_S2,92.0,9.712709178578566,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1556,course-v1:DHQG-HCM+FM101+2025_S2,5.0,84.00016311728871,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1560,course-v1:DHQG-HCM+FM101+2025_S2,85.0,39.0714376673511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1561,course-v1:DHQG-HCM+FM101+2025_S2,78.0,1.3765775240727407,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1562,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1563,course-v1:DHQG-HCM+FM101+2025_S2,0.0,94.96447544928279,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1564,course-v1:DHQG-HCM+FM101+2025_S2,85.0,17.9530019958223,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1565,course-v1:DHQG-HCM+FM101+2025_S2,0.0,91.84808216339438,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1566,course-v1:DHQG-HCM+FM101+2025_S2,0.0,88.21088917439488,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1567,course-v1:DHQG-HCM+FM101+2025_S2,0.0,97.35092860812252,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1568,course-v1:DHQG-HCM+FM101+2025_S2,7.0,95.78556822047169,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1570,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1571,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1572,course-v1:DHQG-HCM+FM101+2025_S2,31.0,80.80518467999848,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1575,course-v1:DHQG-HCM+FM101+2025_S2,37.0,97.87590279641813,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1578,course-v1:DHQG-HCM+FM101+2025_S2,82.0,17.6620785725495,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1579,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1580,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1583,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1585,course-v1:DHQG-HCM+FM101+2025_S2,86.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1586,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.096605704606183,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1588,course-v1:DHQG-HCM+FM101+2025_S2,76.0,7.282724237057228,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1589,course-v1:DHQG-HCM+FM101+2025_S2,27.0,26.41308794590533,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1590,course-v1:DHQG-HCM+FM101+2025_S2,79.0,2.0612075470729074,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1594,course-v1:DHQG-HCM+FM101+2025_S2,46.0,21.96866818097413,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1598,course-v1:DHQG-HCM+FM101+2025_S2,9.0,62.94626754962761,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1599,course-v1:DHQG-HCM+FM101+2025_S2,0.0,72.45971159913972,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1600,course-v1:DHQG-HCM+FM101+2025_S2,80.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1602,course-v1:DHQG-HCM+FM101+2025_S2,78.0,6.138063161775723,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1603,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1604,course-v1:DHQG-HCM+FM101+2025_S2,79.0,0.8051649434541789,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1605,course-v1:DHQG-HCM+FM101+2025_S2,90.0,70.26953102306486,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1609,course-v1:DHQG-HCM+FM101+2025_S2,0.0,96.50737558768058,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1613,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6019578221722461,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1617,course-v1:DHQG-HCM+FM101+2025_S2,7.0,75.74076548117615,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1618,course-v1:DHQG-HCM+FM101+2025_S2,10.0,33.687879438673725,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1619,course-v1:DHQG-HCM+FM101+2025_S2,7.0,28.07287466888812,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1620,course-v1:DHQG-HCM+FM101+2025_S2,79.0,1.1948478076982259,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1621,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1626,course-v1:DHQG-HCM+FM101+2025_S2,0.0,90.09552877805815,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1632,course-v1:DHQG-HCM+FM101+2025_S2,75.0,28.399168936187696,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1634,course-v1:DHQG-HCM+FM101+2025_S2,80.0,83.59185970839889,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1635,course-v1:DHQG-HCM+FM101+2025_S2,81.0,82.07114707969406,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1636,course-v1:DHQG-HCM+FM101+2025_S2,86.0,1.3344291007788514,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1639,course-v1:DHQG-HCM+FM101+2025_S2,82.0,15.444467795589102,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1640,course-v1:DHQG-HCM+FM101+2025_S2,84.0,0.8503006782362034,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1643,course-v1:DHQG-HCM+FM101+2025_S2,0.0,90.5647762357265,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1645,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1646,course-v1:DHQG-HCM+FM101+2025_S2,43.0,83.59457985891459,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1650,course-v1:DHQG-HCM+FM101+2025_S2,82.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1652,course-v1:DHQG-HCM+FM101+2025_S2,86.0,1.1271302294046248,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1653,course-v1:DHQG-HCM+FM101+2025_S2,45.0,41.65635842995004,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1655,course-v1:DHQG-HCM+FM101+2025_S2,9.0,94.38121856186973,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1658,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1660,course-v1:DHQG-HCM+FM101+2025_S2,23.0,95.32066190423568,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1661,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1662,course-v1:DHQG-HCM+FM101+2025_S2,88.0,0.8534567114918858,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1673,course-v1:DHQG-HCM+FM101+2025_S2,14.0,97.04270137362037,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1675,course-v1:DHQG-HCM+FM101+2025_S2,86.0,6.023876405662932,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1678,course-v1:DHQG-HCM+FM101+2025_S2,94.0,0.7935742883552893,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1679,course-v1:DHQG-HCM+FM101+2025_S2,74.0,1.5828235582656696,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1680,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1681,course-v1:DHQG-HCM+FM101+2025_S2,80.0,1.1353578572725298,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1683,course-v1:DHQG-HCM+FM101+2025_S2,0.0,90.22412884918496,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1687,course-v1:DHQG-HCM+FM101+2025_S2,87.0,3.4450367486043674,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1689,course-v1:DHQG-HCM+FM101+2025_S2,77.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1695,course-v1:DHQG-HCM+FM101+2025_S2,92.0,43.32746642441448,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1697,course-v1:DHQG-HCM+FM101+2025_S2,6.0,93.85157511842691,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1739,course-v1:DHQG-HCM+FM101+2025_S2,3.0,97.24843713176666,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1747,course-v1:DHQG-HCM+FM101+2025_S2,84.0,1.287600088139062,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1761,course-v1:DHQG-HCM+FM101+2025_S2,75.0,0.6750183793235328,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1778,course-v1:DHQG-HCM+FM101+2025_S2,7.0,94.55668792447821,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1786,course-v1:DHQG-HCM+FM101+2025_S2,81.0,2.5619622358100576,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1792,course-v1:DHQG-HCM+FM101+2025_S2,93.0,0.5606320851277197,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1802,course-v1:DHQG-HCM+FM101+2025_S2,0.0,95.4817479636149,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1804,course-v1:DHQG-HCM+FM101+2025_S2,0.0,93.79571836127755,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1808,course-v1:DHQG-HCM+FM101+2025_S2,92.0,0.8051649434541789,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1809,course-v1:DHQG-HCM+FM101+2025_S2,9.0,84.31982023114765,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1814,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.143299282240791,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1816,course-v1:DHQG-HCM+FM101+2025_S2,24.0,15.640811962540338,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1824,course-v1:DHQG-HCM+FM101+2025_S2,82.0,3.7572618143617875,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1827,course-v1:DHQG-HCM+FM101+2025_S2,67.0,4.308436123702767,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1841,course-v1:DHQG-HCM+FM101+2025_S2,87.0,2.514894574053545,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1842,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.8523856315094033,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1850,course-v1:DHQG-HCM+FM101+2025_S2,93.0,1.0940085474206835,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1854,course-v1:DHQG-HCM+FM101+2025_S2,0.0,91.185415944529,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1855,course-v1:DHQG-HCM+FM101+2025_S2,74.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1859,course-v1:DHQG-HCM+FM101+2025_S2,0.0,90.24160827734421,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1862,course-v1:DHQG-HCM+FM101+2025_S2,10.0,87.18195881305978,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1864,course-v1:DHQG-HCM+FM101+2025_S2,43.0,89.6321634848902,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1865,course-v1:DHQG-HCM+FM101+2025_S2,80.0,1.57493159045857,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1866,course-v1:DHQG-HCM+FM101+2025_S2,9.0,69.97017871324461,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1868,course-v1:DHQG-HCM+FM101+2025_S2,67.0,1.1353578572725298,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1875,course-v1:DHQG-HCM+FM101+2025_S2,7.0,82.85412324889964,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1881,course-v1:DHQG-HCM+FM101+2025_S2,0.0,93.36731173359212,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1884,course-v1:DHQG-HCM+FM101+2025_S2,0.0,90.56651523608215,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1888,course-v1:DHQG-HCM+FM101+2025_S2,79.0,4.832899801182925,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1890,course-v1:DHQG-HCM+FM101+2025_S2,85.0,1.4599051530706528,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1891,course-v1:DHQG-HCM+FM101+2025_S2,87.0,0.6445048270068007,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1893,course-v1:DHQG-HCM+FM101+2025_S2,94.0,1.1808513023541487,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1895,course-v1:DHQG-HCM+FM101+2025_S2,86.0,6.506948986337346,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1896,course-v1:DHQG-HCM+FM101+2025_S2,83.0,0.7768538515400163,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1899,course-v1:DHQG-HCM+FM101+2025_S2,85.0,0.8438282160953511,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1900,course-v1:DHQG-HCM+FM101+2025_S2,8.0,91.62964351212032,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1906,course-v1:DHQG-HCM+FM101+2025_S2,88.0,1.1968435044499692,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1907,course-v1:DHQG-HCM+FM101+2025_S2,86.0,11.298806678319808,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1908,course-v1:DHQG-HCM+FM101+2025_S2,84.0,14.813410312479977,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1912,course-v1:DHQG-HCM+FM101+2025_S2,9.0,95.32066190423568,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1916,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1917,course-v1:DHQG-HCM+FM101+2025_S2,78.0,12.151451243887644,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1918,course-v1:DHQG-HCM+FM101+2025_S2,23.0,23.30950610536158,LOW,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1919,course-v1:DHQG-HCM+FM101+2025_S2,10.0,81.78513651342308,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1920,course-v1:DHQG-HCM+FM101+2025_S2,11.0,81.78513651342308,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1922,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1930,course-v1:DHQG-HCM+FM101+2025_S2,0.0,86.76490054873081,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1933,course-v1:DHQG-HCM+FM101+2025_S2,88.0,32.45173392462945,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1934,course-v1:DHQG-HCM+FM101+2025_S2,90.0,23.423911635950848,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1935,course-v1:DHQG-HCM+FM101+2025_S2,91.0,0.8622579550754348,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1938,course-v1:DHQG-HCM+FM101+2025_S2,62.0,70.83440340822868,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1939,course-v1:DHQG-HCM+FM101+2025_S2,61.0,69.44675724647168,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1949,course-v1:DHQG-HCM+FM101+2025_S2,83.0,18.26766529485548,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1950,course-v1:DHQG-HCM+FM101+2025_S2,71.0,23.423911635950848,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1951,course-v1:DHQG-HCM+FM101+2025_S2,20.0,89.14409964118536,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1952,course-v1:DHQG-HCM+FM101+2025_S2,85.0,1.2513677418740865,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1960,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1961,course-v1:DHQG-HCM+FM101+2025_S2,0.0,92.73761601446321,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1964,course-v1:DHQG-HCM+FM101+2025_S2,23.0,81.78513651342308,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1969,course-v1:DHQG-HCM+FM101+2025_S2,93.0,60.08475106119583,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1970,course-v1:DHQG-HCM+FM101+2025_S2,47.0,89.14409964118536,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1976,course-v1:DHQG-HCM+FM101+2025_S2,61.0,70.39177180504498,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1977,course-v1:DHQG-HCM+FM101+2025_S2,58.0,56.470119578695375,MEDIUM,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1979,course-v1:DHQG-HCM+FM101+2025_S2,67.0,38.54308264615268,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1980,course-v1:DHQG-HCM+FM101+2025_S2,68.0,19.92074087471681,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1986,course-v1:DHQG-HCM+FM101+2025_S2,76.0,36.66638653547773,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1989,course-v1:DHQG-HCM+FM101+2025_S2,75.0,12.760982389479656,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1994,course-v1:DHQG-HCM+FM101+2025_S2,78.0,26.082509327629467,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1995,course-v1:DHQG-HCM+FM101+2025_S2,57.0,70.83440340822868,HIGH,🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+1996,course-v1:DHQG-HCM+FM101+2025_S2,75.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+1998,course-v1:DHQG-HCM+FM101+2025_S2,29.0,61.08073738623635,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+1999,course-v1:DHQG-HCM+FM101+2025_S2,37.0,95.32066190423568,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2001,course-v1:DHQG-HCM+FM101+2025_S2,14.0,81.78513651342308,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2008,course-v1:DHQG-HCM+FM101+2025_S2,7.0,81.78513651342308,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2010,course-v1:DHQG-HCM+FM101+2025_S2,22.0,80.81479890807164,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2018,course-v1:DHQG-HCM+FM101+2025_S2,53.0,30.277038028879556,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+2022,course-v1:DHQG-HCM+FM101+2025_S2,2.0,83.617624256901,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2025,course-v1:DHQG-HCM+FM101+2025_S2,0.0,90.83677369196155,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2026,course-v1:DHQG-HCM+FM101+2025_S2,5.0,81.78513651342308,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2027,course-v1:DHQG-HCM+FM101+2025_S2,20.0,81.78513651342308,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2060,course-v1:DHQG-HCM+FM101+2025_S2,81.0,0.8836946372825388,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+2063,course-v1:DHQG-HCM+FM101+2025_S2,9.0,88.8775665253114,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2064,course-v1:DHQG-HCM+FM101+2025_S2,15.0,81.78513651342308,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2065,course-v1:DHQG-HCM+FM101+2025_S2,10.0,95.32066190423568,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2066,course-v1:DHQG-HCM+FM101+2025_S2,7.0,88.8775665253114,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2070,course-v1:DHQG-HCM+FM101+2025_S2,62.0,19.92074087471681,LOW,"✅ Sinh viên đang học tốt, tiếp tục theo dõi"
+2077,course-v1:DHQG-HCM+FM101+2025_S2,0.0,91.8809709816097,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2078,course-v1:DHQG-HCM+FM101+2025_S2,5.0,81.76109334292079,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2084,course-v1:DHQG-HCM+FM101+2025_S2,5.0,76.38036308891246,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2085,course-v1:DHQG-HCM+FM101+2025_S2,6.0,94.84016383914292,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2086,course-v1:DHQG-HCM+FM101+2025_S2,0.0,90.56391173345494,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2110,course-v1:DHQG-HCM+FM101+2025_S2,0.0,76.04401080173665,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2111,course-v1:DHQG-HCM+FM101+2025_S2,0.0,93.03859204912438,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2125,course-v1:DHQG-HCM+FM101+2025_S2,0.0,83.37746769543098,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2135,course-v1:DHQG-HCM+FM101+2025_S2,0.0,93.65814972827421,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2137,course-v1:DHQG-HCM+FM101+2025_S2,0.0,55.280665335602585,MEDIUM,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung
+2149,course-v1:DHQG-HCM+FM101+2025_S2,10.0,80.12099365761746,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+2154,course-v1:DHQG-HCM+FM101+2025_S2,0.0,79.97890564193237,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+3365,course-v1:DHQG-HCM+FM101+2025_S2,0.0,88.48809311700386,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
+3444,course-v1:DHQG-HCM+FM101+2025_S2,0.0,98.20003974679825,HIGH,👨‍🏫 Tổ chức buổi ôn tập hoặc tư vấn 1-1; 📚 Cung cấp tài liệu học tập bổ sung; 🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao; 📊 Lập kế hoạch học tập cá nhân hóa
