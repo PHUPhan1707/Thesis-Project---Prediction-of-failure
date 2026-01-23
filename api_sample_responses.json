@@ -1,0 +1,170 @@
+{
+    "api_examples": {
+        "activity_stats": {
+            "endpoint": "GET /api/courses/{course_id}/students/{user_id}/activity-stats/",
+            "query_params": {
+                "days": 90,
+                "include_history": false
+            },
+            "sample_response": {
+                "success": true,
+                "user_id": 123,
+                "course_id": "course-v1:DHQG-HCM+FM101+2025_S2",
+                "period_days": 90,
+                "summary": {
+                    "problem_attempts": 45,
+                    "problem_completed": 38,
+                    "problem_avg_score": 72.5,
+                    "problem_first_attempt_avg": 65.2,
+                    "problem_improvement_rate": 10.5,
+                    "video_total_views": 120,
+                    "video_completed": 38,
+                    "video_avg_completion": 85.5,
+                    "video_rewatches": 25,
+                    "late_night_activities": 15,
+                    "weekend_activities": 30,
+                    "late_night_ratio": 0.115,
+                    "weekend_ratio": 0.231,
+                    "activity_consistency": 0.75,
+                    "days_active": 68,
+                    "longest_streak": 12,
+                    "current_streak": 3,
+                    "avg_daily_activities": 1.91
+                }
+            }
+        },
+        "assessments": {
+            "endpoint": "GET /api/courses/{course_id}/students/{user_id}/assessments/",
+            "sample_response": {
+                "success": true,
+                "user_id": 123,
+                "course_id": "course-v1:DHQG-HCM+FM101+2025_S2",
+                "summary": {
+                    "total_assessments": 15,
+                    "completed_assessments": 12,
+                    "completion_rate": 80.0,
+                    "avg_score": 75.5,
+                    "first_attempt_avg": 68.2,
+                    "best_attempt_avg": 82.3,
+                    "avg_attempts_to_pass": 2.1,
+                    "passed_count": 10,
+                    "pass_rate": 83.3,
+                    "time_stats": {
+                        "avg_time_to_complete": 1800,
+                        "fastest_completion": 900,
+                        "slowest_completion": 3600
+                    }
+                },
+                "assessments": [
+                    {
+                        "assessment_id": "block-v1:exam_midterm",
+                        "assessment_name": "Midterm Exam",
+                        "attempts": 3,
+                        "first_score": 60.0,
+                        "best_score": 85.0,
+                        "last_score": 85.0,
+                        "passed": true,
+                        "time_spent": 2400,
+                        "submitted_at": "2024-09-15T14:30:00Z"
+                    }
+                ]
+            }
+        },
+        "progress_weekly": {
+            "endpoint": "GET /api/courses/{course_id}/students/{user_id}/progress-weekly/",
+            "sample_response": {
+                "success": true,
+                "user_id": 123,
+                "course_id": "course-v1:DHQG-HCM+FM101+2025_S2",
+                "current_progress": {
+                    "completion_percentage": 65.5,
+                    "blocks_completed": 45,
+                    "blocks_total": 68,
+                    "current_chapter": 8
+                },
+                "weekly_progress": [
+                    {
+                        "week_number": 1,
+                        "week_start": "2024-09-02",
+                        "completion_percentage": 8.5,
+                        "blocks_completed": 6,
+                        "velocity": 6.0,
+                        "is_on_track": true
+                    },
+                    {
+                        "week_number": 2,
+                        "week_start": "2024-09-09",
+                        "completion_percentage": 18.2,
+                        "blocks_completed": 12,
+                        "velocity": 6.0,
+                        "is_on_track": true
+                    },
+                    {
+                        "week_number": 10,
+                        "week_start": "2024-11-04",
+                        "completion_percentage": 65.5,
+                        "blocks_completed": 45,
+                        "velocity": 4.2,
+                        "is_on_track": false
+                    }
+                ],
+                "velocity_stats": {
+                    "avg_velocity": 5.6,
+                    "current_velocity": 4.2,
+                    "velocity_trend": "declining",
+                    "weeks_to_complete": 4.1
+                }
+            }
+        }
+    },
+    "ml_feature_mapping": {
+        "high_priority_features": [
+            {
+                "api_field": "problem_improvement_rate",
+                "ml_feature": "learning_trajectory",
+                "importance": "HIGH",
+                "why": "Positive = learning, Negative = struggling"
+            },
+            {
+                "api_field": "activity_consistency",
+                "ml_feature": "study_habit_quality",
+                "importance": "HIGH",
+                "why": "Low consistency = irregular study = dropout risk"
+            },
+            {
+                "api_field": "velocity_trend",
+                "ml_feature": "momentum_indicator",
+                "importance": "HIGH",
+                "why": "Declining = early warning sign"
+            },
+            {
+                "api_field": "avg_attempts_to_pass",
+                "ml_feature": "difficulty_indicator",
+                "importance": "MEDIUM",
+                "why": ">3 attempts = struggling with material"
+            },
+            {
+                "api_field": "late_night_ratio",
+                "ml_feature": "stress_indicator",
+                "importance": "MEDIUM",
+                "why": "High ratio = cramming, poor time management"
+            }
+        ]
+    },
+    "error_responses": {
+        "user_not_found": {
+            "success": false,
+            "error": "User not enrolled in course",
+            "code": "USER_NOT_ENROLLED"
+        },
+        "no_activity": {
+            "success": true,
+            "user_id": 999,
+            "summary": {
+                "problem_attempts": 0,
+                "activity_consistency": 0,
+                "note": "No activity recorded for this user"
+            }
+        }
+    }
+}
