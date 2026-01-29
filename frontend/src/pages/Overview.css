@@ -1,0 +1,29 @@
+/* Overview page */
+.overview .section {
+  margin-bottom: 28px;
+}
+
+.overview-chart {
+  max-width: 520px;
+}
+
+@media (max-width: 1200px) {
+  .overview-chart {
+    max-width: 100%;
+  }
+}
+
+.statistics-section {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+

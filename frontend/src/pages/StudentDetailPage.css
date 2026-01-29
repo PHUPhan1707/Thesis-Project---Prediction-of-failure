@@ -1,0 +1,553 @@
+/* Student Detail Page Styles */
+.student-detail-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f3f0 0%, #ebe8e4 50%, #f0ede8 100%);
+    padding: 24px 32px;
+}
+
+/* Loading & Error States */
+.loading-container,
+.error-container,
+.no-course-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: 16px;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(99, 102, 241, 0.2);
+    border-top-color: #6366f1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.error-container .error-icon,
+.no-course-message .icon {
+    font-size: 3rem;
+}
+
+.error-container h3,
+.no-course-message h3 {
+    font-size: 1.4rem;
+    color: #3a3a3a;
+    margin: 0;
+}
+
+.error-container p,
+.no-course-message p {
+    color: #7a7a7a;
+    margin: 0;
+}
+
+/* Header */
+.detail-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 32px;
+    padding: 24px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 250, 248, 0.95) 100%);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.back-btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #4a4a4a;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    transform: translateX(-4px);
+}
+
+.header-student-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+.header-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.avatar-red {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.avatar-yellow {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.avatar-green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.header-text {
+    flex: 1;
+}
+
+.header-text h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 4px;
+}
+
+.header-email {
+    font-size: 0.95rem;
+    color: #6a6a6a;
+}
+
+.header-risk-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 16px;
+    font-weight: 600;
+}
+
+.badge-red {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #dc2626;
+}
+
+.badge-yellow {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #d97706;
+}
+
+.badge-green {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #059669;
+}
+
+.risk-score {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* Main Content Grid */
+.detail-main {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 24px;
+    align-items: start;
+}
+
+/* Section Styling */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.section-icon {
+    font-size: 1.3rem;
+}
+
+.section-header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin: 0;
+}
+
+.count-badge {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+/* Overview Section */
+.overview-section {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 250, 248, 0.95) 100%);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.metric-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #f3f4f6 100%);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.metric-card.highlight {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.metric-card .metric-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    color: #5a5a5a;
+    font-weight: 500;
+}
+
+.metric-card .metric-icon {
+    font-size: 1.1rem;
+}
+
+.metric-card .metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin-bottom: 8px;
+}
+
+.value-red {
+    color: #dc2626;
+}
+
+.value-yellow {
+    color: #d97706;
+}
+
+.value-green {
+    color: #059669;
+}
+
+.metric-bar {
+    height: 8px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.fill-red {
+    background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+}
+
+.fill-yellow {
+    background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+}
+
+.fill-green {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+}
+
+.fill-blue {
+    background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.fill-purple {
+    background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.metric-note {
+    font-size: 0.85rem;
+    color: #8a8a8a;
+}
+
+/* Additional Info */
+.additional-info {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 20px;
+}
+
+.additional-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #4a4a4a;
+    margin: 0 0 16px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 12px;
+}
+
+.info-label {
+    font-size: 0.85rem;
+    color: #7a7a7a;
+}
+
+.info-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #3a3a3a;
+}
+
+/* Right Column */
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Suggestions Section */
+.suggestions-section {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 250, 248, 0.95) 100%);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.suggestions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.suggestion-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #f3f4f6 100%);
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.suggestion-card.priority-high {
+    border-left-color: #ef4444;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.suggestion-card.priority-medium {
+    border-left-color: #f59e0b;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.suggestion-card.priority-low {
+    border-left-color: #10b981;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.suggestion-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.suggestion-content {
+    flex: 1;
+}
+
+.suggestion-content h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2a2a2a;
+    margin: 0 0 4px;
+}
+
+.suggestion-content p {
+    font-size: 0.85rem;
+    color: #6a6a6a;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.priority-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+}
+
+.priority-tag.priority-high {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.priority-tag.priority-medium {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.priority-tag.priority-low {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.no-suggestions {
+    text-align: center;
+    padding: 32px 16px;
+    color: #7a7a7a;
+}
+
+.no-suggestions .icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Actions Section */
+.actions-section {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 250, 248, 0.95) 100%);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn .btn-icon {
+    font-size: 1.3rem;
+}
+
+.email-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+}
+
+.phone-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.message-btn {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .detail-main {
+        grid-template-columns: 1fr;
+    }
+
+    .right-column {
+        flex-direction: row;
+    }
+
+    .suggestions-section,
+    .actions-section {
+        flex: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .student-detail-page {
+        padding: 16px;
+    }
+
+    .detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .header-student-info {
+        flex-wrap: wrap;
+    }
+
+    .header-risk-badge {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .overview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .right-column {
+        flex-direction: column;
+    }
+
+    .action-buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        flex: 1;
+        min-width: calc(50% - 6px);
+    }
+}

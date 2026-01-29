@@ -166,7 +166,7 @@ class DropoutPredictor:
             # Update raw_data table với predictions
             update_query = """
             UPDATE raw_data
-            SET fail_risk_score = %s, dropout_risk_score = %s
+            SET fail_risk_score = %s
             WHERE user_id = %s AND course_id = %s
             """
             
@@ -174,7 +174,6 @@ class DropoutPredictor:
             for _, row in predictions_df.iterrows():
                 values = (
                     row['fail_risk_score'],
-                    row['fail_risk_score'],  # Use same score for dropout_risk for now
                     row['user_id'],
                     row['course_id']
                 )

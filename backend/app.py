@@ -1,423 +1,461 @@
 """
-Teacher Dashboard Backend API
-Flask REST API để cung cấp dữ liệu cho dashboard giảng viên
+Backend API cho Teacher Dashboard - Dropout Prediction System
+Tích hợp với MySQL database và Model V4
 """
-import sys
 import logging
-from pathlib import Path
-from datetime import datetime
-from typing import Dict, List, Optional
+import os
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-import mysql.connector
-from mysql.connector import Error
-import pandas as pd
 
-# Add parent directory to path
-sys.path.append(str(Path(__file__).parent.parent))
+# Support running both:
+# - python -m backend.app   (recommended)
+# - python backend/app.py   (also works)
+if __package__ in (None, ""):
+    import sys
+    from pathlib import Path
 
-# Setup logging
+    sys.path.append(str(Path(__file__).resolve().parents[1]))
+    from backend.db import execute, fetch_all, get_db_config  # type: ignore
+    from backend.model_v4_service import ModelV4Service  # type: ignore
+else:
+    from .db import execute, fetch_all, get_db_config
+    from .model_v4_service import ModelV4Service
+
+
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
-# Database configuration
-DB_CONFIG = {
-    "host": "localhost",
-    "port": 4000,
-    "database": "dropout_prediction_db",
-    "user": "dropout_user",
-    "password": "dropout_pass_123"
-}
 
-# Initialize Flask app
-app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend
-
-
-# ============================================================
-# Database Helper Functions
-# ============================================================
-
-def get_db_connection():
-    """Tạo kết nối database"""
-    try:
-        connection = mysql.connector.connect(**DB_CONFIG)
-        return connection
-    except Error as e:
-        logger.error(f"Error connecting to database: {e}")
-        return None
-
-
-def execute_query(query: str, params: tuple = None) -> Optional[List[Dict]]:
-    """Execute query và trả về results as list of dicts"""
-    connection = get_db_connection()
-    if not connection:
-        return None
-    
-    try:
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute(query, params or ())
-        results = cursor.fetchall()
-        return results
-    except Error as e:
-        logger.error(f"Error executing query: {e}")
-        return None
-    finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
-
-
-# ============================================================
-# API Endpoints
-# ============================================================
-
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    """Health check endpoint"""
-    return jsonify({
-        "status": "ok",
-        "timestamp": datetime.now().isoformat(),
-        "service": "Teacher Dashboard API"
-    })
-
-
-@app.route('/api/courses', methods=['GET'])
-def get_courses():
-    """Lấy danh sách courses có trong database"""
-    query = """
-    SELECT DISTINCT course_id, COUNT(*) as student_count
-    FROM raw_data
-    GROUP BY course_id
-    ORDER BY course_id
-    """
-    
-    results = execute_query(query)
-    
-    if results is None:
-        return jsonify({"error": "Database connection failed"}), 500
-    
-    return jsonify({
-        "courses": results,
-        "total": len(results)
-    })
-
-
-@app.route('/api/students/<course_id>', methods=['GET'])
-def get_students(course_id: str):
-    """
-    Lấy danh sách học viên trong course với risk scores
-    Query params:
-        - risk_level: HIGH, MEDIUM, LOW (optional)
-        - sort_by: risk_score, name, grade (default: risk_score)
-        - order: desc, asc (default: desc)
-    """
-    risk_level = request.args.get('risk_level', None)
-    sort_by = request.args.get('sort_by', 'risk_score')
-    order = request.args.get('order', 'desc')
-    
-    # Build base query
-    query = """
-    SELECT 
-        r.user_id,
-        e.email,
-        e.full_name,
-        r.fail_risk_score,
-        r.mooc_grade_percentage,
-        r.mooc_completion_rate,
-        r.days_since_last_activity,
-        r.last_activity,
-        r.video_completion_rate,
-        r.quiz_avg_score,
-        r.discussion_total_interactions,
-        r.h5p_completion_rate
-    FROM raw_data r
-    LEFT JOIN enrollments e ON r.user_id = e.user_id AND r.course_id = e.course_id
-    WHERE r.course_id = %s
-    """
-    
-    params = [course_id]
-    
-    # Add risk level filter if provided
-    if risk_level:
-        if risk_level == 'HIGH':
-            query += " AND r.fail_risk_score >= 70"
-        elif risk_level == 'MEDIUM':
-            query += " AND r.fail_risk_score >= 40 AND r.fail_risk_score < 70"
-        elif risk_level == 'LOW':
-            query += " AND r.fail_risk_score < 40"
-    
-    # Add sorting
-    sort_column_map = {
-        'risk_score': 'r.fail_risk_score',
-        'name': 'e.full_name',
-        'grade': 'r.mooc_grade_percentage',
-        'last_activity': 'r.last_activity'
-    }
-    
-    sort_column = sort_column_map.get(sort_by, 'r.fail_risk_score')
-    query += f" ORDER BY {sort_column} {order.upper()}"
-    
-    results = execute_query(query, tuple(params))
-    
-    if results is None:
-        return jsonify({"error": "Database connection failed"}), 500
-    
-    # Add risk_level classification
-    for student in results:
-        risk_score = student.get('fail_risk_score', 0)
-        if risk_score >= 70:
-            student['risk_level'] = 'HIGH'
-        elif risk_score >= 40:
-            student['risk_level'] = 'MEDIUM'
-        else:
-            student['risk_level'] = 'LOW'
-        
-        # Format datetime
-        if student.get('last_activity'):
-            student['last_activity'] = student['last_activity'].isoformat() if hasattr(student['last_activity'], 'isoformat') else str(student['last_activity'])
-    
-    return jsonify({
-        "students": results,
-        "total": len(results),
-        "course_id": course_id
-    })
-
-
-@app.route('/api/student/<int:user_id>/<course_id>', methods=['GET'])
-def get_student_detail(user_id: int, course_id: str):
-    """Lấy chi tiết thông tin một học viên"""
-    query = """
-    SELECT 
-        r.*,
-        e.email,
-        e.full_name,
-        e.username,
-        e.mssv,
-        e.class_code,
-        e.department,
-        e.faculty,
-        e.enrollment_id,
-        e.mode,
-        e.is_active,
-        e.created as enrollment_date
-    FROM raw_data r
-    LEFT JOIN enrollments e ON r.user_id = e.user_id AND r.course_id = e.course_id
-    WHERE r.user_id = %s AND r.course_id = %s
-    """
-    
-    results = execute_query(query, (user_id, course_id))
-    
-    if results is None:
-        return jsonify({"error": "Database connection failed"}), 500
-    
-    if not results:
-        return jsonify({"error": "Student not found"}), 404
-    
-    student = results[0]
-    
-    # Add risk_level classification
-    risk_score = student.get('fail_risk_score', 0)
+def classify_risk_level(risk_score: float) -> str:
+    """Phân loại mức độ rủi ro dựa trên điểm risk score"""
     if risk_score >= 70:
-        student['risk_level'] = 'HIGH'
-    elif risk_score >= 40:
-        student['risk_level'] = 'MEDIUM'
-    else:
-        student['risk_level'] = 'LOW'
-    
-    # Format datetime fields
-    for field in ['last_activity', 'enrollment_date', 'extracted_at']:
-        if student.get(field) and hasattr(student[field], 'isoformat'):
-            student[field] = student[field].isoformat()
-    
-    # Generate intervention suggestions
-    suggestions = generate_suggestions(student)
-    student['suggestions'] = suggestions
-    
-    return jsonify(student)
+        return "HIGH"
+    if risk_score >= 40:
+        return "MEDIUM"
+    return "LOW"
 
 
-@app.route('/api/statistics/<course_id>', methods=['GET'])
-def get_course_statistics(course_id: str):
-    """Lấy thống kê tổng quan cho course"""
-    query = """
-    SELECT 
-        COUNT(*) as total_students,
-        AVG(fail_risk_score) as avg_risk_score,
-        AVG(mooc_grade_percentage) as avg_grade,
-        AVG(mooc_completion_rate) as avg_completion_rate,
-        SUM(CASE WHEN fail_risk_score >= 70 THEN 1 ELSE 0 END) as high_risk_count,
-        SUM(CASE WHEN fail_risk_score >= 40 AND fail_risk_score < 70 THEN 1 ELSE 0 END) as medium_risk_count,
-        SUM(CASE WHEN fail_risk_score < 40 THEN 1 ELSE 0 END) as low_risk_count,
-        SUM(CASE WHEN days_since_last_activity > 7 THEN 1 ELSE 0 END) as inactive_students,
-        SUM(CASE WHEN mooc_grade_percentage < 40 THEN 1 ELSE 0 END) as failing_students
-    FROM raw_data
-    WHERE course_id = %s
+def generate_suggestions(student: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
-    
-    results = execute_query(query, (course_id,))
-    
-    if results is None:
-        return jsonify({"error": "Database connection failed"}), 500
-    
-    if not results:
-        return jsonify({"error": "Course not found"}), 404
-    
-    stats = results[0]
-    
-    # Calculate percentages
-    total = stats['total_students'] or 1
-    stats['high_risk_percentage'] = (stats['high_risk_count'] / total) * 100
-    stats['medium_risk_percentage'] = (stats['medium_risk_count'] / total) * 100
-    stats['low_risk_percentage'] = (stats['low_risk_count'] / total) * 100
-    
-    return jsonify({
-        "course_id": course_id,
-        "statistics": stats
-    })
+    Tạo gợi ý can thiệp dựa trên các chỉ số của sinh viên
+    """
+    suggestions: List[Dict[str, Any]] = []
 
+    days_inactive = student.get("days_since_last_activity") or 0
+    grade = student.get("mooc_grade_percentage") or 0
+    completion = student.get("mooc_completion_rate") or 0
+    video_completion = student.get("video_completion_rate") or 0
+    quiz_avg = student.get("quiz_avg_score") or 0
+    discussion = student.get("discussion_total_interactions") or 0
 
-@app.route('/api/interventions/<int:user_id>/<course_id>', methods=['POST'])
-def record_intervention(user_id: int, course_id: str):
-    """Ghi nhận hành động can thiệp (for future implementation)"""
-    data = request.get_json()
-    action = data.get('action', '')
-    notes = data.get('notes', '')
-    
-    # TODO: Store intervention in database
-    # For now, just return success
-    
-    logger.info(f"Intervention recorded for user {user_id} in course {course_id}: {action}")
-    
-    return jsonify({
-        "success": True,
-        "message": "Intervention recorded successfully",
-        "user_id": user_id,
-        "course_id": course_id,
-        "action": action
-    })
-
-
-# ============================================================
-# Helper Functions
-# ============================================================
-
-def generate_suggestions(student_data: Dict) -> List[Dict]:
-    """Tạo gợi ý can thiệp dựa trên student data"""
-    suggestions = []
-    
-    # Check inactivity
-    days_inactive = student_data.get('days_since_last_activity', 0)
+    # Can thiệp khẩn cấp cho inactive
     if days_inactive > 14:
-        suggestions.append({
-            "icon": "📞",
-            "title": "Liên hệ khẩn cấp",
-            "description": f"Sinh viên không hoạt động {days_inactive} ngày. Liên hệ trực tiếp qua điện thoại hoặc tin nhắn.",
-            "priority": "high"
-        })
+        suggestions.append(
+            {
+                "icon": "📞",
+                "title": "Liên hệ khẩn cấp",
+                "description": f"Sinh viên không hoạt động {days_inactive} ngày, cần liên hệ ngay để tìm hiểu khó khăn.",
+                "priority": "high",
+            }
+        )
     elif days_inactive > 7:
-        suggestions.append({
-            "icon": "📧",
-            "title": "Gửi email nhắc nhở",
-            "description": f"Sinh viên không hoạt động {days_inactive} ngày. Gửi email nhắc nhở quay lại học.",
-            "priority": "medium"
-        })
-    
-    # Check grade
-    grade = student_data.get('mooc_grade_percentage', 100)
+        suggestions.append(
+            {
+                "icon": "📧",
+                "title": "Gửi email nhắc nhở",
+                "description": f"Sinh viên đã không hoạt động {days_inactive} ngày, nên gửi email nhắc nhở quay lại học.",
+                "priority": "medium",
+            }
+        )
+
+    # Hỗ trợ học thuật cho điểm thấp
     if grade < 40:
-        suggestions.append({
-            "icon": "👨‍🏫",
-            "title": "Tư vấn học tập 1-1",
-            "description": f"Điểm số thấp ({grade:.1f}%). Tổ chức buổi ôn tập hoặc tư vấn cá nhân.",
-            "priority": "high"
-        })
-        suggestions.append({
-            "icon": "📚",
-            "title": "Tài liệu bổ sung",
-            "description": "Cung cấp tài liệu học tập bổ sung và bài tập luyện tập.",
-            "priority": "medium"
-        })
-    
-    # Check completion rate
-    completion = student_data.get('mooc_completion_rate', 100)
+        suggestions.append(
+            {
+                "icon": "📝",
+                "title": "Hỗ trợ học thuật",
+                "description": "Điểm tổng kết hiện tại thấp, nên đề xuất buổi tư vấn 1-1 hoặc tài liệu ôn tập thêm.",
+                "priority": "high",
+            }
+        )
+
+    # Nhắc nhở tiến độ
     if completion < 30:
-        suggestions.append({
-            "icon": "⏰",
-            "title": "Nhắc nhở lộ trình",
-            "description": f"Tiến độ hoàn thành thấp ({completion:.1f}%). Nhắc nhở về deadline và lộ trình học tập.",
-            "priority": "medium"
-        })
-    
-    # Check discussion participation
-    interactions = student_data.get('discussion_total_interactions', 1)
-    if interactions == 0:
-        suggestions.append({
-            "icon": "💬",
-            "title": "Khuyến khích thảo luận",
-            "description": "Sinh viên chưa tham gia thảo luận. Khuyến khích tham gia forum và ghép nhóm học tập.",
-            "priority": "low"
-        })
-    
-    # Check video completion
-    video_completion = student_data.get('video_completion_rate', 100)
+        suggestions.append(
+            {
+                "icon": "⏰",
+                "title": "Nhắc nhở tiến độ",
+                "description": "Tiến độ hoàn thành khóa học thấp, cần nhắc sinh viên về deadline và lộ trình học.",
+                "priority": "medium",
+            }
+        )
+
+    # Khuyến khích tham gia thảo luận
+    if discussion == 0:
+        suggestions.append(
+            {
+                "icon": "💬",
+                "title": "Khuyến khích tham gia thảo luận",
+                "description": "Sinh viên chưa có tương tác trên diễn đàn, nên khuyến khích đặt câu hỏi hoặc thảo luận.",
+                "priority": "low",
+            }
+        )
+
+    # Kiểm tra việc xem video
     if video_completion < 30:
-        suggestions.append({
-            "icon": "🎥",
-            "title": "Kiểm tra video",
-            "description": f"Tỷ lệ xem video thấp ({video_completion:.1f}%). Kiểm tra vấn đề kỹ thuật hoặc cung cấp transcript.",
-            "priority": "medium"
-        })
-    
-    # Check quiz performance
-    quiz_score = student_data.get('quiz_avg_score', 100)
-    if quiz_score < 50:
-        suggestions.append({
-            "icon": "✍️",
-            "title": "Hỗ trợ quiz",
-            "description": f"Điểm quiz thấp ({quiz_score:.1f}%). Tổ chức buổi giải đáp thắc mắc.",
-            "priority": "medium"
-        })
-    
-    # General high risk
-    risk_score = student_data.get('fail_risk_score', 0)
-    if risk_score >= 70:
-        suggestions.insert(0, {
-            "icon": "🚨",
-            "title": "Can thiệp ngay",
-            "description": f"Nguy cơ rất cao ({risk_score:.1f}%). Ưu tiên can thiệp và lập kế hoạch học tập cá nhân hóa.",
-            "priority": "high"
-        })
-    
-    # Default if no issues
+        suggestions.append(
+            {
+                "icon": "🎥",
+                "title": "Kiểm tra việc xem video",
+                "description": "Tiến độ video rất thấp, cần kiểm tra vấn đề kỹ thuật hoặc cung cấp transcript/tài liệu thay thế.",
+                "priority": "medium",
+            }
+        )
+
+    # Củng cố kiến thức quiz
+    if quiz_avg < 50:
+        suggestions.append(
+            {
+                "icon": "📚",
+                "title": "Củng cố kiến thức quiz",
+                "description": "Điểm quiz trung bình thấp, nên cung cấp bài tập luyện thêm hoặc buổi giải đáp thắc mắc.",
+                "priority": "medium",
+            }
+        )
+
+    # Nếu không có vấn đề gì
     if not suggestions:
-        suggestions.append({
-            "icon": "✅",
-            "title": "Học tốt",
-            "description": "Sinh viên đang học tốt. Tiếp tục theo dõi và khuyến khích.",
-            "priority": "low"
-        })
-    
+        suggestions.append(
+            {
+                "icon": "✅",
+                "title": "Tiếp tục theo dõi",
+                "description": "Sinh viên đang học ổn, chỉ cần tiếp tục theo dõi định kỳ.",
+                "priority": "low",
+            }
+        )
+
     return suggestions
 
 
-# ============================================================
-# Main
-# ============================================================
+def create_app() -> Flask:
+    """Factory function để tạo Flask app"""
+    app = Flask(__name__)
+    CORS(app)
 
-if __name__ == '__main__':
-    logger.info("Starting Teacher Dashboard API...")
-    logger.info(f"Database: {DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}")
-    
-    # Test database connection
-    conn = get_db_connection()
-    if conn:
-        logger.info("✓ Database connection successful")
-        conn.close()
-    else:
-        logger.error("✗ Database connection failed")
-    
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    logger.info("Using DB config: %s", get_db_config())
+
+    # Lazy singleton cho model service (load khi cần)
+    service: Optional[ModelV4Service] = None
+
+    def get_service() -> ModelV4Service:
+        nonlocal service
+        if service is None:
+            service = ModelV4Service(
+                model_path=os.getenv("MODEL_V4_PATH"),
+                feature_fallback_csv=os.getenv("MODEL_V4_FEATURES_CSV"),
+            )
+        return service
+
+    # ------------------------------------------------------------------
+    # 1. Health Check
+    # ------------------------------------------------------------------
+    @app.get("/api/health")
+    def health():
+        """Kiểm tra trạng thái API"""
+        return jsonify(
+            {
+                "status": "ok",
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "service": "Teacher Dashboard API",
+            }
+        )
+
+    # ------------------------------------------------------------------
+    # 2. Get Courses
+    # ------------------------------------------------------------------
+    @app.get("/api/courses")
+    def get_courses():
+        """Lấy danh sách khóa học và số lượng sinh viên"""
+        try:
+            rows = fetch_all(
+                """
+                SELECT course_id, COUNT(*) AS student_count
+                FROM raw_data
+                GROUP BY course_id
+                ORDER BY course_id
+                """
+            )
+            return jsonify({"courses": rows, "total": len(rows)})
+        except Exception as e:
+            logger.exception("Error loading courses")
+            return jsonify({"error": "Database error"}), 500
+
+    # ------------------------------------------------------------------
+    # 3. Get Students (with filters)
+    # ------------------------------------------------------------------
+    @app.get("/api/students/<path:course_id>")
+    def get_students(course_id: str):
+        """Lấy danh sách sinh viên theo khóa học với filters"""
+        risk_level = request.args.get("risk_level")
+        sort_by = request.args.get("sort_by", "risk_score")
+        order = request.args.get("order", "desc").lower()
+
+        # Map sort parameters to columns
+        sort_map = {
+            "risk_score": "r.fail_risk_score",
+            "name": "full_name",
+            "grade": "r.mooc_grade_percentage",
+            "last_activity": "r.days_since_last_activity",
+        }
+        sort_col = sort_map.get(sort_by, "r.fail_risk_score")
+        sort_dir = "ASC" if order == "asc" else "DESC"
+
+        # Build WHERE clause
+        where = ["r.course_id = %s"]
+        params: List[Any] = [course_id]
+
+        if risk_level == "HIGH":
+            where.append("r.fail_risk_score >= 70")
+        elif risk_level == "MEDIUM":
+            where.append("r.fail_risk_score >= 40 AND r.fail_risk_score < 70")
+        elif risk_level == "LOW":
+            where.append("r.fail_risk_score < 40")
+
+        where_sql = " AND ".join(where)
+
+        try:
+            rows = fetch_all(
+                f"""
+                SELECT
+                    r.user_id,
+                    COALESCE(NULLIF(e.email, ''), g.email) AS email,
+                    COALESCE(NULLIF(e.full_name_vn, ''), NULLIF(e.full_name, ''), NULLIF(g.full_name, '')) AS full_name,
+                    e.username,
+                    e.mssv,
+                    r.fail_risk_score,
+                    r.mooc_grade_percentage,
+                    r.mooc_completion_rate,
+                    r.days_since_last_activity
+                FROM raw_data r
+                LEFT JOIN enrollments e
+                    ON r.user_id = e.user_id AND r.course_id = e.course_id
+                LEFT JOIN mooc_grades g
+                    ON r.user_id = g.user_id AND r.course_id = g.course_id
+                WHERE {where_sql}
+                ORDER BY {sort_col} {sort_dir}
+                """,
+                params,
+            )
+
+            # Add risk_level classification
+            for row in rows:
+                score = float(row.get("fail_risk_score") or 0)
+                row["risk_level"] = classify_risk_level(score)
+
+            return jsonify({"students": rows, "total": len(rows), "course_id": course_id})
+        except Exception:
+            logger.exception("Error loading students for course %s", course_id)
+            return jsonify({"error": "Database error"}), 500
+
+    # ------------------------------------------------------------------
+    # 4. Get Student Detail
+    # ------------------------------------------------------------------
+    @app.get("/api/student/<int:user_id>/<path:course_id>")
+    def get_student_detail(user_id: int, course_id: str):
+        """Lấy thông tin chi tiết của một sinh viên"""
+        try:
+            rows = fetch_all(
+                """
+                SELECT
+                    r.*,
+                    COALESCE(NULLIF(e.email, ''), g.email) AS email,
+                    COALESCE(NULLIF(e.full_name_vn, ''), NULLIF(e.full_name, ''), NULLIF(g.full_name, '')) AS full_name,
+                    e.username,
+                    e.mssv
+                FROM raw_data r
+                LEFT JOIN enrollments e
+                    ON r.user_id = e.user_id AND r.course_id = e.course_id
+                LEFT JOIN mooc_grades g
+                    ON r.user_id = g.user_id AND r.course_id = g.course_id
+                WHERE r.user_id = %s AND r.course_id = %s
+                """,
+                (user_id, course_id),
+            )
+        except Exception:
+            logger.exception("Error loading student detail")
+            return jsonify({"error": "Database error"}), 500
+
+        if not rows:
+            return jsonify({"error": "Student not found"}), 404
+
+        student = rows[0]
+
+        score = float(student.get("fail_risk_score") or 0)
+        student["fail_risk_score"] = score
+        student["risk_level"] = classify_risk_level(score)
+        student["suggestions"] = generate_suggestions(student)
+
+        # Return formatted response
+        response: Dict[str, Any] = {
+            "user_id": int(student["user_id"]),
+            "email": student.get("email"),
+            "full_name": student.get("full_name"),
+            "username": student.get("username"),
+            "mssv": student.get("mssv"),
+            "fail_risk_score": score,
+            "risk_level": student["risk_level"],
+            "mooc_grade_percentage": float(student.get("mooc_grade_percentage") or 0),
+            "mooc_completion_rate": float(student.get("mooc_completion_rate") or 0),
+            "days_since_last_activity": int(student.get("days_since_last_activity") or 0),
+            "video_completion_rate": float(student.get("video_completion_rate") or 0),
+            "quiz_avg_score": float(student.get("quiz_avg_score") or 0),
+            "discussion_threads_count": int(student.get("discussion_threads_count") or 0),
+            "suggestions": student["suggestions"],
+        }
+
+        return jsonify(response)
+
+    # ------------------------------------------------------------------
+    # 5. Get Course Statistics
+    # ------------------------------------------------------------------
+    @app.get("/api/statistics/<path:course_id>")
+    def get_statistics(course_id: str):
+        """Lấy thống kê tổng quan của khóa học"""
+        try:
+            rows = fetch_all(
+                """
+                SELECT
+                    COUNT(*) AS total_students,
+                    AVG(fail_risk_score) AS avg_risk_score,
+                    AVG(mooc_grade_percentage) AS avg_grade,
+                    AVG(mooc_completion_rate) AS avg_completion_rate,
+                    SUM(CASE WHEN fail_risk_score >= 70 THEN 1 ELSE 0 END) AS high_risk_count,
+                    SUM(CASE WHEN fail_risk_score >= 40 AND fail_risk_score < 70 THEN 1 ELSE 0 END) AS medium_risk_count,
+                    SUM(CASE WHEN fail_risk_score < 40 THEN 1 ELSE 0 END) AS low_risk_count
+                FROM raw_data
+                WHERE course_id = %s
+                """,
+                (course_id,),
+            )
+        except Exception:
+            logger.exception("Error loading statistics for course %s", course_id)
+            return jsonify({"error": "Database error"}), 500
+
+        if not rows:
+            return jsonify({"error": "Course not found"}), 404
+
+        stats = rows[0]
+        
+        # Convert None to 0.0 for averages
+        for key in ["avg_risk_score", "avg_grade", "avg_completion_rate"]:
+            if stats.get(key) is None:
+                stats[key] = 0.0
+
+        return jsonify({"course_id": course_id, "statistics": stats})
+
+    # ------------------------------------------------------------------
+    # 6. Record Intervention
+    # ------------------------------------------------------------------
+    def _ensure_interventions_table() -> None:
+        """Đảm bảo bảng interventions tồn tại"""
+        execute(
+            """
+            CREATE TABLE IF NOT EXISTS interventions (
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                course_id VARCHAR(255) NOT NULL,
+                action VARCHAR(255) NOT NULL,
+                notes TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                INDEX idx_user_course (user_id, course_id),
+                INDEX idx_created_at (created_at)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+            """
+        )
+
+    @app.post("/api/interventions/<int:user_id>/<path:course_id>")
+    def record_intervention(user_id: int, course_id: str):
+        """Ghi nhận hành động can thiệp của giảng viên"""
+        data = request.get_json(silent=True) or {}
+        action = (data.get("action") or "").strip()
+        notes = (data.get("notes") or "").strip()
+
+        if not action:
+            return jsonify({"error": "action is required"}), 400
+
+        try:
+            _ensure_interventions_table()
+            execute(
+                """
+                INSERT INTO interventions (user_id, course_id, action, notes)
+                VALUES (%s, %s, %s, %s)
+                """,
+                (user_id, course_id, action, notes),
+            )
+        except Exception:
+            logger.exception("Error recording intervention")
+            return jsonify({"error": "Database error"}), 500
+
+        return jsonify(
+            {
+                "success": True,
+                "message": "Intervention recorded successfully",
+                "user_id": user_id,
+                "course_id": course_id,
+                "action": action,
+            }
+        )
+
+    # ------------------------------------------------------------------
+    # 7. Model V4 Prediction Endpoints (Optional)
+    # ------------------------------------------------------------------
+    @app.get("/api/predict-v4/<path:course_id>")
+    def predict_v4_course(course_id: str):
+        """Dự đoán risk score cho tất cả sinh viên trong khóa học bằng Model V4"""
+        save_db = request.args.get("save_db", "0") in ("1", "true", "True")
+        
+        try:
+            df = get_service().predict_course(course_id, save_db=save_db)
+            return jsonify(
+                {
+                    "success": True,
+                    "model": "fm101_model_v4",
+                    "course_id": course_id,
+                    "total": int(len(df)),
+                    "students": df.to_dict(orient="records"),
+                    "saved_to_db": bool(save_db),
+                }
+            )
+        except Exception:
+            logger.exception("Error predicting with model v4 for course %s", course_id)
+            return jsonify({"error": "Prediction error"}), 500
+
+    @app.get("/api/predict-v4/<int:user_id>/<path:course_id>")
+    def predict_v4_student(user_id: int, course_id: str):
+        """Dự đoán risk score cho một sinh viên cụ thể bằng Model V4"""
+        save_db = request.args.get("save_db", "0") in ("1", "true", "True")
+        
+        try:
+            payload = get_service().predict_student(course_id, user_id, save_db=save_db)
+            if payload is None:
+                return jsonify({"success": False, "error": "Student not found"}), 404
+            return jsonify({"success": True, "saved_to_db": bool(save_db), **payload})
+        except Exception:
+            logger.exception("Error predicting with model v4 for user %s", user_id)
+            return jsonify({"error": "Prediction error"}), 500
+
+    return app
+
+
+# Create app instance
+app = create_app()
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", "5000"))
+    app.run(host="0.0.0.0", port=port, debug=True)

@@ -338,8 +338,7 @@ CREATE TABLE IF NOT EXISTS raw_data (
     -- Target labels (để NULL, sẽ được label thủ công hoặc AI dự đoán)
     is_dropout BOOLEAN DEFAULT NULL, -- Target 1: Sinh viên có bỏ học giữa chừng không? (tự động label từ is_active, days_since_last_activity)
     is_passed BOOLEAN DEFAULT NULL, -- Target 2: Sinh viên có pass môn học không? (cần label thủ công sau khi có kết quả cuối khóa)
-    dropout_risk_score DECIMAL(5,2) DEFAULT NULL, -- Prediction 1: Tỷ lệ rủi ro bỏ học (0-100), được AI dự đoán
-    fail_risk_score DECIMAL(5,2) DEFAULT NULL, -- Prediction 2: Tỷ lệ rủi ro rớt môn (0-100), được AI dự đoán
+    fail_risk_score DECIMAL(5,2) DEFAULT NULL, -- Prediction: Tỷ lệ rủi ro rớt môn (0-100), được AI dự đoán
     
     -- Metadata
     extracted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -357,7 +356,7 @@ CREATE TABLE IF NOT EXISTS raw_data (
     INDEX idx_days_since_last_activity (days_since_last_activity),
     INDEX idx_discussion_total_interactions (discussion_total_interactions),
     INDEX idx_is_passed (is_passed),
-    INDEX idx_dropout_risk_score (dropout_risk_score),
+    INDEX idx_fail_risk_score (fail_risk_score),
     INDEX idx_extraction_batch (extraction_batch_id),
     INDEX idx_extracted_at (extracted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

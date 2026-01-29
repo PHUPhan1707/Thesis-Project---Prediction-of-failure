@@ -88,7 +88,7 @@ class DropoutModelTrainer:
             'id', 'user_id', 'course_id', 'username', 'email', 'full_name',
             
             # Target labels
-            'is_passed', 'is_dropout', 'dropout_risk_score', 'fail_risk_score',
+            'is_passed', 'is_dropout', 'fail_risk_score',
             
             # ⚠️ DATA LEAKAGE COLUMNS - Perfect correlation with target
             'mooc_grade_percentage',  # Final grade - direct leakage!

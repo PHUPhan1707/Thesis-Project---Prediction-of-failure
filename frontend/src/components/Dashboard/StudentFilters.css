@@ -1,0 +1,305 @@
+.student-filters {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(252, 250, 248, 0.98) 100%);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    margin-bottom: 24px;
+}
+
+.filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.filters-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filters-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin: 0;
+}
+
+.title-icon {
+    font-size: 1.4rem;
+}
+
+.student-count-badge {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #e8e4df 0%, #ddd8d2 100%);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #5a5a5a;
+}
+
+.export-btn {
+    padding: 10px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.export-btn:hover:enabled {
+    background: white;
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+}
+
+.export-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Risk Tabs */
+.risk-tabs {
+    display: flex;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.03);
+    padding: 6px;
+    border-radius: 16px;
+}
+
+.risk-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6a6a6a;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.risk-tab:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.risk-tab.active {
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.risk-tab-red.active {
+    color: #dc2626;
+    background: linear-gradient(135deg, #fff5f5 0%, #fee2e2 100%);
+}
+
+.risk-tab-yellow.active {
+    color: #d97706;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.risk-tab-green.active {
+    color: #059669;
+    background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+}
+
+.risk-tab-default.active {
+    color: #3b82f6;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.tab-icon {
+    font-size: 1.1rem;
+}
+
+.tab-label {
+    white-space: nowrap;
+}
+
+/* Filters Controls */
+.filters-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.search-input {
+    padding: 12px 40px 12px 42px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    width: 260px;
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    background: white;
+}
+
+.search-input::placeholder {
+    color: #aaa;
+}
+
+.clear-search {
+    position: absolute;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    transition: all 0.2s ease;
+}
+
+.clear-search:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Sort Controls */
+.sort-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.sort-select {
+    padding: 12px 36px 12px 16px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    transition: all 0.3s ease;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.sort-order-btn {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.sort-order-btn:hover {
+    background: white;
+    border-color: #6366f1;
+}
+
+.sort-order-btn.desc {
+    color: #ef4444;
+}
+
+.sort-order-btn.asc {
+    color: #10b981;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .filters-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .risk-tabs {
+        overflow-x: auto;
+        padding-bottom: 8px;
+    }
+
+    .filters-controls {
+        flex-wrap: wrap;
+    }
+
+    .search-input {
+        width: 100%;
+        flex: 1;
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .student-filters {
+        padding: 16px;
+    }
+
+    .filters-header-actions {
+        gap: 8px;
+    }
+
+    .risk-tab {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    .tab-label {
+        display: none;
+    }
+
+    .tab-icon {
+        font-size: 1.2rem;
+    }
+
+    .search-input {
+        min-width: 160px;
+    }
+}

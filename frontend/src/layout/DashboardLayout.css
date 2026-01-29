@@ -1,0 +1,128 @@
+/* App shell with left sidebar */
+.app-shell {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f3f0 0%, #ebe8e4 50%, #f0ede8 100%);
+  display: flex;
+}
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  padding: 24px 0;
+}
+
+.dashboard-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* Error Banner */
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 16px;
+  margin-bottom: 24px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-icon {
+  font-size: 1.3rem;
+}
+
+.error-message {
+  font-size: 0.95rem;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* Footer */
+.dashboard-footer {
+  padding: 28px 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-footer p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #5a5a5a;
+}
+
+.footer-subtitle {
+  font-size: 0.85rem !important;
+  color: #8a8a8a !important;
+  margin-top: 6px !important;
+}
+
+/* Utility states (shared between pages) */
+.no-course-selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(252, 250, 248, 0.9) 100%);
+  border-radius: 24px;
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+}
+
+.no-course-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+.no-course-selected h3 {
+  font-size: 1.4rem;
+  color: #3a3a3a;
+  margin: 0 0 12px;
+}
+
+.no-course-selected p {
+  font-size: 1rem;
+  color: #7a7a7a;
+  margin: 0;
+  max-width: 460px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app-shell {
+    padding-bottom: 86px; /* space for bottom sidebar */
+  }
+
+  .dashboard-container {
+    padding: 0 16px;
+  }
+
+  .app-content {
+    padding: 18px 0;
+  }
+}
+
+

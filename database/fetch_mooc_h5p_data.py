@@ -1411,7 +1411,6 @@ class MOOCH5PDataFetcher:
             # Else: NULL (không chắc chắn, 7-30 ngày)
             
             # Risk scores: Để NULL, sẽ được AI model predict sau
-            dropout_risk_score = None
             fail_risk_score = None
             
             # OPTION 2: Calculate comparative features
@@ -1464,11 +1463,11 @@ class MOOCH5PDataFetcher:
                 relative_to_course_video_completion, relative_to_course_discussion,
                 performance_percentile, is_below_course_average,
                 is_top_performer, is_bottom_performer,
-                is_dropout, is_passed, dropout_risk_score, fail_risk_score, extraction_batch_id
+                is_dropout, is_passed, fail_risk_score, extraction_batch_id
             ) VALUES (
                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
             )
             ON DUPLICATE KEY UPDATE
                 enrollment_mode = VALUES(enrollment_mode),
@@ -1519,7 +1518,6 @@ class MOOCH5PDataFetcher:
                 is_bottom_performer = VALUES(is_bottom_performer),
                 is_dropout = VALUES(is_dropout),
                 is_passed = VALUES(is_passed),
-                dropout_risk_score = VALUES(dropout_risk_score),
                 fail_risk_score = VALUES(fail_risk_score),
                 extraction_batch_id = VALUES(extraction_batch_id),
                 extracted_at = CURRENT_TIMESTAMP
@@ -1547,7 +1545,7 @@ class MOOCH5PDataFetcher:
                 comparative_features['is_below_course_average'],
                 comparative_features['is_top_performer'],
                 comparative_features['is_bottom_performer'],
-                is_dropout, is_passed, dropout_risk_score, fail_risk_score, batch_id
+                is_dropout, is_passed, fail_risk_score, batch_id
             )
             
             cursor.execute(insert_query, values)

@@ -1,73 +1,37 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* Global styles (Vite entry imports this file) */
 
 :root {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  line-height: 1.6;
-  font-weight: 400;
-
   color-scheme: light;
-  font-synthesis: none;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  line-height: 1.5;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  overflow-x: hidden;
-  background: #f5e6d3;
+  background: #f5f3f0;
+  color: #1f2937;
 }
 
-#root {
-  width: 100%;
-  min-height: 100vh;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
-/* Selection color */
-::selection {
-  background-color: rgba(212, 165, 116, 0.3);
-  color: #3d3d3d;
-}
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(245, 230, 211, 0.5);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #d4a574, #c9a082);
-  border-radius: 10px;
-  border: 2px solid rgba(245, 230, 211, 0.5);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #c9a082, #d4a574);
-}
-
-/* Focus styles for accessibility */
-*:focus-visible {
-  outline: 2px solid #d4a574;
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-/* Smooth transitions */
-a, button, .feature-card, .hero-badge {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}

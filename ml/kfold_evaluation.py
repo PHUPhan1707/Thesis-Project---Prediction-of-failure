@@ -79,7 +79,7 @@ class KFoldModelEvaluator:
         # Define feature columns (same as train_model.py)
         exclude_cols = [
             'id', 'user_id', 'course_id', 'username', 'email', 'full_name',
-            'is_passed', 'is_dropout', 'dropout_risk_score', 'fail_risk_score',
+            'is_passed', 'is_dropout', 'fail_risk_score',
             'mooc_grade_percentage', 'mooc_letter_grade', 'mooc_is_passed',
             'extracted_at', 'extraction_batch_id', 'fetched_at', 'updated_at',
             'created', 'enrollment_id', 'all_attributes',
