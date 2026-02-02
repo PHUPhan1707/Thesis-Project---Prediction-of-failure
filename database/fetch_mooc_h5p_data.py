@@ -241,6 +241,79 @@ class MOOCH5PDataFetcher:
             logger.warning(f"Error fetching course students: {e}")
             return None
     
+    # ==================== COURSE DETAILS (for course dates) ====================
+    
+    def fetch_course_details(self, course_id: str) -> Optional[Dict]:
+        """Fetch course details từ MOOC API để lấy start/end date"""
+        try:
+            encoded_course_id = self.url_encode_course_id(course_id)
+            url = f"{self.mooc_base_url}/course-details/display-name/?course_id={encoded_course_id}"
+            
+            response = self.session.get(url, timeout=30)
+            response.raise_for_status()
+            data = response.json()
+            
+            if data.get('success') and 'data' in data:
+                course_data = data['data']
+                return {
+                    'course_name': course_data.get('display_name'),
+                    'course_start': course_data.get('start'),
+                    'course_end': course_data.get('end')
+                }
+            return None
+        except requests.exceptions.RequestException as e:
+            logger.warning(f"Error fetching course details for {course_id}: {e}")
+            return None
+    
+    def update_enrollments_course_info(self, course_id: str, course_info: Dict) -> bool:
+        """Cập nhật thông tin course_name, course_start, course_end vào enrollments"""
+        if not self.db_connection or not self.db_connection.is_connected():
+            if not self.connect_db():
+                return False
+        
+        try:
+            cursor = self.db_connection.cursor()
+            
+            # Parse datetime
+            course_start = self.parse_datetime(course_info.get('course_start'))
+            course_end = self.parse_datetime(course_info.get('course_end'))
+            course_name = course_info.get('course_name')
+            
+            update_query = """
+            UPDATE enrollments
+            SET course_name = %s,
+                course_start = %s,
+                course_end = %s,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE course_id = %s
+            """
+            
+            cursor.execute(update_query, (course_name, course_start, course_end, course_id))
+            affected_rows = cursor.rowcount
+            
+            self.db_connection.commit()
+            logger.info(f"Updated course info for {affected_rows} enrollments in course {course_id}")
+            logger.info(f"  - Course Name: {course_name}")
+            logger.info(f"  - Course Start: {course_start}")
+            logger.info(f"  - Course End: {course_end}")
+            return True
+            
+        except Error as e:
+            logger.error(f"Error updating enrollments course info: {e}")
+            self.db_connection.rollback()
+            return False
+        finally:
+            cursor.close()
+    
+    def fetch_and_update_course_info(self, course_id: str) -> bool:
+        """Fetch course details và cập nhật vào enrollments"""
+        course_info = self.fetch_course_details(course_id)
+        if course_info:
+            return self.update_enrollments_course_info(course_id, course_info)
+        else:
+            logger.warning(f"Could not fetch course details for {course_id}")
+            return False
+    
     # ==================== H5P SCORES ====================
     
     def save_h5p_scores(self, user_id: int, course_id: str, scores_data: Dict) -> bool:
@@ -1656,6 +1729,14 @@ class MOOCH5PDataFetcher:
         if not user_ids:
             logger.error("No users found in course")
             return {"success": False, "message": "No users found"}
+        
+        # Bước 1.5: Fetch course details (start/end date) và cập nhật vào enrollments
+        logger.info("Step 1.5: Fetching course details (start/end dates)...")
+        course_info_success = self.fetch_and_update_course_info(course_id)
+        if course_info_success:
+            logger.info("Course info updated successfully!")
+        else:
+            logger.warning("Could not update course info - continuing without it")
         
         if max_users:
             user_ids = user_ids[:max_users]

@@ -97,6 +97,44 @@
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
 }
 
+/* Completed student styles */
+.student-card.completed::before {
+    background: linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.avatar-completed {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.completion-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.badge-completed {
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    color: #4f46e5;
+}
+
+.completed-badge-inline {
+    margin-left: 8px;
+    font-size: 0.9rem;
+}
+
+.student-card.completed {
+    background: linear-gradient(135deg, rgba(248, 250, 255, 0.98) 0%, rgba(245, 247, 255, 0.98) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.student-card.completed:hover {
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
 .student-info {
     display: flex;
     flex-direction: column;

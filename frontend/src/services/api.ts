@@ -1,5 +1,6 @@
 import type {
   CoursesResponse,
+  DashboardSummaryResponse,
   InterventionRequest,
   InterventionResponse,
   RiskLevel,
@@ -101,6 +102,18 @@ export async function recordIntervention(
   });
 }
 
+// Get Dashboard Summary (NEW)
+export async function getDashboardSummary(courseId: string): Promise<DashboardSummaryResponse> {
+  const encodedCourseId = encodeURIComponent(courseId);
+  return fetchAPI(`/dashboard-summary/${encodedCourseId}`);
+}
+
+// Get Urgent Students (NEW)
+export async function getUrgentStudents(courseId: string): Promise<StudentsResponse> {
+  const encodedCourseId = encodeURIComponent(courseId);
+  return fetchAPI(`/students/${encodedCourseId}/urgent`);
+}
+
 // Export all API functions
 export const api = {
   checkHealth,
@@ -109,6 +122,9 @@ export const api = {
   getStudentDetail,
   getCourseStatistics,
   recordIntervention,
+  getDashboardSummary,
+  getUrgentStudents,
 };
 
 export default api;
+

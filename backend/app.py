@@ -241,7 +241,8 @@ def create_app() -> Flask:
                     r.fail_risk_score,
                     r.mooc_grade_percentage,
                     r.mooc_completion_rate,
-                    r.days_since_last_activity
+                    r.days_since_last_activity,
+                    r.mooc_is_passed
                 FROM raw_data r
                 LEFT JOIN enrollments e
                     ON r.user_id = e.user_id AND r.course_id = e.course_id
@@ -253,10 +254,20 @@ def create_app() -> Flask:
                 params,
             )
 
-            # Add risk_level classification
+            # Add risk_level classification and completion_status
             for row in rows:
                 score = float(row.get("fail_risk_score") or 0)
                 row["risk_level"] = classify_risk_level(score)
+                
+                # Determine completion_status based on mooc_is_passed
+                # Use truthiness check to handle both bool and int (1/0)
+                mooc_is_passed = row.get("mooc_is_passed")
+                if mooc_is_passed in (True, 1, "1"):
+                    row["completion_status"] = "completed"
+                elif mooc_is_passed in (False, 0, "0"):
+                    row["completion_status"] = "not_passed"
+                else:
+                    row["completion_status"] = "in_progress"
 
             return jsonify({"students": rows, "total": len(rows), "course_id": course_id})
         except Exception:
@@ -335,9 +346,14 @@ def create_app() -> Flask:
                     AVG(fail_risk_score) AS avg_risk_score,
                     AVG(mooc_grade_percentage) AS avg_grade,
                     AVG(mooc_completion_rate) AS avg_completion_rate,
-                    SUM(CASE WHEN fail_risk_score >= 70 THEN 1 ELSE 0 END) AS high_risk_count,
-                    SUM(CASE WHEN fail_risk_score >= 40 AND fail_risk_score < 70 THEN 1 ELSE 0 END) AS medium_risk_count,
-                    SUM(CASE WHEN fail_risk_score < 40 THEN 1 ELSE 0 END) AS low_risk_count
+                    -- Risk counts: CHỈ tính sinh viên CHƯA hoàn thành (mooc_is_passed != 1)
+                    SUM(CASE WHEN fail_risk_score >= 70 AND mooc_is_passed != 1 THEN 1 ELSE 0 END) AS high_risk_count,
+                    SUM(CASE WHEN fail_risk_score >= 40 AND fail_risk_score < 70 AND mooc_is_passed != 1 THEN 1 ELSE 0 END) AS medium_risk_count,
+                    SUM(CASE WHEN fail_risk_score < 40 AND mooc_is_passed != 1 THEN 1 ELSE 0 END) AS low_risk_count,
+                    -- Completion status counts
+                    SUM(CASE WHEN mooc_is_passed = 1 THEN 1 ELSE 0 END) AS completed_count,
+                    SUM(CASE WHEN mooc_is_passed = 0 THEN 1 ELSE 0 END) AS not_passed_count,
+                    SUM(CASE WHEN mooc_is_passed IS NULL THEN 1 ELSE 0 END) AS in_progress_count
                 FROM raw_data
                 WHERE course_id = %s
                 """,
@@ -352,10 +368,14 @@ def create_app() -> Flask:
 
         stats = rows[0]
         
-        # Convert None to 0.0 for averages
+        # Convert Decimal to float for averages
         for key in ["avg_risk_score", "avg_grade", "avg_completion_rate"]:
-            if stats.get(key) is None:
-                stats[key] = 0.0
+            stats[key] = float(stats.get(key) or 0)
+        
+        # Convert Decimal to int for counts
+        for key in ["total_students", "high_risk_count", "medium_risk_count", "low_risk_count",
+                    "completed_count", "not_passed_count", "in_progress_count"]:
+            stats[key] = int(stats.get(key) or 0)
 
         return jsonify({"course_id": course_id, "statistics": stats})
 
@@ -413,7 +433,184 @@ def create_app() -> Flask:
         )
 
     # ------------------------------------------------------------------
-    # 7. Model V4 Prediction Endpoints (Optional)
+    # 7. Dashboard Summary (NEW)
+    # ------------------------------------------------------------------
+    @app.get("/api/dashboard-summary/<path:course_id>")
+    def get_dashboard_summary(course_id: str):
+        """Lấy thông tin tổng hợp dashboard cho giảng viên"""
+        try:
+            # Get today's tasks - HIGH risk students needing intervention
+            today_tasks_rows = fetch_all(
+                """
+                SELECT
+                    r.user_id,
+                    COALESCE(NULLIF(e.full_name_vn, ''), NULLIF(e.full_name, ''), NULLIF(g.full_name, '')) AS full_name,
+                    COALESCE(NULLIF(e.email, ''), g.email) AS email,
+                    r.fail_risk_score,
+                    r.days_since_last_activity,
+                    r.mooc_completion_rate,
+                    r.mooc_grade_percentage
+                FROM raw_data r
+                LEFT JOIN enrollments e ON r.user_id = e.user_id AND r.course_id = e.course_id
+                LEFT JOIN mooc_grades g ON r.user_id = g.user_id AND r.course_id = g.course_id
+                WHERE r.course_id = %s AND r.fail_risk_score >= 70
+                ORDER BY r.fail_risk_score DESC, r.days_since_last_activity DESC
+                LIMIT 10
+                """,
+                (course_id,),
+            )
+
+            # Transform to today_tasks format
+            today_tasks = []
+            for row in today_tasks_rows:
+                score = float(row.get("fail_risk_score") or 0)
+                days_inactive = int(row.get("days_since_last_activity") or 0)
+                
+                # Determine urgency and reason
+                if score >= 85 or days_inactive > 14:
+                    urgency = "critical"
+                    reason = f"Rủi ro rất cao ({score:.0f}%)" if score >= 85 else f"Không hoạt động {days_inactive} ngày"
+                elif score >= 70 or days_inactive > 7:
+                    urgency = "high"
+                    reason = f"Rủi ro cao ({score:.0f}%)" if score >= 70 else f"Không hoạt động {days_inactive} ngày"
+                else:
+                    urgency = "medium"
+                    reason = f"Cần theo dõi (risk: {score:.0f}%)"
+                
+                today_tasks.append({
+                    "user_id": int(row["user_id"]),
+                    "full_name": row.get("full_name") or "Chưa có tên",
+                    "email": row.get("email") or "",
+                    "risk_level": classify_risk_level(score),
+                    "fail_risk_score": score,
+                    "reason": reason,
+                    "urgency": urgency,
+                })
+
+            # Get recent alerts - students with issues in last 7 days
+            recent_alerts_rows = fetch_all(
+                """
+                SELECT
+                    r.user_id,
+                    COALESCE(NULLIF(e.full_name_vn, ''), NULLIF(e.full_name, ''), NULLIF(g.full_name, '')) AS full_name,
+                    r.fail_risk_score,
+                    r.days_since_last_activity,
+                    r.mooc_completion_rate
+                FROM raw_data r
+                LEFT JOIN enrollments e ON r.user_id = e.user_id AND r.course_id = e.course_id
+                LEFT JOIN mooc_grades g ON r.user_id = g.user_id AND r.course_id = g.course_id
+                WHERE r.course_id = %s
+                    AND (r.fail_risk_score >= 60 OR r.days_since_last_activity > 5)
+                ORDER BY r.fail_risk_score DESC
+                LIMIT 8
+                """,
+                (course_id,),
+            )
+
+            # Transform to alerts format
+            recent_alerts = []
+            for idx, row in enumerate(recent_alerts_rows):
+                score = float(row.get("fail_risk_score") or 0)
+                days_inactive = int(row.get("days_since_last_activity") or 0)
+                completion = float(row.get("mooc_completion_rate") or 0)
+                
+                # Determine alert type
+                if days_inactive > 7:
+                    alert_type = "inactive"
+                    message = f"Không hoạt động {days_inactive} ngày"
+                elif score >= 70:
+                    alert_type = "risk_increase"
+                    message = f"Nguy cơ cao: {score:.0f}%"
+                elif completion < 20:
+                    alert_type = "low_progress"
+                    message = f"Tiến độ thấp: {completion:.0f}%"
+                else:
+                    alert_type = "risk_increase"
+                    message = f"Cần theo dõi: {score:.0f}%"
+                
+                recent_alerts.append({
+                    "id": idx + 1,
+                    "user_id": int(row["user_id"]),
+                    "full_name": row.get("full_name") or "Chưa có tên",
+                    "alert_type": alert_type,
+                    "message": message,
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                })
+
+            # Get quick stats
+            stats_rows = fetch_all(
+                """
+                SELECT
+                    SUM(CASE WHEN fail_risk_score >= 70 THEN 1 ELSE 0 END) AS new_high_risk_count,
+                    SUM(CASE WHEN days_since_last_activity > 7 THEN 1 ELSE 0 END) AS inactive_students_count
+                FROM raw_data
+                WHERE course_id = %s
+                """,
+                (course_id,),
+            )
+            
+            quick_stats = {
+                "new_high_risk_count": int(stats_rows[0].get("new_high_risk_count") or 0) if stats_rows else 0,
+                "inactive_students_count": int(stats_rows[0].get("inactive_students_count") or 0) if stats_rows else 0,
+                "intervention_pending": len(today_tasks),
+            }
+
+            return jsonify({
+                "course_id": course_id,
+                "today_tasks": today_tasks,
+                "recent_alerts": recent_alerts,
+                "quick_stats": quick_stats,
+            })
+        except Exception:
+            logger.exception("Error loading dashboard summary for course %s", course_id)
+            return jsonify({"error": "Database error"}), 500
+
+    # ------------------------------------------------------------------
+    # 8. Urgent Students (NEW)
+    # ------------------------------------------------------------------
+    @app.get("/api/students/<path:course_id>/urgent")
+    def get_urgent_students(course_id: str):
+        """Lấy danh sách sinh viên cần can thiệp khẩn cấp"""
+        try:
+            rows = fetch_all(
+                """
+                SELECT
+                    r.user_id,
+                    COALESCE(NULLIF(e.email, ''), g.email) AS email,
+                    COALESCE(NULLIF(e.full_name_vn, ''), NULLIF(e.full_name, ''), NULLIF(g.full_name, '')) AS full_name,
+                    e.username,
+                    e.mssv,
+                    r.fail_risk_score,
+                    r.mooc_grade_percentage,
+                    r.mooc_completion_rate,
+                    r.days_since_last_activity
+                FROM raw_data r
+                LEFT JOIN enrollments e ON r.user_id = e.user_id AND r.course_id = e.course_id
+                LEFT JOIN mooc_grades g ON r.user_id = g.user_id AND r.course_id = g.course_id
+                WHERE r.course_id = %s
+                    AND (r.fail_risk_score >= 70 OR r.days_since_last_activity > 7)
+                ORDER BY r.fail_risk_score DESC, r.days_since_last_activity DESC
+                LIMIT 20
+                """,
+                (course_id,),
+            )
+
+            # Add risk_level classification
+            for row in rows:
+                score = float(row.get("fail_risk_score") or 0)
+                row["risk_level"] = classify_risk_level(score)
+
+            return jsonify({
+                "students": rows,
+                "total": len(rows),
+                "course_id": course_id,
+            })
+        except Exception:
+            logger.exception("Error loading urgent students for course %s", course_id)
+            return jsonify({"error": "Database error"}), 500
+
+    # ------------------------------------------------------------------
+    # 9. Model V4 Prediction Endpoints (Optional)
     # ------------------------------------------------------------------
     @app.get("/api/predict-v4/<path:course_id>")
     def predict_v4_course(course_id: str):

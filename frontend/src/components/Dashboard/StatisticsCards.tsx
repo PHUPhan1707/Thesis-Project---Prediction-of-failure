@@ -32,6 +32,17 @@ export function StatisticsCards() {
             trend: null,
         },
         {
+            id: 'completed',
+            icon: '🎓',
+            label: 'Đã hoàn thành',
+            value: statistics.completed_count || 0,
+            percentage: statistics.total_students > 0
+                ? (((statistics.completed_count || 0) / statistics.total_students) * 100).toFixed(1)
+                : '0',
+            color: 'purple',
+            trend: 'success',
+        },
+        {
             id: 'high-risk',
             icon: '🚨',
             label: 'Nguy cơ cao',

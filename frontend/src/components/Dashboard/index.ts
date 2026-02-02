@@ -6,3 +6,7 @@ export { RiskDistributionChart } from './RiskChart';
 export { StudentFilters } from './StudentFilters';
 export { StudentList } from './StudentList';
 export { StudentDetailModal } from './StudentDetailModal';
+export { TodaysTasks } from './TodaysTasks';
+export { RecentAlerts } from './RecentAlerts';
+export { QuickActions } from './QuickActions';
+

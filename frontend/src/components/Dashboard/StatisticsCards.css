@@ -1,6 +1,6 @@
 .statistics-cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 24px;
     margin-bottom: 32px;
 }
@@ -157,6 +157,25 @@
 
 .stat-card-green .stat-card-glow {
     background: linear-gradient(90deg, #10b981, #34d399, #10b981);
+}
+
+/* Purple - Completed */
+.stat-card-purple {
+    border-top: 4px solid #8b5cf6;
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+}
+
+.stat-card-purple .stat-value {
+    color: #7c3aed;
+}
+
+.stat-card-purple .stat-card-glow {
+    background: linear-gradient(90deg, #8b5cf6, #a78bfa, #8b5cf6);
+}
+
+.trend-success {
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    color: #7c3aed;
 }
 
 /* Skeleton loading */

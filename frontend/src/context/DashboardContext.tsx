@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import type {
     Course,
     CourseStatistics,
+    DashboardSummary,
     RiskLevel,
     Student,
     StudentDetail,
@@ -17,6 +18,7 @@ interface DashboardContextType {
     students: Student[];
     selectedStudent: StudentDetail | null;
     statistics: CourseStatistics | null;
+    dashboardSummary: DashboardSummary | null;
     filters: StudentFilters;
 
     // Loading states
@@ -24,6 +26,7 @@ interface DashboardContextType {
     isLoadingStudents: boolean;
     isLoadingStudentDetail: boolean;
     isLoadingStatistics: boolean;
+    isLoadingDashboardSummary: boolean;
 
     // Error states
     error: string | null;
@@ -34,6 +37,7 @@ interface DashboardContextType {
     setFilters: (filters: Partial<StudentFilters>) => void;
     refreshData: () => Promise<void>;
     loadStudentDetail: (userId: number) => Promise<void>;
+    loadDashboardSummary: () => Promise<void>;
     closeStudentDetail: () => void;
 }
 
@@ -66,6 +70,9 @@ function normalizeCourseStatistics(raw: any): CourseStatistics {
         high_risk_count: toInt(raw?.high_risk_count),
         medium_risk_count: toInt(raw?.medium_risk_count),
         low_risk_count: toInt(raw?.low_risk_count),
+        completed_count: toInt(raw?.completed_count),
+        not_passed_count: toInt(raw?.not_passed_count),
+        in_progress_count: toInt(raw?.in_progress_count),
     };
 }
 
@@ -76,6 +83,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     const [students, setStudents] = useState<Student[]>([]);
     const [selectedStudent, setSelectedStudent] = useState<StudentDetail | null>(null);
     const [statistics, setStatistics] = useState<CourseStatistics | null>(null);
+    const [dashboardSummary, setDashboardSummary] = useState<DashboardSummary | null>(null);
     const [filters, setFiltersState] = useState<StudentFilters>(defaultFilters);
 
     // Loading states
@@ -83,6 +91,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     const [isLoadingStudents, setIsLoadingStudents] = useState(false);
     const [isLoadingStudentDetail, setIsLoadingStudentDetail] = useState(false);
     const [isLoadingStatistics, setIsLoadingStatistics] = useState(false);
+    const [isLoadingDashboardSummary, setIsLoadingDashboardSummary] = useState(false);
 
     // Error state
     const [error, setError] = useState<string | null>(null);
@@ -215,23 +224,41 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         }
     }, [selectedCourse, filters]);
 
+    // Load dashboard summary
+    const loadDashboardSummary = useCallback(async () => {
+        if (!selectedCourse) return;
+
+        try {
+            setIsLoadingDashboardSummary(true);
+            const summary = await api.getDashboardSummary(selectedCourse.course_id);
+            setDashboardSummary(summary);
+        } catch (err) {
+            console.error('Failed to load dashboard summary:', err);
+        } finally {
+            setIsLoadingDashboardSummary(false);
+        }
+    }, [selectedCourse]);
+
     const value: DashboardContextType = {
         courses,
         selectedCourse,
         students,
         selectedStudent,
         statistics,
+        dashboardSummary,
         filters,
         isLoadingCourses,
         isLoadingStudents,
         isLoadingStudentDetail,
         isLoadingStatistics,
+        isLoadingDashboardSummary,
         error,
         setSelectedCourse,
         setSelectedStudent,
         setFilters,
         refreshData,
         loadStudentDetail,
+        loadDashboardSummary,
         closeStudentDetail,
     };
 

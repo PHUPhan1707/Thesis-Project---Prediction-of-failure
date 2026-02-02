@@ -18,6 +18,10 @@ CREATE TABLE IF NOT EXISTS enrollments (
     mode VARCHAR(50) DEFAULT 'audit',
     is_active BOOLEAN DEFAULT TRUE,
     created DATETIME,
+    -- Course info fields (from course-details API)
+    course_name VARCHAR(500) COMMENT 'Tên khóa học từ API course-details',
+    course_start DATETIME COMMENT 'Ngày bắt đầu khóa học',
+    course_end DATETIME COMMENT 'Ngày kết thúc khóa học',
     -- Student info fields
     mssv VARCHAR(100),
     first_name VARCHAR(255),
@@ -41,8 +45,10 @@ CREATE TABLE IF NOT EXISTS enrollments (
     INDEX idx_email (email),
     INDEX idx_is_active (is_active),
     INDEX idx_mode (mode),
-    INDEX idx_created (created)
+    INDEX idx_created (created),
+    INDEX idx_course_end (course_end)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 -- ============================================================
 -- TABLE 2: h5p_scores

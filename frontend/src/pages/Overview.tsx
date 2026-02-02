@@ -1,9 +1,31 @@
+import { useEffect } from 'react';
 import { useDashboard } from '../context/DashboardContext';
-import { AverageMetrics, RiskDistributionChart, StatisticsCards } from '../components/Dashboard';
+import {
+  AverageMetrics,
+  RiskDistributionChart,
+  StatisticsCards,
+  TodaysTasks,
+  RecentAlerts,
+  QuickActions
+} from '../components/Dashboard';
 import './Overview.css';
 
 export default function Overview() {
-  const { selectedCourse } = useDashboard();
+  const {
+    selectedCourse,
+    dashboardSummary,
+    isLoadingDashboardSummary,
+    loadDashboardSummary,
+    refreshData,
+    isLoadingStatistics
+  } = useDashboard();
+
+  // Load dashboard summary when course changes
+  useEffect(() => {
+    if (selectedCourse) {
+      loadDashboardSummary();
+    }
+  }, [selectedCourse, loadDashboardSummary]);
 
   if (!selectedCourse) {
     return (
@@ -15,18 +37,45 @@ export default function Overview() {
     );
   }
 
+  const handleRefresh = async () => {
+    await Promise.all([
+      refreshData(),
+      loadDashboardSummary(),
+    ]);
+  };
+
   return (
     <div className="overview">
+      {/* Statistics Section */}
       <section className="section statistics-section">
         <StatisticsCards />
         <AverageMetrics />
       </section>
 
-      <section className="section overview-chart">
-        <RiskDistributionChart />
+      {/* Main Dashboard Grid */}
+      <section className="section dashboard-grid">
+        {/* Left Column */}
+        <div className="dashboard-column left-column">
+          <TodaysTasks
+            tasks={dashboardSummary?.today_tasks || []}
+            isLoading={isLoadingDashboardSummary}
+          />
+          <RecentAlerts
+            alerts={dashboardSummary?.recent_alerts || []}
+            isLoading={isLoadingDashboardSummary}
+          />
+        </div>
+
+        {/* Right Column */}
+        <div className="dashboard-column right-column">
+          <RiskDistributionChart />
+          <QuickActions
+            stats={dashboardSummary?.quick_stats || null}
+            onRefresh={handleRefresh}
+            isLoading={isLoadingDashboardSummary || isLoadingStatistics}
+          />
+        </div>
       </section>
     </div>
   );
 }
-
-

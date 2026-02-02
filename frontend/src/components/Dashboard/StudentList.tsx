@@ -70,7 +70,24 @@ function StudentCard({ student, index, onClick }: StudentCardProps) {
         LOW: { color: 'green', label: 'Thấp', icon: '✅' },
     };
 
+    const completionConfig = {
+        completed: { color: 'completed', label: 'Đã hoàn thành', icon: '🎓' },
+        not_passed: { color: 'not-passed', label: 'Chưa đạt', icon: '📝' },
+        in_progress: { color: 'in-progress', label: 'Đang học', icon: '📚' },
+    };
+
     const config = riskLevelConfig[student.risk_level] || riskLevelConfig.LOW;
+    
+    // Check completion status with fallback to mooc_is_passed
+    // Handle both boolean (true/false) and int (1/0) from backend
+    const isCompleted = student.completion_status === 'completed' || 
+                        student.mooc_is_passed === true || 
+                        student.mooc_is_passed === 1;
+    
+    const completionStatus = student.completion_status || 
+                             (student.mooc_is_passed === true || student.mooc_is_passed === 1 ? 'completed' : 
+                              student.mooc_is_passed === false || student.mooc_is_passed === 0 ? 'not_passed' : 'in_progress');
+    const completionCfg = completionConfig[completionStatus] || completionConfig.in_progress;
 
     // Generate avatar initials
     const getInitials = (name: string | null | undefined) => {
@@ -101,16 +118,19 @@ function StudentCard({ student, index, onClick }: StudentCardProps) {
 
     return (
         <div
-            className={`student-card risk-${config.color}`}
+            className={`student-card ${isCompleted ? 'completed' : `risk-${config.color}`}`}
             style={{ animationDelay: `${index * 0.05}s` }}
             onClick={onClick}
         >
             <div className="card-left">
-                <div className={`student-avatar avatar-${config.color}`}>
+                <div className={`student-avatar ${isCompleted ? 'avatar-completed' : `avatar-${config.color}`}`}>
                     {getInitials(student.full_name)}
                 </div>
                 <div className="student-info">
-                    <h4 className="student-name">{student.full_name || 'Chưa có tên'}</h4>
+                    <h4 className="student-name">
+                        {student.full_name || 'Chưa có tên'}
+                        {isCompleted && <span className="completed-badge-inline">🎓</span>}
+                    </h4>
                     <span className="student-email">{student.email || 'N/A'}</span>
                     <span className="student-id">ID: {student.user_id}</span>
                 </div>
@@ -118,12 +138,14 @@ function StudentCard({ student, index, onClick }: StudentCardProps) {
 
             <div className="card-center">
                 <div className="metric-group">
-                    <div className="metric">
-                        <span className="metric-label">Điểm rủi ro</span>
-                        <span className={`metric-value risk-value-${config.color}`}>
-                            {formatPercent(student.fail_risk_score)}
-                        </span>
-                    </div>
+                    {!isCompleted && (
+                        <div className="metric">
+                            <span className="metric-label">Điểm rủi ro</span>
+                            <span className={`metric-value risk-value-${config.color}`}>
+                                {formatPercent(student.fail_risk_score)}
+                            </span>
+                        </div>
+                    )}
                     <div className="metric">
                         <span className="metric-label">Điểm TB</span>
                         <span className="metric-value">
@@ -140,10 +162,17 @@ function StudentCard({ student, index, onClick }: StudentCardProps) {
             </div>
 
             <div className="card-right">
-                <div className={`risk-badge badge-${config.color}`}>
-                    <span className="badge-icon">{config.icon}</span>
-                    <span className="badge-text">{config.label}</span>
-                </div>
+                {isCompleted ? (
+                    <div className="completion-badge badge-completed">
+                        <span className="badge-icon">{completionCfg.icon}</span>
+                        <span className="badge-text">{completionCfg.label}</span>
+                    </div>
+                ) : (
+                    <div className={`risk-badge badge-${config.color}`}>
+                        <span className="badge-icon">{config.icon}</span>
+                        <span className="badge-text">{config.label}</span>
+                    </div>
+                )}
                 <span className="last-activity">
                     {formatLastActivity(student.days_since_last_activity)}
                 </span>

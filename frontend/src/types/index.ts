@@ -1,4 +1,6 @@
 // Student types
+export type CompletionStatus = 'completed' | 'not_passed' | 'in_progress';
+
 export interface Student {
   user_id: number;
   email: string;
@@ -10,6 +12,8 @@ export interface Student {
   mooc_grade_percentage: number;
   mooc_completion_rate: number;
   days_since_last_activity: number;
+  mooc_is_passed?: boolean | number | null;  // Can be boolean (true/false) or int (1/0) from MySQL
+  completion_status?: CompletionStatus;
 }
 
 export interface StudentDetail extends Student {
@@ -41,6 +45,10 @@ export interface CourseStatistics {
   high_risk_count: number;
   medium_risk_count: number;
   low_risk_count: number;
+  // Completion status stats
+  completed_count: number;
+  not_passed_count: number;
+  in_progress_count: number;
 }
 
 // API Response types
@@ -87,3 +95,39 @@ export interface StudentFilters {
   order: SortOrder;
   searchQuery: string;
 }
+
+// Dashboard Summary types (NEW)
+export interface TodayTask {
+  user_id: number;
+  full_name: string;
+  email: string;
+  risk_level: 'HIGH' | 'MEDIUM' | 'LOW';
+  fail_risk_score: number;
+  reason: string;
+  urgency: 'critical' | 'high' | 'medium';
+}
+
+export interface RecentAlert {
+  id: number;
+  user_id: number;
+  full_name: string;
+  alert_type: 'risk_increase' | 'inactive' | 'low_progress';
+  message: string;
+  created_at: string;
+}
+
+export interface QuickStats {
+  new_high_risk_count: number;
+  inactive_students_count: number;
+  intervention_pending: number;
+}
+
+export interface DashboardSummary {
+  course_id: string;
+  today_tasks: TodayTask[];
+  recent_alerts: RecentAlert[];
+  quick_stats: QuickStats;
+}
+
+export interface DashboardSummaryResponse extends DashboardSummary {}
+
