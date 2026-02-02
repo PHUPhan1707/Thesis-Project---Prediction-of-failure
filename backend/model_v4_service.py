@@ -295,11 +295,12 @@ class ModelV4Service:
 
     def _save_predictions_to_db(self, predictions_df: pd.DataFrame):
         """
-        Lưu fail_risk_score vào bảng raw_data
+        Lưu fail_risk_score vào bảng raw_data VÀ predictions (V2)
         
         Args:
             predictions_df: DataFrame chứa predictions cần lưu
         """
+        # 1. Update raw_data (V1 - backward compatibility)
         update_query = """
             UPDATE raw_data
             SET fail_risk_score = %s
@@ -311,6 +312,29 @@ class ModelV4Service:
                 (row["fail_risk_score"], row["user_id"], row["course_id"]),
             )
         logger.info(f"Updated {len(predictions_df)} student risk scores in raw_data table.")
+        
+        # 2. Also save to predictions table (V2 - new architecture)
+        try:
+            from .db import save_prediction
+            saved_count = 0
+            for _, row in predictions_df.iterrows():
+                success = save_prediction(
+                    user_id=int(row["user_id"]),
+                    course_id=row["course_id"],
+                    model_name='fm101_v4',
+                    fail_risk_score=float(row["fail_risk_score"]),
+                    risk_level=row["risk_level"],
+                    model_version='v4.0.0',
+                    model_path=self.model_path,
+                    snapshot_grade=float(row.get("mooc_grade_percentage", 0)),
+                    snapshot_completion_rate=float(row.get("mooc_completion_rate", 0)),
+                    snapshot_days_inactive=int(row.get("days_since_last_activity", 0))
+                )
+                if success:
+                    saved_count += 1
+            logger.info(f"Saved {saved_count}/{len(predictions_df)} predictions to predictions table (V2).")
+        except Exception as e:
+            logger.warning(f"Could not save to predictions table (V2): {e}. Continuing with raw_data only.")
 
     def classify_risk_level(self, risk_score: float) -> str:
         """Phân loại risk level dựa trên risk score"""

@@ -43,6 +43,7 @@ interface DashboardContextType {
 
 const defaultFilters: StudentFilters = {
     riskLevel: 'ALL',
+    completionFilter: 'not_completed',  // Mặc định không hiển thị sinh viên đã hoàn thành
     sortBy: 'risk_score',
     order: 'desc',
     searchQuery: '',
@@ -144,8 +145,18 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
                     api.getCourseStatistics(selectedCourse.course_id),
                 ]);
 
-                // Filter locally by search query if provided
+                // Filter locally by completion status and search query
                 let filteredStudents = studentsResponse.students;
+                
+                // Filter by completion status
+                if (filters.completionFilter === 'completed') {
+                    filteredStudents = filteredStudents.filter(s => s.completion_status === 'completed');
+                } else if (filters.completionFilter === 'not_completed') {
+                    filteredStudents = filteredStudents.filter(s => s.completion_status !== 'completed');
+                }
+                // 'ALL' -> no filter
+                
+                // Filter by search query
                 if (filters.searchQuery) {
                     const query = filters.searchQuery.toLowerCase();
                     filteredStudents = filteredStudents.filter(
@@ -167,7 +178,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         };
 
         loadData();
-    }, [selectedCourse, filters.riskLevel, filters.sortBy, filters.order, filters.searchQuery]);
+    }, [selectedCourse, filters.riskLevel, filters.sortBy, filters.order, filters.searchQuery, filters.completionFilter]);
 
     // Load student detail
     const loadStudentDetail = useCallback(async (userId: number) => {

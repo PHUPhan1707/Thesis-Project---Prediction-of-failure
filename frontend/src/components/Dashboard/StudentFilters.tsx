@@ -1,5 +1,5 @@
 import { useDashboard } from '../../context/DashboardContext';
-import type { RiskLevel } from '../../types';
+import type { RiskLevel, CompletionFilter } from '../../types';
 import { exportStudentsToCSV } from '../../services/exportCsv';
 import './StudentFilters.css';
 
@@ -11,6 +11,12 @@ export function StudentFilters() {
         { value: 'HIGH', label: 'Cao', icon: '🚨', color: 'red' },
         { value: 'MEDIUM', label: 'Trung bình', icon: '⚠️', color: 'yellow' },
         { value: 'LOW', label: 'Thấp', icon: '✅', color: 'green' },
+    ];
+
+    const completionOptions: { value: CompletionFilter; label: string; icon: string }[] = [
+        { value: 'not_completed', label: 'Chưa hoàn thành', icon: '📚' },
+        { value: 'completed', label: 'Đã hoàn thành', icon: '🎓' },
+        { value: 'ALL', label: 'Tất cả', icon: '📋' },
     ];
 
     const sortOptions = [
@@ -45,6 +51,23 @@ export function StudentFilters() {
             </div>
 
             <div className="filters-row">
+                {/* Completion Status Filter */}
+                <div className="completion-filter">
+                    <label className="filter-label">Trạng thái:</label>
+                    <div className="completion-buttons">
+                        {completionOptions.map((option) => (
+                            <button
+                                key={option.value}
+                                className={`completion-btn ${filters.completionFilter === option.value ? 'active' : ''}`}
+                                onClick={() => setFilters({ completionFilter: option.value })}
+                            >
+                                <span className="btn-icon">{option.icon}</span>
+                                <span className="btn-label">{option.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
                 {/* Risk Level Tabs */}
                 <div className="risk-tabs">
                     {riskLevelOptions.map((option) => (

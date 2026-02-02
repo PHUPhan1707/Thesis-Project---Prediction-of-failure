@@ -130,3 +130,162 @@ def fetch_one(query: str, params: tuple = None) -> Optional[Dict]:
         if connection.is_connected():
             connection.close()
 
+
+# ============================================================================
+# HELPER FUNCTIONS FOR NEW SCHEMA V2
+# ============================================================================
+
+def get_student_features(user_id: int, course_id: str) -> Optional[Dict]:
+    """
+    Lấy features của một sinh viên
+    
+    Args:
+        user_id: ID sinh viên
+        course_id: ID khóa học
+        
+    Returns:
+        Dictionary chứa features hoặc None
+    """
+    return fetch_one(
+        "SELECT * FROM student_features WHERE user_id = %s AND course_id = %s",
+        (user_id, course_id)
+    )
+
+
+def get_latest_prediction(user_id: int, course_id: str, model_name: Optional[str] = None) -> Optional[Dict]:
+    """
+    Lấy prediction mới nhất của sinh viên
+    
+    Args:
+        user_id: ID sinh viên
+        course_id: ID khóa học
+        model_name: Tên model (optional, nếu muốn filter theo model)
+        
+    Returns:
+        Dictionary chứa prediction hoặc None
+    """
+    if model_name:
+        return fetch_one(
+            """
+            SELECT * FROM predictions 
+            WHERE user_id = %s AND course_id = %s AND model_name = %s AND is_latest = TRUE
+            ORDER BY predicted_at DESC LIMIT 1
+            """,
+            (user_id, course_id, model_name)
+        )
+    else:
+        return fetch_one(
+            """
+            SELECT * FROM predictions 
+            WHERE user_id = %s AND course_id = %s AND is_latest = TRUE
+            ORDER BY predicted_at DESC LIMIT 1
+            """,
+            (user_id, course_id)
+        )
+
+
+def save_prediction(user_id: int, course_id: str, model_name: str, 
+                   fail_risk_score: float, risk_level: str,
+                   model_version: Optional[str] = None, model_path: Optional[str] = None,
+                   snapshot_grade: Optional[float] = None,
+                   snapshot_completion_rate: Optional[float] = None,
+                   snapshot_days_inactive: Optional[int] = None) -> bool:
+    """
+    Lưu prediction mới và mark predictions cũ là not latest
+    
+    Args:
+        user_id: ID sinh viên
+        course_id: ID khóa học
+        model_name: Tên model
+        fail_risk_score: Risk score (0-100)
+        risk_level: 'LOW', 'MEDIUM', 'HIGH'
+        model_version: Version của model
+        model_path: Path to model file
+        snapshot_grade: Grade tại thời điểm predict
+        snapshot_completion_rate: Completion rate tại thời điểm predict
+        snapshot_days_inactive: Days inactive tại thời điểm predict
+        
+    Returns:
+        True nếu thành công, False nếu lỗi
+    """
+    connection = get_db_connection()
+    if connection is None:
+        return False
+    
+    try:
+        cursor = connection.cursor()
+    
+        cursor.execute(
+            """
+            DELETE FROM predictions 
+            WHERE user_id = %s AND course_id = %s
+            """,
+            (user_id, course_id)
+        )
+        
+        # 2. Insert bản ghi mới (luôn is_latest = TRUE)
+        cursor.execute(
+            """
+            INSERT INTO predictions (
+                user_id, course_id, model_name, model_version, model_path,
+                fail_risk_score, risk_level,
+                snapshot_grade, snapshot_completion_rate, snapshot_days_inactive,
+                is_latest
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, TRUE)
+            """,
+            (user_id, course_id, model_name, model_version, model_path,
+             fail_risk_score, risk_level,
+             snapshot_grade, snapshot_completion_rate, snapshot_days_inactive)
+        )
+        
+        connection.commit()
+        cursor.close()
+        return True
+        
+    except Error as e:
+        logger.error(f"Error saving prediction: {e}")
+        connection.rollback()
+        return False
+    finally:
+        if connection.is_connected():
+            connection.close()
+
+
+def get_course_model_mapping(course_id: str) -> Optional[Dict]:
+    """
+    Lấy model mapping cho course
+    
+    Args:
+        course_id: ID khóa học
+        
+    Returns:
+        Dictionary chứa mapping config hoặc None
+    """
+    return fetch_one(
+        """
+        SELECT cmm.*, mr.model_path, mr.features_csv_path, mr.model_type
+        FROM course_model_mapping cmm
+        JOIN model_registry mr ON cmm.model_name = mr.model_name
+        WHERE cmm.course_id = %s AND cmm.is_active = TRUE
+        ORDER BY cmm.assigned_at DESC
+        LIMIT 1
+        """,
+        (course_id,)
+    )
+
+
+def get_default_model() -> Optional[Dict]:
+    """
+    Lấy default model từ registry
+    
+    Returns:
+        Dictionary chứa model info hoặc None
+    """
+    return fetch_one(
+        """
+        SELECT * FROM model_registry 
+        WHERE is_default = TRUE AND is_active = TRUE
+        LIMIT 1
+        """
+    )
+

@@ -70,10 +70,66 @@
 
 .filters-row {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Completion Filter */
+.completion-filter {
+    display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.filter-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #5a5a5a;
+    min-width: 80px;
+}
+
+.completion-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.completion-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 2px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    background: white;
+    color: #5a5a5a;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.completion-btn:hover {
+    border-color: rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.02);
+    transform: translateY(-1px);
+}
+
+.completion-btn.active {
+    border-color: #9c27b0;
+    background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+}
+
+.completion-btn .btn-icon {
+    font-size: 1rem;
+}
+
+.completion-btn .btn-label {
+    font-weight: 600;
 }
 
 /* Risk Tabs */

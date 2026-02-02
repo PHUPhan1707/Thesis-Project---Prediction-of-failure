@@ -86,11 +86,13 @@ export interface InterventionResponse {
 
 // Filter types
 export type RiskLevel = 'HIGH' | 'MEDIUM' | 'LOW' | 'ALL';
+export type CompletionFilter = 'ALL' | 'completed' | 'not_completed';
 export type SortBy = 'risk_score' | 'name' | 'grade' | 'last_activity';
 export type SortOrder = 'asc' | 'desc';
 
 export interface StudentFilters {
   riskLevel: RiskLevel;
+  completionFilter: CompletionFilter;
   sortBy: SortBy;
   order: SortOrder;
   searchQuery: string;
