@@ -9,4 +9,5 @@ export { StudentDetailModal } from './StudentDetailModal';
 export { TodaysTasks } from './TodaysTasks';
 export { RecentAlerts } from './RecentAlerts';
 export { QuickActions } from './QuickActions';
+export { default as H5PPerformance } from './H5PPerformance';
 

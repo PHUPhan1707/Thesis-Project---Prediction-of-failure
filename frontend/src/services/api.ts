@@ -61,7 +61,7 @@ export async function getStudents(
   order: SortOrder = 'desc'
 ): Promise<StudentsResponse> {
   const params = new URLSearchParams();
-  
+
   if (riskLevel && riskLevel !== 'ALL') {
     params.append('risk_level', riskLevel);
   }
@@ -70,7 +70,7 @@ export async function getStudents(
 
   const queryString = params.toString();
   const encodedCourseId = encodeURIComponent(courseId);
-  
+
   return fetchAPI(`/students/${encodedCourseId}?${queryString}`);
 }
 
@@ -114,6 +114,36 @@ export async function getUrgentStudents(courseId: string): Promise<StudentsRespo
   return fetchAPI(`/students/${encodedCourseId}/urgent`);
 }
 
+// H5P Analytics APIs (NEW)
+export async function getH5PLowPerformance(
+  courseId: string,
+  limit: number = 10,
+  minStudents: number = 3
+): Promise<any> {
+  const encodedCourseId = encodeURIComponent(courseId);
+  const params = new URLSearchParams({
+    limit: limit.toString(),
+    min_students: minStudents.toString(),
+  });
+  const url = `/h5p-analytics/${encodedCourseId}/low-performance?${params}`;
+  console.log('[API] Calling H5P API:', {
+    courseId,
+    encodedCourseId,
+    fullUrl: `${API_BASE_URL}${url}`
+  });
+  return fetchAPI(url);
+}
+
+export async function getH5PContentDetail(courseId: string, contentId: number): Promise<any> {
+  const encodedCourseId = encodeURIComponent(courseId);
+  return fetchAPI(`/h5p-analytics/${encodedCourseId}/content/${contentId}`);
+}
+
+export async function getH5PStudentPerformance(courseId: string, userId: number): Promise<any> {
+  const encodedCourseId = encodeURIComponent(courseId);
+  return fetchAPI(`/h5p-analytics/${encodedCourseId}/student/${userId}`);
+}
+
 // Export all API functions
 export const api = {
   checkHealth,
@@ -124,6 +154,9 @@ export const api = {
   recordIntervention,
   getDashboardSummary,
   getUrgentStudents,
+  getH5PLowPerformance,
+  getH5PContentDetail,
+  getH5PStudentPerformance,
 };
 
 export default api;

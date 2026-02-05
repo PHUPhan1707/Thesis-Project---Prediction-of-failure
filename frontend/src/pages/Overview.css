@@ -29,6 +29,11 @@
   gap: 1.5rem;
 }
 
+/* H5P Performance Section */
+.h5p-section {
+  width: 100%;
+}
+
 /* No course selected state */
 .no-course-selected {
   display: flex;
