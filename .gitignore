@@ -35,3 +35,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# CatBoost training artifacts (regenerated on train)
+catboost_info/

@@ -1,5 +1,6 @@
 """
-Model V4 Service - Tích hợp CatBoost model với database
+Model V5 Service - Tích hợp CatBoost model với database
+Updated: V5 model trained without positional leakage features (current_chapter/section/unit)
 """
 import os
 import logging
@@ -43,13 +44,13 @@ class ModelV4Service:
         if model_path:
             self.model_path = model_path
         else:
-            self.model_path = str(Path(__file__).parent.parent / "models" / "fm101_model_v4.cbm")
+            self.model_path = str(Path(__file__).parent.parent / "models" / "fm101_model_v5.cbm")
         
         if feature_fallback_csv:
             self.feature_fallback_csv = feature_fallback_csv
         else:
             self.feature_fallback_csv = str(
-                Path(__file__).parent.parent / "models" / "fm101_model_v4_feature_importance.csv"
+                Path(__file__).parent.parent / "models" / "fm101_model_v5_feature_importance.csv"
             )
         
         self._load_model()
@@ -71,9 +72,6 @@ class ModelV4Service:
             # Define categorical features (phải match với training)
             self.categorical_features = [
                 "enrollment_mode",
-                "current_chapter",
-                "current_section",
-                "current_unit",
                 "enrollment_phase",
             ]
             logger.info(f"Categorical features: {self.categorical_features}")
@@ -139,8 +137,8 @@ class ModelV4Service:
 
     def _feature_engineer(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Tạo các features cần thiết cho model từ raw data
-        Đây là phiên bản rút gọn, trong thực tế nên import từ ml/feature_engineering.py
+        Tạo features sử dụng shared FeatureEngineer class (đồng bộ với training pipeline).
+        Đảm bảo CÙNG công thức feature engineering giữa training và inference.
         
         Args:
             df: DataFrame chứa raw data
@@ -151,7 +149,35 @@ class ModelV4Service:
         if df.empty:
             return df
 
-        # Basic engagement features
+        try:
+            from ml.feature_engineering import FeatureEngineer
+            engineer = FeatureEngineer()
+            df = engineer.create_all_features(df)
+            logger.info("Features created using shared FeatureEngineer (consistent with training)")
+        except ImportError:
+            logger.warning("Could not import FeatureEngineer, using fallback feature engineering")
+            df = self._feature_engineer_fallback(df)
+        except Exception as e:
+            logger.warning(f"FeatureEngineer failed ({e}), using fallback")
+            df = self._feature_engineer_fallback(df)
+
+        # Ensure all expected features exist (fill missing with defaults)
+        if self.feature_names:
+            for col in self.feature_names:
+                if col not in df.columns:
+                    if col in (self.categorical_features or []):
+                        df[col] = "missing"
+                    else:
+                        df[col] = 0
+
+        return df
+
+    def _feature_engineer_fallback(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Fallback feature engineering khi không import được FeatureEngineer.
+        CHỈ dùng khi import thất bại - ưu tiên dùng shared FeatureEngineer.
+        """
+        # Engagement score (simplified - NOT identical to training!)
         df["engagement_score"] = (
             df.get("mooc_completion_rate", 0)
             + df.get("video_completion_rate", 0)
@@ -160,27 +186,42 @@ class ModelV4Service:
 
         df["activity_recency"] = 100 - (df.get("days_since_last_activity", 0) / 30 * 100).clip(0, 100)
         df["activity_consistency"] = (df["engagement_score"] + df["activity_recency"]) / 2
-        
+
         df["is_inactive"] = (df.get("days_since_last_activity", 0) > 7).astype(int)
+        df["is_highly_inactive"] = (df.get("days_since_last_activity", 0) > 14).astype(int)
         df["is_struggling"] = (
             (df.get("mooc_completion_rate", 0) < 50) | (df.get("video_completion_rate", 0) < 50)
         ).astype(int)
-        
+        df["is_at_risk"] = (df.get("mooc_completion_rate", 0) < 40).astype(int)
+
+        df["relative_completion"] = (
+            df.get("mooc_completion_rate", 0)
+            - df.groupby("course_id")["mooc_completion_rate"].transform("mean")
+        ) if "course_id" in df.columns else 0
+
+        df["completion_consistency"] = df[
+            ["mooc_completion_rate", "video_completion_rate", "h5p_completion_rate"]
+        ].std(axis=1).fillna(0) if all(c in df.columns for c in ["mooc_completion_rate", "video_completion_rate", "h5p_completion_rate"]) else 0
+
         df["discussion_engagement_rate"] = df.get("discussion_total_interactions", 0)
         df["has_no_discussion"] = (df.get("discussion_total_interactions", 0) == 0).astype(int)
 
-        # Add enrollment_phase if not present
+        df["video_engagement_rate"] = df.get("video_completion_rate", 0) / 100
+        df["h5p_engagement_rate"] = df.get("h5p_completion_rate", 0) / 100
+        df["interaction_score"] = (
+            df["discussion_engagement_rate"] * 0.4
+            + df["video_engagement_rate"] * 0.3
+            + df["h5p_engagement_rate"] * 0.3
+        ) * 100
+
+        df["progress_rate"] = (
+            df.get("mooc_completion_rate", 0)
+            / df.get("weeks_since_enrollment", pd.Series([1] * len(df))).replace(0, 1)
+        )
+        df["weeks_remaining"] = (16 - df.get("weeks_since_enrollment", 0)).clip(0, 16)
+
         if "enrollment_phase" not in df.columns:
             df["enrollment_phase"] = "mid"
-
-        # Ensure all expected features exist
-        if self.feature_names:
-            for col in self.feature_names:
-                if col not in df.columns:
-                    if col in self.categorical_features:
-                        df[col] = "missing"
-                    else:
-                        df[col] = 0
 
         return df
 
@@ -321,10 +362,10 @@ class ModelV4Service:
                 success = save_prediction(
                     user_id=int(row["user_id"]),
                     course_id=row["course_id"],
-                    model_name='fm101_v4',
+                    model_name='fm101_v5',
                     fail_risk_score=float(row["fail_risk_score"]),
                     risk_level=row["risk_level"],
-                    model_version='v4.0.0',
+                    model_version='v5.0.0',
                     model_path=self.model_path,
                     snapshot_grade=float(row.get("mooc_grade_percentage", 0)),
                     snapshot_completion_rate=float(row.get("mooc_completion_rate", 0)),

@@ -44,9 +44,9 @@ try:
         SELECT 
             user_id, 
             course_id,
-            'fm101_v4' as model_name,
-            'v4.0.0' as model_version,
-            './models/fm101_model_v4.cbm' as model_path,
+            'fm101_v5' as model_name,
+            'v5.0.0' as model_version,
+            './models/fm101_model_v5.cbm' as model_path,
             fail_risk_score,
             CASE 
                 WHEN fail_risk_score >= 70 THEN 'HIGH'

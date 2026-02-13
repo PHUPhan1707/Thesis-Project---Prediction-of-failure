@@ -6,8 +6,7 @@ import {
   StatisticsCards,
   TodaysTasks,
   RecentAlerts,
-  QuickActions,
-  H5PPerformance
+  QuickActions
 } from '../components/Dashboard';
 import './Overview.css';
 
@@ -76,11 +75,6 @@ export default function Overview() {
             isLoading={isLoadingDashboardSummary || isLoadingStatistics}
           />
         </div>
-      </section>
-
-      {/* H5P Performance Section */}
-      <section className="section h5p-section">
-        <H5PPerformance />
       </section>
     </div>
   );

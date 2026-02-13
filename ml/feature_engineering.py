@@ -285,7 +285,7 @@ def main():
         # Print feature statistics
         logger.info("\n=== Key Feature Statistics ===")
         key_features = [
-            'engagement_score', 'activity_recency', 'relative_grade',
+            'engagement_score', 'activity_recency', 'relative_completion',
             'interaction_score', 'progress_rate', 'is_at_risk'
         ]
         

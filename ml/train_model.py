@@ -90,10 +90,15 @@ class DropoutModelTrainer:
             # Target labels
             'is_passed', 'is_dropout', 'fail_risk_score',
             
-            # ⚠️ DATA LEAKAGE COLUMNS - Perfect correlation with target
+            # DATA LEAKAGE COLUMNS - Perfect correlation with target
             'mooc_grade_percentage',  # Final grade - direct leakage!
             'mooc_letter_grade',      # Letter grade - same as above
             'mooc_is_passed',         # This IS the target variable!
+            
+            # POSITIONAL LEAKAGE - extracted at end-of-course, directly reveals outcome
+            'current_chapter',        # Student at last chapter = completed
+            'current_section',        # Same positional leakage
+            'current_unit',           # Same positional leakage
             
             # Timestamps & metadata
             'extracted_at', 'extraction_batch_id', 'fetched_at', 'updated_at',
@@ -108,8 +113,7 @@ class DropoutModelTrainer:
         self.categorical_features = [
             col for col in X.columns 
             if X[col].dtype == 'object' or col in [
-                'enrollment_mode', 'current_chapter', 'current_section', 
-                'current_unit', 'mooc_letter_grade', 'enrollment_phase'
+                'enrollment_mode', 'enrollment_phase'
             ]
         ]
         

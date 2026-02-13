@@ -3,6 +3,7 @@ Prediction Module
 Sử dụng trained model để predict fail risk cho sinh viên
 """
 import sys
+import os
 import logging
 import pandas as pd
 import numpy as np
@@ -31,14 +32,25 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Database configuration
-DB_CONFIG = {
-    "host": "localhost",
-    "port": 4000,
-    "database": "dropout_prediction_db",
-    "user": "dropout_user",
-    "password": "dropout_pass_123"
-}
+
+def get_db_config() -> Dict[str, any]:
+    """
+    Lấy cấu hình database từ biến môi trường hoặc dùng giá trị mặc định
+    
+    Returns:
+        Dict chứa thông tin kết nối database
+    """
+    return {
+        "host": os.getenv("DB_HOST", "localhost"),
+        "port": int(os.getenv("DB_PORT", "4000")),
+        "database": os.getenv("DB_NAME", "dropout_prediction_db"),
+        "user": os.getenv("DB_USER", "dropout_user"),
+        "password": os.getenv("DB_PASSWORD", "dropout_pass_123"),
+    }
+
+
+# For backward compatibility - use function instead of constant
+DB_CONFIG = get_db_config()
 
 
 class DropoutPredictor:

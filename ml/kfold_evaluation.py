@@ -81,6 +81,8 @@ class KFoldModelEvaluator:
             'id', 'user_id', 'course_id', 'username', 'email', 'full_name',
             'is_passed', 'is_dropout', 'fail_risk_score',
             'mooc_grade_percentage', 'mooc_letter_grade', 'mooc_is_passed',
+            # Positional leakage - extracted at end-of-course, directly reveals outcome
+            'current_chapter', 'current_section', 'current_unit',
             'extracted_at', 'extraction_batch_id', 'fetched_at', 'updated_at',
             'created', 'enrollment_id', 'all_attributes',
             'enrollment_date', 'last_activity'
@@ -93,8 +95,7 @@ class KFoldModelEvaluator:
         self.categorical_features = [
             col for col in X.columns 
             if X[col].dtype == 'object' or col in [
-                'enrollment_mode', 'current_chapter', 'current_section', 
-                'current_unit', 'mooc_letter_grade', 'enrollment_phase'
+                'enrollment_mode', 'enrollment_phase'
             ]
         ]
         
@@ -271,13 +272,13 @@ class KFoldModelEvaluator:
         for metric in metric_names:
             std = summary[f'{metric}_std']
             if std < 0.02:
-                stability = "Very Stable ✓"
+                stability = "Very Stable [OK]"
             elif std < 0.05:
                 stability = "Stable"
             elif std < 0.10:
                 stability = "Moderately Stable"
             else:
-                stability = "Unstable ⚠"
+                stability = "Unstable [!]"
             logger.info(f"  {metric.upper()}: {stability} (std={std:.4f})")
         
         return summary

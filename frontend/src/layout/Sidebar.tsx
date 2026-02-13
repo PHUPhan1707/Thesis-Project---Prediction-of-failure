@@ -18,6 +18,11 @@ export function Sidebar() {
           <span className="nav-label">Tổng quan</span>
         </NavLink>
 
+        <NavLink to="/h5p-analytics" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <span className="nav-icon">📚</span>
+          <span className="nav-label">Phân tích H5P</span>
+        </NavLink>
+
         <NavLink to="/details" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
           <span className="nav-icon">👥</span>
           <span className="nav-label">Chi tiết</span>

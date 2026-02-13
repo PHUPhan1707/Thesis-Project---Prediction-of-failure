@@ -1227,32 +1227,32 @@ class MOOCH5PDataFetcher:
         }
         
         try:
-            # Relative to course scores
-            user_problem_score = user_metrics.get('problem_avg_score', 0)
-            course_avg_problem = course_benchmarks.get('assessment_avg_score', 0)
+            # Convert all values to float to avoid decimal.Decimal * float errors
+            user_problem_score = float(user_metrics.get('problem_avg_score', 0) or 0)
+            course_avg_problem = float(course_benchmarks.get('assessment_avg_score', 0) or 0)
             if course_avg_problem > 0:
                 features['relative_to_course_problem_score'] = round(
                     user_problem_score - course_avg_problem, 2
                 )
             
             # Relative completion
-            user_completion = user_metrics.get('mooc_completion_rate', 0)
-            course_avg_completion = course_benchmarks.get('progress_avg_completion', 0)
+            user_completion = float(user_metrics.get('mooc_completion_rate', 0) or 0)
+            course_avg_completion = float(course_benchmarks.get('progress_avg_completion', 0) or 0)
             if course_avg_completion > 0:
                 features['relative_to_course_completion'] = round(
                     user_completion - course_avg_completion, 2
                 )
             
             # Relative video completion
-            user_video_completion = user_metrics.get('video_completion_rate', 0)
-            course_avg_video = course_benchmarks.get('video_avg_completion', 0) or user_video_completion
+            user_video_completion = float(user_metrics.get('video_completion_rate', 0) or 0)
+            course_avg_video = float(course_benchmarks.get('video_avg_completion', 0) or 0) or user_video_completion
             features['relative_to_course_video_completion'] = round(
                 user_video_completion - course_avg_video, 2
             )
             
             # Relative discussion
-            user_discussion = user_metrics.get('discussion_total_interactions', 0)
-            course_avg_discussion = course_benchmarks.get('discussion_avg_interactions', 0)
+            user_discussion = float(user_metrics.get('discussion_total_interactions', 0) or 0)
+            course_avg_discussion = float(course_benchmarks.get('discussion_avg_interactions', 0) or 0)
             features['relative_to_course_discussion'] = int(
                 user_discussion - course_avg_discussion
             )
@@ -1384,12 +1384,20 @@ class MOOCH5PDataFetcher:
             is_active = enrollment['is_active'] if enrollment else True
             
             # Tính weeks_since_enrollment từ created date
+            # FIX: MySQL trả về datetime object trực tiếp, không cần parse string
             weeks_since_enrollment = 0
             if enrollment and enrollment.get('created'):
-                created_date = self.parse_datetime(enrollment['created'])
+                created_date = enrollment['created']
+                # Nếu là string thì parse, nếu đã là datetime thì giữ nguyên
+                if isinstance(created_date, str):
+                    created_date = self.parse_datetime(created_date)
                 if created_date:
-                    delta = datetime.now() - (created_date.replace(tzinfo=None) if created_date.tzinfo else created_date)
+                    # Loại bỏ timezone nếu có để so sánh
+                    if hasattr(created_date, 'tzinfo') and created_date.tzinfo:
+                        created_date = created_date.replace(tzinfo=None)
+                    delta = datetime.now() - created_date
                     weeks_since_enrollment = round(delta.days / 7.0, 2)
+                    logger.debug(f"User {user_id}: weeks_since_enrollment = {weeks_since_enrollment} (created: {created_date})")
             
             # Progress features - tính từ dashboard hoặc từ summaries
             if dashboard and dashboard.get('overall_completion'):
@@ -1464,6 +1472,75 @@ class MOOCH5PDataFetcher:
             quiz_avg_score = h5p_overall_percentage
             quiz_completion_rate = h5p_completion_rate
             
+            # ============================================================
+            # ADDITIONAL METRICS từ h5p_scores detail và video_progress
+            # Populate các cột migration-added (trước đây luôn = 0)
+            # ============================================================
+            
+            # --- H5P Assessment detail metrics ---
+            cursor.execute("""
+                SELECT 
+                    COUNT(*) as total_attempts,
+                    AVG(CASE WHEN finished > 0 THEN percentage ELSE NULL END) as avg_finished_score,
+                    SUM(CASE WHEN finished > 0 AND percentage >= 60 THEN 1 ELSE 0 END) as successful_count,
+                    SUM(CASE WHEN finished > 0 THEN 1 ELSE 0 END) as finished_count,
+                    SUM(CASE WHEN finished > 0 AND percentage < 60 THEN 1 ELSE 0 END) as struggling_count,
+                    AVG(opened) as avg_opened_per_content
+                FROM h5p_scores
+                WHERE user_id = %s AND course_id = %s
+            """, (user_id, course_id))
+            h5p_detail = cursor.fetchone()
+            
+            problem_attempts = int(h5p_detail['finished_count'] or 0) if h5p_detail else 0
+            problem_avg_score = round(float(h5p_detail['avg_finished_score'] or 0), 2) if h5p_detail else 0
+            problem_success_rate = round(
+                float(h5p_detail['successful_count'] or 0) / max(problem_attempts, 1), 2
+            ) if h5p_detail else 0
+            assessment_attempts_avg = min(round(float(h5p_detail['avg_opened_per_content'] or 0), 2), 999.99) if h5p_detail else 0
+            struggling_assessments_count = int(h5p_detail['struggling_count'] or 0) if h5p_detail else 0
+            
+            # --- Video views từ video_progress detail ---
+            cursor.execute("""
+                SELECT COUNT(*) as video_views
+                FROM video_progress
+                WHERE user_id = %s AND course_id = %s AND progress_percent > 0
+            """, (user_id, course_id))
+            video_detail = cursor.fetchone()
+            video_views = int(video_detail['video_views'] or 0) if video_detail else 0
+            
+            # --- Access frequency & active_days ---
+            # Estimate active_days: tổng items đã tương tác / ước lượng items per day
+            total_items_interacted = problem_attempts + video_views
+            # Ước lượng: ~3-5 items per active day (conservative estimate)
+            active_days = max(1, total_items_interacted // 4) if total_items_interacted > 0 else 0
+            # Access frequency = active_days / weeks
+            access_frequency = round(active_days / max(weeks_since_enrollment, 1), 2)
+            
+            # --- max_inactive_gap_days ---
+            # Best proxy: days_since_last_activity (gap hiện tại từ lần hoạt động cuối)
+            max_inactive_gap_days = days_since_last_activity if days_since_last_activity < 999 else 0
+            
+            # --- Progress velocity & estimate ---
+            progress_velocity = min(round(
+                float(mooc_completion_rate or 0) / max(weeks_since_enrollment, 1), 2
+            ), 999.99)
+            progress_acceleration = 0  # Cần historical snapshots, chưa có
+            weeks_to_complete_estimate = min(round(
+                (100 - float(mooc_completion_rate or 0)) / max(progress_velocity, 0.01), 2
+            ), 999.99) if progress_velocity > 0 else None
+            
+            # --- First attempt success rate ---
+            # Ước lượng: nếu avg_opened ~= 1 và score cao → first attempt success cao
+            first_attempt_success_rate = problem_success_rate  # Best proxy hiện tại
+            
+            # --- Assessment improvement rate ---
+            assessment_improvement_rate = 0  # Cần per-attempt history
+            
+            # --- Late night / weekend ratio ---
+            # Cần event log timestamps (không có trong API hiện tại)
+            late_night_ratio = 0
+            weekend_ratio = 0
+            
             # Target labels và predictions
             
             # is_passed: Lấy từ MOOC grades API
@@ -1525,6 +1602,7 @@ class MOOCH5PDataFetcher:
                 progress_percent, current_chapter, current_section, current_unit,
                 mooc_completion_rate, overall_completion, completed_blocks, total_blocks,
                 last_activity, days_since_last_activity,
+                access_frequency, active_days,
                 h5p_total_contents, h5p_completed_contents, h5p_total_score, h5p_total_max_score,
                 h5p_overall_percentage, h5p_total_time_spent, h5p_completion_rate,
                 video_total_videos, video_completed_videos, video_in_progress_videos,
@@ -1532,6 +1610,12 @@ class MOOCH5PDataFetcher:
                 quiz_attempts, quiz_avg_score, quiz_completion_rate,
                 discussion_threads_count, discussion_comments_count, discussion_total_interactions,
                 discussion_questions_count, discussion_total_upvotes,
+                problem_attempts, problem_avg_score, problem_success_rate,
+                video_views, late_night_ratio, weekend_ratio,
+                max_inactive_gap_days,
+                assessment_attempts_avg, assessment_improvement_rate,
+                first_attempt_success_rate, struggling_assessments_count,
+                progress_velocity, progress_acceleration, weeks_to_complete_estimate,
                 relative_to_course_problem_score, relative_to_course_completion,
                 relative_to_course_video_completion, relative_to_course_discussion,
                 performance_percentile, is_below_course_average,
@@ -1539,8 +1623,9 @@ class MOOCH5PDataFetcher:
                 is_dropout, is_passed, fail_risk_score, extraction_batch_id
             ) VALUES (
                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
             )
             ON DUPLICATE KEY UPDATE
                 enrollment_mode = VALUES(enrollment_mode),
@@ -1559,6 +1644,8 @@ class MOOCH5PDataFetcher:
                 total_blocks = VALUES(total_blocks),
                 last_activity = VALUES(last_activity),
                 days_since_last_activity = VALUES(days_since_last_activity),
+                access_frequency = VALUES(access_frequency),
+                active_days = VALUES(active_days),
                 h5p_total_contents = VALUES(h5p_total_contents),
                 h5p_completed_contents = VALUES(h5p_completed_contents),
                 h5p_total_score = VALUES(h5p_total_score),
@@ -1581,6 +1668,20 @@ class MOOCH5PDataFetcher:
                 discussion_total_interactions = VALUES(discussion_total_interactions),
                 discussion_questions_count = VALUES(discussion_questions_count),
                 discussion_total_upvotes = VALUES(discussion_total_upvotes),
+                problem_attempts = VALUES(problem_attempts),
+                problem_avg_score = VALUES(problem_avg_score),
+                problem_success_rate = VALUES(problem_success_rate),
+                video_views = VALUES(video_views),
+                late_night_ratio = VALUES(late_night_ratio),
+                weekend_ratio = VALUES(weekend_ratio),
+                max_inactive_gap_days = VALUES(max_inactive_gap_days),
+                assessment_attempts_avg = VALUES(assessment_attempts_avg),
+                assessment_improvement_rate = VALUES(assessment_improvement_rate),
+                first_attempt_success_rate = VALUES(first_attempt_success_rate),
+                struggling_assessments_count = VALUES(struggling_assessments_count),
+                progress_velocity = VALUES(progress_velocity),
+                progress_acceleration = VALUES(progress_acceleration),
+                weeks_to_complete_estimate = VALUES(weeks_to_complete_estimate),
                 relative_to_course_problem_score = VALUES(relative_to_course_problem_score),
                 relative_to_course_completion = VALUES(relative_to_course_completion),
                 relative_to_course_video_completion = VALUES(relative_to_course_video_completion),
@@ -1603,6 +1704,7 @@ class MOOCH5PDataFetcher:
                 progress_percent, current_chapter, current_section, current_unit,
                 mooc_completion_rate, overall_completion, completed_blocks, total_blocks,
                 last_activity, days_since_last_activity,
+                access_frequency, active_days,
                 h5p_total_contents, h5p_completed_contents, h5p_total_score, h5p_total_max_score,
                 h5p_overall_percentage, h5p_total_time_spent, h5p_completion_rate,
                 video_total_videos, video_completed_videos, video_in_progress_videos,
@@ -1610,6 +1712,12 @@ class MOOCH5PDataFetcher:
                 quiz_attempts, quiz_avg_score, quiz_completion_rate,
                 discussion_threads_count, discussion_comments_count, discussion_total_interactions,
                 discussion_questions_count, discussion_total_upvotes,
+                problem_attempts, problem_avg_score, problem_success_rate,
+                video_views, late_night_ratio, weekend_ratio,
+                max_inactive_gap_days,
+                assessment_attempts_avg, assessment_improvement_rate,
+                first_attempt_success_rate, struggling_assessments_count,
+                progress_velocity, progress_acceleration, weeks_to_complete_estimate,
                 comparative_features['relative_to_course_problem_score'],
                 comparative_features['relative_to_course_completion'],
                 comparative_features['relative_to_course_video_completion'],
