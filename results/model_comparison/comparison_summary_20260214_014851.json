@@ -1,0 +1,77 @@
+{
+  "models": {
+    "Logistic Regression": {
+      "accuracy_mean": 0.8850631136044882,
+      "accuracy_std": 0.02213380936512762,
+      "auc_roc_mean": 0.9524475669006918,
+      "auc_roc_std": 0.019236496493397127,
+      "precision_mean": 0.8079052641511412,
+      "precision_std": 0.06608426206787289,
+      "recall_mean": 0.8198412698412699,
+      "recall_std": 0.057288012123503804,
+      "f1_score_mean": 0.8110107586934217,
+      "f1_score_std": 0.03399155289773124
+    },
+    "Random Forest": {
+      "accuracy_mean": 0.894857410004675,
+      "accuracy_std": 0.027137531130135374,
+      "auc_roc_mean": 0.9667650144993896,
+      "auc_roc_std": 0.01950868184331534,
+      "precision_mean": 0.8277667857699414,
+      "precision_std": 0.06956925185182261,
+      "recall_mean": 0.8308201058201059,
+      "recall_std": 0.05990455664676129,
+      "f1_score_mean": 0.826442083247529,
+      "f1_score_std": 0.040248958676741026
+    },
+    "SVM": {
+      "accuracy_mean": 0.877407667134175,
+      "accuracy_std": 0.0358664847967471,
+      "auc_roc_mean": 0.9430840455840457,
+      "auc_roc_std": 0.02770010765310361,
+      "precision_mean": 0.803844704465394,
+      "precision_std": 0.09045125051436317,
+      "recall_mean": 0.7981481481481482,
+      "recall_std": 0.05776586263515553,
+      "f1_score_mean": 0.7977678876943679,
+      "f1_score_std": 0.05204337467045192
+    },
+    "XGBoost": {
+      "accuracy_mean": 0.8927068723702665,
+      "accuracy_std": 0.03523558089280578,
+      "auc_roc_mean": 0.9672677553927554,
+      "auc_roc_std": 0.018469364237019753,
+      "precision_mean": 0.8368512078614533,
+      "precision_std": 0.07948522497712422,
+      "recall_mean": 0.8092592592592593,
+      "recall_std": 0.08175368917102105,
+      "f1_score_mean": 0.8189355957390715,
+      "f1_score_std": 0.05768379117261117
+    },
+    "CatBoost": {
+      "accuracy_mean": 0.8893875642823748,
+      "accuracy_std": 0.02856911091950526,
+      "auc_roc_mean": 0.9701118933150183,
+      "auc_roc_std": 0.015089933774554424,
+      "precision_mean": 0.8089003428957791,
+      "precision_std": 0.05907302260876127,
+      "recall_mean": 0.8341269841269842,
+      "recall_std": 0.058215085691316726,
+      "f1_score_mean": 0.8194134608810908,
+      "f1_score_std": 0.04329078934676399
+    }
+  },
+  "best_model": {
+    "by_accuracy": "Random Forest",
+    "by_auc_roc": "CatBoost",
+    "by_precision": "XGBoost",
+    "by_recall": "CatBoost",
+    "by_f1_score": "Random Forest"
+  },
+  "dataset_info": {
+    "total_samples": 922,
+    "n_features": 79,
+    "fail_rate": 0.3004,
+    "n_folds": 10
+  }
+}

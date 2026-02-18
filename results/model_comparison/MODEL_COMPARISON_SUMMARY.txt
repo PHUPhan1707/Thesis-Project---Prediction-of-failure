@@ -1,0 +1,113 @@
+================================================================================
+       MODEL COMPARISON SUMMARY - DROPOUT PREDICTION SYSTEM
+                        Thesis Evaluation
+================================================================================
+
+Date:           2026-02-14
+Evaluation:     10-Fold Stratified Cross-Validation
+Dataset:        922 samples, 79 features, 30.04% fail rate
+Data source:    data/features_v5.csv
+
+================================================================================
+1. COMPARISON TABLE (Mean +/- Std)
+================================================================================
+
++------------------------+---------------+---------------+---------------+---------------+---------------+
+| Model                  | AUC-ROC       | Accuracy      | Precision     | Recall        | F1-Score      |
++------------------------+---------------+---------------+---------------+---------------+---------------+
+| Logistic Regression    | 0.9524+-0.019 | 0.8851+-0.022 | 0.8079+-0.066 | 0.8198+-0.057 | 0.8110+-0.034 |
+| Random Forest          | 0.9668+-0.020 | 0.8949+-0.027 | 0.8278+-0.070 | 0.8308+-0.060 | 0.8264+-0.040 |
+| SVM (RBF)              | 0.9431+-0.028 | 0.8774+-0.036 | 0.8038+-0.090 | 0.7981+-0.058 | 0.7978+-0.052 |
+| XGBoost                | 0.9673+-0.018 | 0.8927+-0.035 | 0.8369+-0.079 | 0.8093+-0.082 | 0.8189+-0.058 |
+| CatBoost               | 0.9701+-0.015 | 0.8894+-0.029 | 0.8089+-0.059 | 0.8341+-0.058 | 0.8194+-0.043 |
++------------------------+---------------+---------------+---------------+---------------+---------------+
+
+================================================================================
+2. RANKING BY METRIC
+================================================================================
+
+  AUC-ROC:    1. CatBoost (0.9701)  2. XGBoost (0.9673)  3. Random Forest (0.9668)  4. LR (0.9524)  5. SVM (0.9431)
+  Accuracy:   1. Random Forest (0.8949)  2. XGBoost (0.8927)  3. CatBoost (0.8894)  4. LR (0.8851)  5. SVM (0.8774)
+  Precision:  1. XGBoost (0.8369)  2. Random Forest (0.8278)  3. CatBoost (0.8089)  4. LR (0.8079)  5. SVM (0.8038)
+  Recall:     1. CatBoost (0.8341)  2. Random Forest (0.8308)  3. LR (0.8198)  4. XGBoost (0.8093)  5. SVM (0.7981)
+  F1-Score:   1. Random Forest (0.8264)  2. CatBoost (0.8194)  3. XGBoost (0.8189)  4. LR (0.8110)  5. SVM (0.7978)
+
+================================================================================
+3. STABILITY ANALYSIS (Lower Std = More Stable)
+================================================================================
+
+  AUC-ROC Std:    CatBoost (0.015) < XGBoost (0.018) < LR (0.019) < RF (0.020) < SVM (0.028)
+  Accuracy Std:   LR (0.022) < RF (0.027) < CatBoost (0.029) < XGBoost (0.035) < SVM (0.036)
+  F1-Score Std:   LR (0.034) < RF (0.040) < CatBoost (0.043) < SVM (0.052) < XGBoost (0.058)
+
+  Most stable overall: CatBoost & Logistic Regression
+  Least stable:        SVM & XGBoost
+
+================================================================================
+4. HEAD-TO-HEAD: CatBoost vs XGBoost
+================================================================================
+
+  +---------------+----------+----------+---------+
+  | Metric        | CatBoost | XGBoost  | Winner  |
+  +---------------+----------+----------+---------+
+  | AUC-ROC       |  0.9701  |  0.9673  | CatBoost (+0.28%) |
+  | Accuracy      |  0.8894  |  0.8927  | XGBoost  (+0.33%) |
+  | Precision     |  0.8089  |  0.8369  | XGBoost  (+2.80%) |
+  | Recall        |  0.8341  |  0.8093  | CatBoost (+2.48%) |
+  | F1-Score      |  0.8194  |  0.8189  | CatBoost (+0.05%) |
+  | Stability     |  0.015   |  0.018   | CatBoost (lower std) |
+  +---------------+----------+----------+---------+
+
+  Verdict: CatBoost wins on AUC-ROC, Recall, F1, and Stability.
+           XGBoost wins on Accuracy and Precision by small margins.
+
+================================================================================
+5. KEY FINDINGS FOR THESIS
+================================================================================
+
+  (1) CatBoost achieves the highest AUC-ROC (0.970), the most important metric
+      for imbalanced dropout prediction (30% fail rate).
+
+  (2) CatBoost has the highest Recall (0.834), meaning it correctly identifies
+      more at-risk students. In an early-warning system, missing a struggling
+      student (false negative) is more costly than a false alarm.
+
+  (3) CatBoost is the most stable model on AUC-ROC (std=0.015), showing
+      consistent performance across all 10 folds.
+
+  (4) All gradient boosting models (CatBoost, XGBoost, Random Forest)
+      outperform traditional methods (Logistic Regression, SVM), justifying
+      the use of ensemble methods for this problem.
+
+  (5) Even Logistic Regression achieves AUC 0.952, indicating the features
+      are well-engineered and carry strong predictive signal.
+
+  (6) The performance gap between top 3 models is small (<0.4% AUC),
+      suggesting the feature set matters more than the algorithm choice.
+
+================================================================================
+6. CONCLUSION
+================================================================================
+
+  RECOMMENDED MODEL: CatBoost
+
+  Reasons:
+  - Best AUC-ROC (0.9701) and Recall (0.8341)
+  - Most stable predictions (lowest AUC-ROC std = 0.015)
+  - Native categorical feature handling (no manual encoding needed)
+  - Built-in early stopping and regularization
+  - Already integrated into the production system
+
+================================================================================
+7. OUTPUT FILES
+================================================================================
+
+  results/model_comparison/
+    comparison_summary_20260214_014851.json    - Full metrics (JSON)
+    comparison_details_20260214_014851.csv     - Per-fold results (CSV)
+    comparison_chart_20260214_014848.png       - Grouped bar chart
+    comparison_boxplot_20260214_014848.png     - Box plot distributions
+    comparison_radar_20260214_014848.png       - Radar/spider chart
+    comparison_heatmap_20260214_014848.png     - Heatmap
+
+================================================================================

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(python:*)",
+      "Bash(ls -la \"D:\\\\ProjectThesis\\\\dropout_prediction\\\\ml\"\" && ls -la \"D:ProjectThesisdropout_predictionmodels\"\")",
+      "Bash(pip install:*)",
+      "Bash(head:*)",
+      "Bash(wc:*)",
+      "Bash(python3:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}
