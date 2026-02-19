@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useDashboard } from '../../context/DashboardContext';
 import api from '../../services/api';
+import { ShapExplanationChart } from './ShapExplanation';
 import './StudentDetailModal.css';
 
 export function StudentDetailModal() {
     const { selectedStudent, selectedCourse, closeStudentDetail, isLoadingStudentDetail } = useDashboard();
-    const [activeTab, setActiveTab] = useState<'overview' | 'suggestions' | 'intervention'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'suggestions' | 'shap' | 'intervention'>('overview');
     const [interventionNote, setInterventionNote] = useState('');
     const [selectedAction, setSelectedAction] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -130,6 +131,13 @@ export function StudentDetailModal() {
                         {selectedStudent.suggestions?.length > 0 && (
                             <span className="tab-badge">{selectedStudent.suggestions.length}</span>
                         )}
+                    </button>
+                    <button
+                        className={`tab-btn ${activeTab === 'shap' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('shap')}
+                    >
+                        <span className="tab-icon">🧠</span>
+                        Phan tich AI
                     </button>
                     <button
                         className={`tab-btn ${activeTab === 'intervention' ? 'active' : ''}`}
@@ -264,6 +272,16 @@ export function StudentDetailModal() {
                                     <p>Sinh viên này không có vấn đề cần can thiệp ngay lập tức</p>
                                 </div>
                             )}
+                        </div>
+                    )}
+
+                    {/* SHAP Analysis Tab */}
+                    {activeTab === 'shap' && selectedStudent && selectedCourse && (
+                        <div className="tab-content shap-tab">
+                            <ShapExplanationChart
+                                userId={selectedStudent.user_id}
+                                courseId={selectedCourse.course_id}
+                            />
                         </div>
                     )}
 

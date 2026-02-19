@@ -172,6 +172,24 @@ def get_student_detail(user_id: int, course_id: str):
         return jsonify({"error": "Database error"}), 500
 
 
+@students_bp.get("/student/<int:user_id>/<path:course_id>/explain")
+def get_student_explanation(user_id: int, course_id: str):
+    """SHAP explanation for a single student's risk prediction"""
+    try:
+        model_service = current_app.config.get('model_service')
+        if not model_service:
+            return jsonify({"error": "Model service not available"}), 503
+
+        result = model_service.explain_student(course_id, user_id)
+        if result is None:
+            return jsonify({"error": "Student not found or no data available"}), 404
+
+        return jsonify(result)
+    except Exception:
+        logger.exception("Error generating SHAP explanation for user %s course %s", user_id, course_id)
+        return jsonify({"error": "Failed to generate explanation"}), 500
+
+
 @students_bp.get("/statistics/<path:course_id>")
 def get_statistics(course_id: str):
     """Lấy thống kê từ student_features + predictions"""

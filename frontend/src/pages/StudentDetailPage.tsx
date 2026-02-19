@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDashboard } from '../context/DashboardContext';
 import api from '../services/api';
+import { ShapExplanationChart } from '../components/Dashboard/ShapExplanation';
 import type { StudentDetail } from '../types';
 import './StudentDetailPage.css';
 
@@ -129,113 +130,127 @@ export default function StudentDetailPage() {
 
             {/* Main Content Grid */}
             <main className="detail-main">
-                {/* Left Column - Overview */}
-                <section className="overview-section">
-                    <div className="section-header">
-                        <span className="section-icon">📊</span>
-                        <h2>Tổng Quan</h2>
-                    </div>
-
-                    <div className="overview-grid">
-                        {/* Risk Score Card */}
-                        <div className="metric-card highlight">
-                            <div className="metric-header">
-                                <span className="metric-icon">📈</span>
-                                <span>Điểm Rủi Ro</span>
-                            </div>
-                            <div className={`metric-value value-${config.color}`}>
-                                {student.fail_risk_score?.toFixed(1) || 'N/A'}%
-                            </div>
-                            <div className="metric-bar">
-                                <div
-                                    className={`bar-fill fill-${config.color}`}
-                                    style={{ width: `${student.fail_risk_score || 0}%` }}
-                                ></div>
-                            </div>
+                {/* Left Column */}
+                <div className="left-column">
+                    <section className="overview-section">
+                        <div className="section-header">
+                            <span className="section-icon">📊</span>
+                            <h2>Tổng Quan</h2>
                         </div>
 
-                        {/* Grade Card */}
-                        <div className="metric-card">
-                            <div className="metric-header">
-                                <span className="metric-icon">📝</span>
-                                <span>Điểm Trung Bình</span>
-                            </div>
-                            <div className="metric-value">
-                                {student.mooc_grade_percentage?.toFixed(1) || 'N/A'}%
-                            </div>
-                            <div className="metric-bar">
-                                <div
-                                    className="bar-fill fill-blue"
-                                    style={{ width: `${student.mooc_grade_percentage || 0}%` }}
-                                ></div>
-                            </div>
-                        </div>
-
-                        {/* Progress Card */}
-                        <div className="metric-card">
-                            <div className="metric-header">
-                                <span className="metric-icon">📚</span>
-                                <span>Tiến Độ Học</span>
-                            </div>
-                            <div className="metric-value">
-                                {student.mooc_completion_rate?.toFixed(1) || 'N/A'}%
-                            </div>
-                            <div className="metric-bar">
-                                <div
-                                    className="bar-fill fill-purple"
-                                    style={{ width: `${student.mooc_completion_rate || 0}%` }}
-                                ></div>
-                            </div>
-                        </div>
-
-                        {/* Last Activity Card */}
-                        <div className="metric-card">
-                            <div className="metric-header">
-                                <span className="metric-icon">📅</span>
-                                <span>Hoạt Động Cuối</span>
-                            </div>
-                            <div className="metric-value">
-                                {student.days_since_last_activity || 0} ngày
-                            </div>
-                            <span className="metric-note">trước</span>
-                        </div>
-                    </div>
-
-                    {/* Additional Info */}
-                    <div className="additional-info">
-                        <h3>Thông tin bổ sung</h3>
-                        <div className="info-grid">
-                            <div className="info-item">
-                                <span className="info-label">🎬 Video hoàn thành</span>
-                                <span className="info-value">{student.video_completion_rate?.toFixed(1) || 'N/A'}%</span>
-                            </div>
-                            <div className="info-item">
-                                <span className="info-label">📝 Quiz TB</span>
-                                <span className="info-value">{student.quiz_avg_score?.toFixed(1) || 'N/A'}%</span>
-                            </div>
-                            <div className="info-item">
-                                <span className="info-label">💬 Tương tác Forum</span>
-                                <span className="info-value">{student.discussion_threads_count || 0} bài</span>
-                            </div>
-                            <div className="info-item">
-                                <span className="info-label">🆔 User ID</span>
-                                <span className="info-value">{student.user_id}</span>
-                            </div>
-                            {student.mssv && (
-                                <div className="info-item">
-                                    <span className="info-label">🎓 MSSV</span>
-                                    <span className="info-value">{student.mssv}</span>
+                        <div className="overview-grid">
+                            {/* Risk Score Card */}
+                            <div className="metric-card highlight">
+                                <div className="metric-header">
+                                    <span className="metric-icon">📈</span>
+                                    <span>Điểm Rủi Ro</span>
                                 </div>
-                            )}
-                            {student.username && (
-                                <div className="info-item">
-                                    <span className="info-label">👤 Username</span>
-                                    <span className="info-value">@{student.username}</span>
+                                <div className={`metric-value value-${config.color}`}>
+                                    {student.fail_risk_score?.toFixed(1) || 'N/A'}%
                                 </div>
-                            )}
+                                <div className="metric-bar">
+                                    <div
+                                        className={`bar-fill fill-${config.color}`}
+                                        style={{ width: `${student.fail_risk_score || 0}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+
+                            {/* Grade Card */}
+                            <div className="metric-card">
+                                <div className="metric-header">
+                                    <span className="metric-icon">📝</span>
+                                    <span>Điểm Trung Bình</span>
+                                </div>
+                                <div className="metric-value">
+                                    {student.mooc_grade_percentage?.toFixed(1) || 'N/A'}%
+                                </div>
+                                <div className="metric-bar">
+                                    <div
+                                        className="bar-fill fill-blue"
+                                        style={{ width: `${student.mooc_grade_percentage || 0}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+
+                            {/* Progress Card */}
+                            <div className="metric-card">
+                                <div className="metric-header">
+                                    <span className="metric-icon">📚</span>
+                                    <span>Tiến Độ Học</span>
+                                </div>
+                                <div className="metric-value">
+                                    {student.mooc_completion_rate?.toFixed(1) || 'N/A'}%
+                                </div>
+                                <div className="metric-bar">
+                                    <div
+                                        className="bar-fill fill-purple"
+                                        style={{ width: `${student.mooc_completion_rate || 0}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+
+                            {/* Last Activity Card */}
+                            <div className="metric-card">
+                                <div className="metric-header">
+                                    <span className="metric-icon">📅</span>
+                                    <span>Hoạt Động Cuối</span>
+                                </div>
+                                <div className="metric-value">
+                                    {student.days_since_last_activity || 0} ngày
+                                </div>
+                                <span className="metric-note">trước</span>
+                            </div>
                         </div>
-                    </div>
-                </section>
+
+                        {/* Additional Info */}
+                        <div className="additional-info">
+                            <h3>Thông tin bổ sung</h3>
+                            <div className="info-grid">
+                                <div className="info-item">
+                                    <span className="info-label">🎬 Video hoàn thành</span>
+                                    <span className="info-value">{student.video_completion_rate?.toFixed(1) || 'N/A'}%</span>
+                                </div>
+                                <div className="info-item">
+                                    <span className="info-label">📝 Quiz TB</span>
+                                    <span className="info-value">{student.quiz_avg_score?.toFixed(1) || 'N/A'}%</span>
+                                </div>
+                                <div className="info-item">
+                                    <span className="info-label">💬 Tương tác Forum</span>
+                                    <span className="info-value">{student.discussion_threads_count || 0} bài</span>
+                                </div>
+                                <div className="info-item">
+                                    <span className="info-label">🆔 User ID</span>
+                                    <span className="info-value">{student.user_id}</span>
+                                </div>
+                                {student.mssv && (
+                                    <div className="info-item">
+                                        <span className="info-label">🎓 MSSV</span>
+                                        <span className="info-value">{student.mssv}</span>
+                                    </div>
+                                )}
+                                {student.username && (
+                                    <div className="info-item">
+                                        <span className="info-label">👤 Username</span>
+                                        <span className="info-value">@{student.username}</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* SHAP Analysis Section - below overview */}
+                    <section className="shap-analysis-section">
+                        <div className="section-header">
+                            <span className="section-icon">🧠</span>
+                            <h2>Phân Tích AI</h2>
+                        </div>
+                        <ShapExplanationChart
+                            userId={student.user_id}
+                            courseId={selectedCourse.course_id}
+                        />
+                    </section>
+                </div>
 
                 {/* Right Column */}
                 <aside className="right-column">

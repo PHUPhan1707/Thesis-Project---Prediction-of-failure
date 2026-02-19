@@ -16,10 +16,25 @@ if __package__ in (None, ""):
     import sys
     sys.path.append(str(Path(__file__).resolve().parents[1]))
     from backend.db import fetch_one, fetch_all, execute  # type: ignore
+    from backend.utils.feature_labels import get_vi_label  # type: ignore
 else:
     from .db import fetch_one, fetch_all, execute
+    from .utils.feature_labels import get_vi_label
 
 logger = logging.getLogger(__name__)
+
+
+def _serialize_value(val):
+    """Convert numpy/pandas types to JSON-serializable Python types."""
+    if isinstance(val, (np.integer,)):
+        return int(val)
+    if isinstance(val, (np.floating,)):
+        return round(float(val), 4)
+    if isinstance(val, (np.bool_,)):
+        return bool(val)
+    if pd.isna(val):
+        return None
+    return val
 
 
 class ModelV4Service:
@@ -39,6 +54,7 @@ class ModelV4Service:
         self.model: Optional[CatBoostClassifier] = None
         self.feature_names: Optional[List[str]] = None
         self.categorical_features: Optional[List[str]] = None
+        self._shap_explainer = None  # lazy-initialized on first explain call
         
         # Set default paths
         if model_path:
@@ -112,6 +128,12 @@ class ModelV4Service:
             return None
 
         df = pd.DataFrame(data)
+
+        # Convert decimal.Decimal to float (MySQL returns Decimal types that break pandas math)
+        from decimal import Decimal as _Dec
+        for col in df.columns:
+            if df[col].apply(lambda x: isinstance(x, _Dec)).any():
+                df[col] = pd.to_numeric(df[col], errors="coerce")
 
         # Convert datetime columns
         for col in ["last_activity", "extracted_at"]:
@@ -306,7 +328,10 @@ class ModelV4Service:
         if student_raw_data.empty:
             return None
 
-        features_df = self._feature_engineer(student_raw_data.copy())
+        # Feature-engineer ALL students so group-relative features are correct,
+        # then extract the target student.
+        features_df = self._feature_engineer(raw_df.copy())
+        features_df = features_df[features_df["user_id"] == user_id]
 
         # Prepare features
         X = features_df[self.feature_names].copy()
@@ -333,6 +358,140 @@ class ModelV4Service:
             self._save_predictions_to_db(save_df)
 
         return student_result
+
+    def _fetch_raw_data_for_student(self, course_id: str, user_id: int) -> Optional[pd.DataFrame]:
+        """Fetch raw data for a single student (optimized with WHERE user_id filter)."""
+        query = """
+            SELECT rd.*, e.email, e.full_name, e.username, e.mssv
+            FROM raw_data rd
+            LEFT JOIN enrollments e ON rd.user_id = e.user_id AND rd.course_id = e.course_id
+            WHERE rd.course_id = %s AND rd.user_id = %s
+        """
+        data = fetch_all(query, (course_id, user_id))
+        if not data:
+            return None
+
+        df = pd.DataFrame(data)
+
+        # Convert decimal.Decimal to float (MySQL returns Decimal types that break pandas math)
+        from decimal import Decimal as _Dec
+        for col in df.columns:
+            if df[col].apply(lambda x: isinstance(x, _Dec)).any():
+                df[col] = pd.to_numeric(df[col], errors="coerce")
+
+        for col in ["last_activity", "extracted_at"]:
+            if col in df.columns:
+                df[col] = pd.to_datetime(df[col], errors="coerce")
+
+        numeric_cols = [
+            "mooc_grade_percentage", "mooc_completion_rate",
+            "days_since_last_activity", "h5p_total_contents",
+            "h5p_completed_contents", "h5p_overall_percentage",
+            "video_completion_rate", "discussion_total_interactions",
+        ]
+        for col in numeric_cols:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+
+        return df
+
+    def explain_student(self, course_id: str, user_id: int) -> Optional[Dict[str, Any]]:
+        """
+        Generate SHAP explanation for a single student's risk prediction.
+        Returns risk_factors (positive SHAP) and protective_factors (negative SHAP).
+        """
+        if not self.model or not self.feature_names:
+            logger.error("Model not loaded or feature names missing.")
+            return None
+
+        # Fetch ALL students in course so group-relative features
+        # (relative_completion, relative_to_course_*) are computed correctly.
+        raw_df = self._fetch_raw_data_for_course(course_id)
+        if raw_df is None or raw_df.empty:
+            return None
+
+        features_df = self._feature_engineer(raw_df.copy())
+
+        # Extract the target student
+        student_mask = features_df["user_id"] == user_id
+        if not student_mask.any():
+            return None
+        features_df = features_df.loc[student_mask]
+
+        # Prepare feature matrix
+        X = features_df[self.feature_names].copy()
+        for col in self.categorical_features:
+            if col in X.columns:
+                X[col] = X[col].astype(str).replace("nan", "missing")
+        numeric_cols = [col for col in X.columns if col not in self.categorical_features]
+        X[numeric_cols] = X[numeric_cols].fillna(0)
+
+        # Get prediction
+        proba = self.model.predict_proba(X)[:, 1]
+        fail_risk_score = float(proba[0]) * 100
+
+        # Lazy-init SHAP explainer
+        if self._shap_explainer is None:
+            import shap
+            self._shap_explainer = shap.TreeExplainer(self.model)
+            logger.info("SHAP TreeExplainer initialized")
+
+        # Compute SHAP values for this student
+        shap_values = self._shap_explainer.shap_values(X)
+
+        # Xử lý tất cả các dạng output từ SHAP TreeExplainer + CatBoost:
+        # - list [class0, class1]: lấy class 1 (fail)
+        # - 3D array [n_classes, n_samples, n_features]: lấy class 1
+        # - 2D array [n_samples, n_features]: đã là class fail
+        # - 1D array: đã flatten sẵn
+        if isinstance(shap_values, list):
+            sv = np.array(shap_values[1]).flatten()
+        elif isinstance(shap_values, np.ndarray) and shap_values.ndim == 3:
+            sv = shap_values[1][0]  # class 1 (fail), student 0
+        elif isinstance(shap_values, np.ndarray) and shap_values.ndim == 2:
+            sv = shap_values[0]     # student 0 (chỉ 1 student)
+        else:
+            sv = np.array(shap_values).flatten()
+
+        expected = self._shap_explainer.expected_value
+        if isinstance(expected, (list, np.ndarray)):
+            raw_base = float(expected[1]) if len(expected) > 1 else float(expected[0])
+        else:
+            raw_base = float(expected)
+        # Convert log-odds to probability for display
+        base_value = 1.0 / (1.0 + np.exp(-raw_base))
+
+        # Build factor list with feature values
+        feature_values = X.iloc[0]
+        factors = []
+        for i, fname in enumerate(self.feature_names):
+            factors.append({
+                "feature": fname,
+                "label_vi": get_vi_label(fname),
+                "shap_value": round(float(sv[i]), 6),
+                "feature_value": _serialize_value(feature_values[fname]),
+            })
+
+        # Split into risk (positive SHAP) and protective (negative SHAP), sorted by magnitude
+        risk_factors = sorted(
+            [f for f in factors if f["shap_value"] > 0],
+            key=lambda x: x["shap_value"],
+            reverse=True,
+        )[:7]
+
+        protective_factors = sorted(
+            [f for f in factors if f["shap_value"] < 0],
+            key=lambda x: x["shap_value"],
+        )[:5]
+
+        return {
+            "user_id": int(user_id),
+            "course_id": course_id,
+            "fail_risk_score": round(fail_risk_score, 2),
+            "base_value": round(base_value, 4),
+            "risk_factors": risk_factors,
+            "protective_factors": protective_factors,
+        }
 
     def _save_predictions_to_db(self, predictions_df: pd.DataFrame):
         """

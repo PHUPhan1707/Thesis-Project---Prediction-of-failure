@@ -9,7 +9,8 @@
       "Bash(wc:*)",
       "Bash(python3:*)",
       "Bash(ls:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npx:*)"
     ]
   }
 }

@@ -4,6 +4,7 @@ import type {
   InterventionRequest,
   InterventionResponse,
   RiskLevel,
+  ShapExplanation,
   SortBy,
   SortOrder,
   StatisticsResponse,
@@ -144,6 +145,15 @@ export async function getH5PStudentPerformance(courseId: string, userId: number)
   return fetchAPI(`/h5p-analytics/${encodedCourseId}/student/${userId}`);
 }
 
+// Get SHAP explanation for a student
+export async function getStudentExplanation(
+  userId: number,
+  courseId: string
+): Promise<ShapExplanation> {
+  const encodedCourseId = encodeURIComponent(courseId);
+  return fetchAPI(`/student/${userId}/${encodedCourseId}/explain`);
+}
+
 // Export all API functions
 export const api = {
   checkHealth,
@@ -157,6 +167,7 @@ export const api = {
   getH5PLowPerformance,
   getH5PContentDetail,
   getH5PStudentPerformance,
+  getStudentExplanation,
 };
 
 export default api;

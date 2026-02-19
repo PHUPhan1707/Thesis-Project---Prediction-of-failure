@@ -133,3 +133,20 @@ export interface DashboardSummary {
 
 export interface DashboardSummaryResponse extends DashboardSummary {}
 
+// SHAP Explanation types
+export interface ShapFactor {
+  feature: string;
+  label_vi: string;
+  shap_value: number;
+  feature_value: number | string | null;
+}
+
+export interface ShapExplanation {
+  user_id: number;
+  course_id: string;
+  fail_risk_score: number;
+  base_value: number;
+  risk_factors: ShapFactor[];
+  protective_factors: ShapFactor[];
+}
+

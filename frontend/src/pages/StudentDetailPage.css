@@ -193,6 +193,13 @@
     border-radius: 20px;
 }
 
+/* Left Column */
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
 /* Overview Section */
 .overview-section {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 250, 248, 0.95) 100%);
@@ -332,6 +339,14 @@
     font-size: 1rem;
     font-weight: 600;
     color: #3a3a3a;
+}
+
+/* SHAP Analysis Section */
+.shap-analysis-section {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 250, 248, 0.95) 100%);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 /* Right Column */

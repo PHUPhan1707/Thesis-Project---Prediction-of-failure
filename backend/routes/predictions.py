@@ -34,7 +34,7 @@ def predict_course_v4(course_id: str):
                 "success": True,
                 "course_id": course_id,
                 "model_name": service.model_name,
-                "model_version": service.model_version,
+                "model_version": getattr(service, 'model_version', 'v5.0.0'),
                 "predicted_students": len(result_df),
                 "avg_risk_score": avg_risk,
                 "message": f"Successfully predicted {len(result_df)} students"
