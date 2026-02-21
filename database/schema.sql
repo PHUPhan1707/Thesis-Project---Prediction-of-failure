@@ -367,3 +367,155 @@ CREATE TABLE IF NOT EXISTS raw_data (
     INDEX idx_extracted_at (extracted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 COMMENT='Aggregated features for ML training - includes H5P, Video, MOOC Grades, Progress, and Discussions';
+
+-- ============================================================
+-- TABLE 11: student_features (V2 - Production features)
+-- Bảng features cho production: dashboard & prediction đọc từ đây.
+-- Populate từ raw_data hoặc từ fetch_mooc_h5p_data / populate_student_features.
+-- ============================================================
+CREATE TABLE IF NOT EXISTS student_features (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    course_id VARCHAR(255) NOT NULL,
+
+    -- Enrollment features
+    enrollment_mode VARCHAR(50),
+    is_active BOOLEAN DEFAULT TRUE,
+    weeks_since_enrollment DECIMAL(5,2) DEFAULT 0,
+
+    -- MOOC Grades features
+    mooc_grade_percentage DECIMAL(5,2) DEFAULT 0,
+    mooc_letter_grade VARCHAR(5),
+    mooc_is_passed BOOLEAN DEFAULT NULL,
+
+    -- Progress features
+    progress_percent DECIMAL(5,2) DEFAULT 0,
+    current_chapter VARCHAR(500),
+    current_section VARCHAR(500),
+    current_unit VARCHAR(500),
+    mooc_completion_rate DECIMAL(5,2) DEFAULT 0,
+    overall_completion DECIMAL(5,2) DEFAULT 0,
+    completed_blocks INT DEFAULT 0,
+    total_blocks INT DEFAULT 0,
+    last_activity DATETIME,
+    days_since_last_activity INT DEFAULT 999,
+
+    -- Activity features
+    access_frequency DECIMAL(10,2) DEFAULT 0,
+    active_days INT DEFAULT 0,
+
+    -- H5P Scores features
+    h5p_total_contents INT DEFAULT 0,
+    h5p_completed_contents INT DEFAULT 0,
+    h5p_total_score INT DEFAULT 0,
+    h5p_total_max_score INT DEFAULT 0,
+    h5p_overall_percentage DECIMAL(5,2) DEFAULT 0,
+    h5p_total_time_spent INT DEFAULT 0,
+    h5p_completion_rate DECIMAL(5,2) DEFAULT 0,
+
+    -- Video features
+    video_total_videos INT DEFAULT 0,
+    video_completed_videos INT DEFAULT 0,
+    video_in_progress_videos INT DEFAULT 0,
+    video_total_duration INT DEFAULT 0,
+    video_total_watched_time INT DEFAULT 0,
+    video_completion_rate DECIMAL(5,2) DEFAULT 0,
+    video_watch_rate DECIMAL(5,2) DEFAULT 0,
+
+    -- Assessment/Quiz features
+    quiz_attempts INT DEFAULT 0,
+    quiz_avg_score DECIMAL(5,2) DEFAULT 0,
+    quiz_completion_rate DECIMAL(5,2) DEFAULT 0,
+
+    -- Forum/Discussion (Legacy)
+    forum_posts INT DEFAULT 0,
+    forum_comments INT DEFAULT 0,
+    forum_upvotes INT DEFAULT 0,
+
+    -- MOOC Discussion features
+    discussion_threads_count INT DEFAULT 0,
+    discussion_comments_count INT DEFAULT 0,
+    discussion_total_interactions INT DEFAULT 0,
+    discussion_questions_count INT DEFAULT 0,
+    discussion_total_upvotes INT DEFAULT 0,
+
+    -- Metadata
+    extracted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    extraction_batch_id VARCHAR(100),
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    UNIQUE KEY uk_user_course (user_id, course_id),
+    INDEX idx_course_id (course_id),
+    INDEX idx_mooc_grade_percentage (mooc_grade_percentage),
+    INDEX idx_mooc_completion_rate (mooc_completion_rate),
+    INDEX idx_days_since_last_activity (days_since_last_activity),
+    INDEX idx_updated_at (updated_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+COMMENT='V2 Production features - dashboard & prediction read from here';
+
+-- ============================================================
+-- TABLE 12: predictions (V2 - Model outputs, supports history)
+-- Lưu kết quả dự đoán risk; is_latest = TRUE cho bản ghi mới nhất.
+-- ============================================================
+CREATE TABLE IF NOT EXISTS predictions (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    course_id VARCHAR(255) NOT NULL,
+    model_name VARCHAR(100) NOT NULL,
+    model_version VARCHAR(50),
+    model_path VARCHAR(500),
+    fail_risk_score DECIMAL(5,2) NOT NULL,
+    risk_level VARCHAR(20) NOT NULL,
+    snapshot_grade DECIMAL(5,2),
+    snapshot_completion_rate DECIMAL(5,2),
+    snapshot_days_inactive INT,
+    predicted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_latest BOOLEAN DEFAULT TRUE,
+
+    INDEX idx_user_course (user_id, course_id),
+    INDEX idx_user_course_latest (user_id, course_id, is_latest),
+    INDEX idx_course_id (course_id),
+    INDEX idx_model_name (model_name),
+    INDEX idx_predicted_at (predicted_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+COMMENT='V2 Model prediction outputs - one row per prediction, is_latest marks current';
+
+-- ============================================================
+-- TABLE 13: model_registry (V2 - Quản lý models)
+-- Danh sách model có sẵn; is_default = TRUE cho model mặc định.
+-- ============================================================
+CREATE TABLE IF NOT EXISTS model_registry (
+    model_name VARCHAR(100) PRIMARY KEY,
+    model_version VARCHAR(50),
+    model_path VARCHAR(500),
+    features_csv_path VARCHAR(500),
+    model_type VARCHAR(50),
+    domain VARCHAR(100),
+    is_active BOOLEAN DEFAULT TRUE,
+    is_default BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    INDEX idx_is_default (is_default),
+    INDEX idx_is_active (is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+COMMENT='V2 Registry of available models';
+
+-- ============================================================
+-- TABLE 14: course_model_mapping (V2 - Map course → model)
+-- Gán model cho từng khóa học; backend dùng để auto-select model.
+-- ============================================================
+CREATE TABLE IF NOT EXISTS course_model_mapping (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    course_id VARCHAR(255) NOT NULL,
+    model_name VARCHAR(100) NOT NULL,
+    auto_predict BOOLEAN DEFAULT TRUE,
+    predict_frequency VARCHAR(50),
+    is_active BOOLEAN DEFAULT TRUE,
+    assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    INDEX idx_course_id (course_id),
+    INDEX idx_model_name (model_name),
+    INDEX idx_course_active (course_id, is_active),
+    FOREIGN KEY (model_name) REFERENCES model_registry(model_name) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+COMMENT='V2 Map course to model for auto-selection';
