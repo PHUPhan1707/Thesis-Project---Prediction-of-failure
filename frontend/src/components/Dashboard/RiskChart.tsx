@@ -1,15 +1,12 @@
 import { useDashboard } from '../../context/DashboardContext';
+import { ChartSkeleton } from '../LoadingSkeleton';
 import './RiskChart.css';
 
 export function RiskDistributionChart() {
     const { statistics, isLoadingStatistics } = useDashboard();
 
     if (isLoadingStatistics || !statistics) {
-        return (
-            <div className="risk-chart-container loading">
-                <div className="skeleton-chart"></div>
-            </div>
-        );
+        return <ChartSkeleton />;
     }
 
     const total = statistics.total_students;

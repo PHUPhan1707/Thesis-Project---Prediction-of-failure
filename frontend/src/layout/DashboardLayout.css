@@ -1,7 +1,7 @@
 /* App shell with left sidebar */
 .app-shell {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f3f0 0%, #ebe8e4 50%, #f0ede8 100%);
+  background: var(--gradient-hero);
   display: flex;
 }
 
@@ -10,6 +10,18 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+/* Header container with theme toggle */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--card-shadow);
+  gap: 16px;
 }
 
 .app-content {
@@ -34,6 +46,11 @@
   border-radius: 16px;
   margin-bottom: 24px;
   animation: slideDown 0.3s ease;
+}
+
+[data-theme='dark'] .error-banner {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%);
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
 @keyframes slideDown {
@@ -61,20 +78,20 @@
 .dashboard-footer {
   padding: 28px 20px;
   text-align: center;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--card-bg);
   backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid var(--border-color);
 }
 
 .dashboard-footer p {
   margin: 0;
   font-size: 0.9rem;
-  color: #5a5a5a;
+  color: var(--text-secondary);
 }
 
 .footer-subtitle {
   font-size: 0.85rem !important;
-  color: #8a8a8a !important;
+  color: var(--text-tertiary) !important;
   margin-top: 6px !important;
 }
 
@@ -86,9 +103,9 @@
   justify-content: center;
   padding: 80px 20px;
   text-align: center;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(252, 250, 248, 0.9) 100%);
+  background: var(--card-bg);
   border-radius: 24px;
-  border: 2px dashed rgba(0, 0, 0, 0.1);
+  border: 2px dashed var(--border-color);
 }
 
 .no-course-icon {

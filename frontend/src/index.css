@@ -8,6 +8,74 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Light Mode Colors */
+  --bg-primary: #f5f3f0;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #faf9f7;
+  
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  
+  --border-color: #e5e7eb;
+  --border-light: #f3f4f6;
+  
+  --accent-primary: #6366f1;
+  --accent-secondary: #8b5cf6;
+  --accent-hover: #4f46e5;
+  
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+  
+  --skeleton-base: #e0e0e0;
+  --skeleton-highlight: #f0f0f0;
+  
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, #f5e6d3 0%, #e8d5c4 50%, #f0e8df 100%);
+  --gradient-card: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+}
+
+/* Dark Mode Colors */
+[data-theme='dark'] {
+  color-scheme: dark;
+  
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  
+  --card-bg: #1e293b;
+  --card-border: #334155;
+  --card-shadow: rgba(0, 0, 0, 0.3);
+  
+  --border-color: #334155;
+  --border-light: #475569;
+  
+  --accent-primary: #818cf8;
+  --accent-secondary: #a78bfa;
+  --accent-hover: #6366f1;
+  
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --info: #60a5fa;
+  
+  --skeleton-base: #2a2a2a;
+  --skeleton-highlight: #3a3a3a;
+  
+  /* Dark gradients */
+  --gradient-hero: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+  --gradient-card: linear-gradient(135deg, #1e293b 0%, #15202e 100%);
 }
 
 html,
@@ -17,8 +85,9 @@ body {
 
 body {
   margin: 0;
-  background: #f5f3f0;
-  color: #1f2937;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 *,
@@ -32,6 +101,11 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 

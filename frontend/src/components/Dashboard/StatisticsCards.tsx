@@ -1,4 +1,5 @@
 import { useDashboard } from '../../context/DashboardContext';
+import { StatsCardSkeleton } from '../LoadingSkeleton';
 import './StatisticsCards.css';
 
 export function StatisticsCards() {
@@ -7,12 +8,8 @@ export function StatisticsCards() {
     if (isLoadingStatistics) {
         return (
             <div className="statistics-cards loading">
-                {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="stat-card skeleton">
-                        <div className="skeleton-icon"></div>
-                        <div className="skeleton-text"></div>
-                        <div className="skeleton-value"></div>
-                    </div>
+                {[1, 2, 3, 4, 5].map((i) => (
+                    <StatsCardSkeleton key={i} />
                 ))}
             </div>
         );

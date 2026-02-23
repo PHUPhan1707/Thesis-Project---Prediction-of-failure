@@ -1,8 +1,11 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDashboard } from '../../context/DashboardContext';
 import './CourseSelector.css';
 
 export function CourseSelector() {
     const { courses, selectedCourse, setSelectedCourse, isLoadingCourses } = useDashboard();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     if (isLoadingCourses) {
         return (
@@ -35,6 +38,15 @@ export function CourseSelector() {
         return { institution: 'Unknown', code: courseId, term: 'Unknown' };
     };
 
+    // Handle course change (redirect if on student detail page)
+    const handleCourseChange = (course: Course) => {
+        // If currently viewing a student detail page, redirect to main dashboard
+        if (location.pathname.includes('/student/')) {
+            navigate('/details');
+        }
+        setSelectedCourse(course);
+    };
+
     return (
         <div className="course-selector-container">
             <div className="selector-header">
@@ -50,7 +62,7 @@ export function CourseSelector() {
                         <button
                             key={course.course_id}
                             className={`course-card ${isSelected ? 'selected' : ''}`}
-                            onClick={() => setSelectedCourse(course)}
+                            onClick={() => handleCourseChange(course)}
                         >
                             <div className="course-icon">🎓</div>
                             <div className="course-info">

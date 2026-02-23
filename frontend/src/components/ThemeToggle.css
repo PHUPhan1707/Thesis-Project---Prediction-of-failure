@@ -1,0 +1,76 @@
+/* Theme Toggle Button Styles */
+
+.theme-toggle {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: var(--card-bg, white);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+}
+
+.theme-toggle-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-toggle:hover .theme-toggle-inner {
+  transform: rotate(20deg);
+}
+
+.theme-icon {
+  color: var(--text-primary, #1f2937);
+  transition: color 0.3s ease;
+}
+
+/* Light mode icon (Moon) */
+[data-theme='light'] .theme-icon {
+  color: #6366f1;
+}
+
+/* Dark mode icon (Sun) */
+[data-theme='dark'] .theme-icon {
+  color: #fbbf24;
+}
+
+/* Add subtle glow effect */
+[data-theme='dark'] .theme-toggle {
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.2);
+}
+
+[data-theme='dark'] .theme-toggle:hover {
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+/* Animation on theme change */
+@keyframes rotate-in {
+  0% {
+    transform: rotate(-180deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(0);
+    opacity: 1;
+  }
+}
+
+.theme-toggle-inner {
+  animation: rotate-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}

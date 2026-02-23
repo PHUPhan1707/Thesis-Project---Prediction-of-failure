@@ -1,4 +1,5 @@
 import { useDashboard } from '../../context/DashboardContext';
+import ThemeToggle from '../ThemeToggle';
 import './Header.css';
 
 export function Header() {
@@ -51,6 +52,8 @@ export function Header() {
                         <span className="user-role">Instructor</span>
                     </div>
                 </div>
+
+                <ThemeToggle />
             </div>
         </header>
     );

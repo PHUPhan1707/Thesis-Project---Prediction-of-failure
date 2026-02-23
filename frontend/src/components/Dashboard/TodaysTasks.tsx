@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { CardSkeleton } from '../LoadingSkeleton';
 import type { TodayTask } from '../../types';
 import './TodaysTasks.css';
 
@@ -17,17 +18,8 @@ export function TodaysTasks({ tasks, isLoading }: TodaysTasksProps) {
                     <span className="header-icon">📋</span>
                     <h3>Việc Cần Làm Hôm Nay</h3>
                 </div>
-                <div className="tasks-skeleton">
-                    {[1, 2, 3].map((i) => (
-                        <div key={i} className="task-skeleton-item">
-                            <div className="skeleton-avatar"></div>
-                            <div className="skeleton-content">
-                                <div className="skeleton-name"></div>
-                                <div className="skeleton-reason"></div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <CardSkeleton />
+                <CardSkeleton />
             </div>
         );
     }

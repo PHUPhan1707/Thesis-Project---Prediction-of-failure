@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useDashboard } from '../../context/DashboardContext';
+import { StudentListSkeleton } from '../LoadingSkeleton';
 import type { Student } from '../../types';
 import './StudentList.css';
 
@@ -17,20 +18,7 @@ export function StudentList() {
     }
 
     if (isLoadingStudents) {
-        return (
-            <div className="student-list loading">
-                {[1, 2, 3, 4, 5].map((i) => (
-                    <div key={i} className="student-card skeleton">
-                        <div className="skeleton-avatar"></div>
-                        <div className="skeleton-content">
-                            <div className="skeleton-line wide"></div>
-                            <div className="skeleton-line medium"></div>
-                            <div className="skeleton-line short"></div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
+        return <StudentListSkeleton count={8} />;
     }
 
     if (students.length === 0) {
@@ -77,16 +65,16 @@ function StudentCard({ student, index, onClick }: StudentCardProps) {
     };
 
     const config = riskLevelConfig[student.risk_level] || riskLevelConfig.LOW;
-    
+
     // Check completion status with fallback to mooc_is_passed
     // Handle both boolean (true/false) and int (1/0) from backend
-    const isCompleted = student.completion_status === 'completed' || 
-                        student.mooc_is_passed === true || 
-                        student.mooc_is_passed === 1;
-    
-    const completionStatus = student.completion_status || 
-                             (student.mooc_is_passed === true || student.mooc_is_passed === 1 ? 'completed' : 
-                              student.mooc_is_passed === false || student.mooc_is_passed === 0 ? 'not_passed' : 'in_progress');
+    const isCompleted = student.completion_status === 'completed' ||
+        student.mooc_is_passed === true ||
+        student.mooc_is_passed === 1;
+
+    const completionStatus = student.completion_status ||
+        (student.mooc_is_passed === true || student.mooc_is_passed === 1 ? 'completed' :
+            student.mooc_is_passed === false || student.mooc_is_passed === 0 ? 'not_passed' : 'in_progress');
     const completionCfg = completionConfig[completionStatus] || completionConfig.in_progress;
 
     // Generate avatar initials

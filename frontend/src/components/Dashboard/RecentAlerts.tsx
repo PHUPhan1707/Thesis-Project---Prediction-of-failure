@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { CardSkeleton } from '../LoadingSkeleton';
 import type { RecentAlert } from '../../types';
 import './RecentAlerts.css';
 
@@ -17,17 +18,8 @@ export function RecentAlerts({ alerts, isLoading }: RecentAlertsProps) {
                     <span className="header-icon">🔔</span>
                     <h3>Cảnh Báo Gần Đây</h3>
                 </div>
-                <div className="alerts-skeleton">
-                    {[1, 2, 3].map((i) => (
-                        <div key={i} className="alert-skeleton-item">
-                            <div className="skeleton-icon"></div>
-                            <div className="skeleton-content">
-                                <div className="skeleton-message"></div>
-                                <div className="skeleton-time"></div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <CardSkeleton />
+                <CardSkeleton />
             </div>
         );
     }

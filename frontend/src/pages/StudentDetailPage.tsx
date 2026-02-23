@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDashboard } from '../context/DashboardContext';
 import api from '../services/api';
 import { ShapExplanationChart } from '../components/Dashboard/ShapExplanation';
+import { StudentDetailSkeleton } from '../components/LoadingSkeleton';
 import type { StudentDetail } from '../types';
 import './StudentDetailPage.css';
 
@@ -75,10 +76,7 @@ export default function StudentDetailPage() {
     if (isLoading) {
         return (
             <div className="student-detail-page">
-                <div className="loading-container">
-                    <div className="loading-spinner"></div>
-                    <span>Đang tải thông tin sinh viên...</span>
-                </div>
+                <StudentDetailSkeleton />
             </div>
         );
     }
