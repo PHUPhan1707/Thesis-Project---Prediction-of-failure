@@ -2,6 +2,7 @@
 Feature Engineering Module
 Tạo derived features từ raw data để train model
 """
+import os
 import sys
 import logging
 import pandas as pd
@@ -14,6 +15,19 @@ from mysql.connector import Error
 
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))
+
+# Load .env từ thư mục gốc project (2 levels lên từ ml/)
+try:
+    from dotenv import load_dotenv
+    _env_path = Path(__file__).parent.parent / ".env"
+    if _env_path.exists():
+        load_dotenv(dotenv_path=_env_path)
+        # logger chưa khởi tạo ở đây, dùng print tạm
+        print(f"[feature_engineering] Loaded .env from {_env_path}")
+    else:
+        print(f"[feature_engineering] WARNING: .env not found at {_env_path}")
+except ImportError:
+    print("[feature_engineering] WARNING: python-dotenv not installed. Install with: pip install python-dotenv")
 
 # Setup logging
 LOGS_DIR = Path(__file__).parent.parent / "logs"
@@ -29,14 +43,21 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Database configuration
+# Database configuration — đọc từ environment variables (set bởi .env)
 DB_CONFIG = {
-    "host": "localhost",
-    "port": 4000,
-    "database": "dropout_prediction_db",
-    "user": "dropout_user",
-    "password": "dropout_pass_123"
+    "host": os.getenv("DB_HOST", "localhost"),
+    "port": int(os.getenv("DB_PORT", "4000")),
+    "database": os.getenv("DB_NAME", "dropout_prediction_db"),
+    "user": os.getenv("DB_USER", "dropout_user"),
+    "password": os.getenv("DB_PASSWORD", ""),  # Không có default password
 }
+
+# Cảnh báo nếu password rỗng
+if not DB_CONFIG["password"]:
+    logger.warning(
+        "DB_PASSWORD is not set! "
+        "Please set DB_PASSWORD in your .env file or as an environment variable."
+    )
 
 
 class FeatureEngineer:

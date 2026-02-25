@@ -26,19 +26,18 @@ def create_app():
     app = Flask(__name__)
     CORS(app)
 
-    # Initialize Model V4 Service (default model)
+    # Initialize Inference Service (default model)
     model_service = None
     try:
         if __package__ in (None, ""):
-            from backend.model_v4_service import ModelV4Service
+            from backend.inference_service import InferenceService
         else:
-            from .model_v4_service import ModelV4Service
-        
-        model_service = ModelV4Service()
-        model_service.model_name = 'fm101_v5'
-        logger.info("Default Model V5 Service initialized successfully")
+            from .inference_service import InferenceService
+
+        model_service = InferenceService()
+        logger.info("InferenceService initialized successfully")
     except Exception as e:
-        logger.error(f"Failed to initialize Model V4 Service: {e}")
+        logger.error(f"Failed to initialize InferenceService: {e}")
         model_service = None
     
     # Store model service in app config for access by blueprints

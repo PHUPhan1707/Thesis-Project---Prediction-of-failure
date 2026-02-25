@@ -9,7 +9,7 @@ import io
 sys.path.insert(0, os.path.dirname(__file__))
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-from backend.model_v4_service import ModelV4Service
+from backend.inference_service import InferenceService
 from backend.db import fetch_one
 
 course_id = "course-v1:UEL+NLTT241225+2025_12"
@@ -42,7 +42,7 @@ else:
 # 2. Load model và predict
 print("\n2. Loading Model V4...")
 try:
-    service = ModelV4Service()
+    service = InferenceService()
     print(f"   ✅ Model loaded: {service.model_path}")
 except Exception as e:
     print(f"   ❌ Error loading model: {e}")

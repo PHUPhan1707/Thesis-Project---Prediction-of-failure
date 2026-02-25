@@ -172,7 +172,8 @@ dropout_prediction/
 ├── backend/                    # Flask backend
 │   ├── app.py                 # Main application entry
 │   ├── db.py                  # Database connection
-│   ├── model_v4_service.py    # ML inference service
+│   ├── inference_service.py   # ML inference service (DataFetcher, FeaturePreparator, RiskPredictor)
+│   ├── model_v4_service.py    # [shim] backward-compat re-export → inference_service.py
 │   ├── routes/                # API route blueprints
 │   └── utils/                 # Helper functions
 │
