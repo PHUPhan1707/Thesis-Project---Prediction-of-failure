@@ -21,12 +21,19 @@ interface DashboardContextType {
     dashboardSummary: DashboardSummary | null;
     filters: StudentFilters;
 
+    // Pagination state
+    currentPage: number;
+    totalPages: number;
+    totalStudents: number;
+    hasMoreStudents: boolean;
+
     // Loading states
     isLoadingCourses: boolean;
     isLoadingStudents: boolean;
     isLoadingStudentDetail: boolean;
     isLoadingStatistics: boolean;
     isLoadingDashboardSummary: boolean;
+    isLoadingMoreStudents: boolean;
 
     // Error states
     error: string | null;
@@ -39,6 +46,8 @@ interface DashboardContextType {
     loadStudentDetail: (userId: number) => Promise<void>;
     loadDashboardSummary: () => Promise<void>;
     closeStudentDetail: () => void;
+    loadMoreStudents: () => Promise<void>;
+    loadAllStudents: () => Promise<void>;
 }
 
 const defaultFilters: StudentFilters = {
@@ -87,12 +96,18 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     const [dashboardSummary, setDashboardSummary] = useState<DashboardSummary | null>(null);
     const [filters, setFiltersState] = useState<StudentFilters>(defaultFilters);
 
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalStudents, setTotalStudents] = useState(0);
+
     // Loading states
     const [isLoadingCourses, setIsLoadingCourses] = useState(true);
     const [isLoadingStudents, setIsLoadingStudents] = useState(false);
     const [isLoadingStudentDetail, setIsLoadingStudentDetail] = useState(false);
     const [isLoadingStatistics, setIsLoadingStatistics] = useState(false);
     const [isLoadingDashboardSummary, setIsLoadingDashboardSummary] = useState(false);
+    const [isLoadingMoreStudents, setIsLoadingMoreStudents] = useState(false);
 
     // Error state
     const [error, setError] = useState<string | null>(null);
@@ -125,6 +140,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         if (!selectedCourse) {
             setStudents([]);
             setStatistics(null);
+            setCurrentPage(1);
+            setTotalPages(1);
+            setTotalStudents(0);
             return;
         }
 
@@ -133,6 +151,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
                 setIsLoadingStudents(true);
                 setIsLoadingStatistics(true);
                 setError(null);
+                setCurrentPage(1); // Reset to page 1 when filters change
 
                 // Load students and statistics in parallel
                 const [studentsResponse, statsResponse] = await Promise.all([
@@ -140,7 +159,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
                         selectedCourse.course_id,
                         filters.riskLevel === 'ALL' ? undefined : filters.riskLevel as RiskLevel,
                         filters.sortBy,
-                        filters.order
+                        filters.order,
+                        1, // Start from page 1
+                        50 // Default limit
                     ),
                     api.getCourseStatistics(selectedCourse.course_id),
                 ]);
@@ -168,6 +189,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
                 }
 
                 setStudents(filteredStudents);
+                setTotalPages(studentsResponse.total_pages || 1);
+                setTotalStudents(studentsResponse.total || 0);
                 setStatistics(normalizeCourseStatistics(statsResponse.statistics));
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to load data');
@@ -250,6 +273,102 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         }
     }, [selectedCourse]);
 
+    // Load more students (next page)
+    const loadMoreStudents = useCallback(async () => {
+        if (!selectedCourse || currentPage >= totalPages) return;
+
+        try {
+            setIsLoadingMoreStudents(true);
+            setError(null);
+
+            const nextPage = currentPage + 1;
+            const studentsResponse = await api.getStudents(
+                selectedCourse.course_id,
+                filters.riskLevel === 'ALL' ? undefined : filters.riskLevel as RiskLevel,
+                filters.sortBy,
+                filters.order,
+                nextPage,
+                50
+            );
+
+            // Filter locally by completion status and search query
+            let filteredStudents = studentsResponse.students;
+            
+            if (filters.completionFilter === 'completed') {
+                filteredStudents = filteredStudents.filter(s => s.completion_status === 'completed');
+            } else if (filters.completionFilter === 'not_completed') {
+                filteredStudents = filteredStudents.filter(s => s.completion_status !== 'completed');
+            }
+            
+            if (filters.searchQuery) {
+                const query = filters.searchQuery.toLowerCase();
+                filteredStudents = filteredStudents.filter(
+                    (s) =>
+                        s.full_name?.toLowerCase().includes(query) ||
+                        s.email?.toLowerCase().includes(query) ||
+                        s.user_id.toString().includes(query)
+                );
+            }
+
+            // Append new students to existing list
+            setStudents(prev => [...prev, ...filteredStudents]);
+            setCurrentPage(nextPage);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load more students');
+        } finally {
+            setIsLoadingMoreStudents(false);
+        }
+    }, [selectedCourse, currentPage, totalPages, filters]);
+
+    // Load all students at once
+    const loadAllStudents = useCallback(async () => {
+        if (!selectedCourse) return;
+
+        try {
+            setIsLoadingMoreStudents(true);
+            setError(null);
+
+            // Request all remaining students with a high limit
+            const studentsResponse = await api.getStudents(
+                selectedCourse.course_id,
+                filters.riskLevel === 'ALL' ? undefined : filters.riskLevel as RiskLevel,
+                filters.sortBy,
+                filters.order,
+                1,
+                200 // Max limit from backend
+            );
+
+            // Filter locally by completion status and search query
+            let filteredStudents = studentsResponse.students;
+            
+            if (filters.completionFilter === 'completed') {
+                filteredStudents = filteredStudents.filter(s => s.completion_status === 'completed');
+            } else if (filters.completionFilter === 'not_completed') {
+                filteredStudents = filteredStudents.filter(s => s.completion_status !== 'completed');
+            }
+            
+            if (filters.searchQuery) {
+                const query = filters.searchQuery.toLowerCase();
+                filteredStudents = filteredStudents.filter(
+                    (s) =>
+                        s.full_name?.toLowerCase().includes(query) ||
+                        s.email?.toLowerCase().includes(query) ||
+                        s.user_id.toString().includes(query)
+                );
+            }
+
+            setStudents(filteredStudents);
+            setCurrentPage(studentsResponse.total_pages || 1);
+            setTotalPages(studentsResponse.total_pages || 1);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load all students');
+        } finally {
+            setIsLoadingMoreStudents(false);
+        }
+    }, [selectedCourse, filters]);
+
+    const hasMoreStudents = currentPage < totalPages;
+
     const value: DashboardContextType = {
         courses,
         selectedCourse,
@@ -258,11 +377,16 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         statistics,
         dashboardSummary,
         filters,
+        currentPage,
+        totalPages,
+        totalStudents,
+        hasMoreStudents,
         isLoadingCourses,
         isLoadingStudents,
         isLoadingStudentDetail,
         isLoadingStatistics,
         isLoadingDashboardSummary,
+        isLoadingMoreStudents,
         error,
         setSelectedCourse,
         setSelectedStudent,
@@ -271,6 +395,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         loadStudentDetail,
         loadDashboardSummary,
         closeStudentDetail,
+        loadMoreStudents,
+        loadAllStudents,
     };
 
     return (

@@ -61,6 +61,9 @@ export interface StudentsResponse {
   students: Student[];
   total: number;
   course_id: string;
+  page?: number;
+  limit?: number;
+  total_pages?: number;
 }
 
 export interface StatisticsResponse {

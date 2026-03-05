@@ -54,12 +54,14 @@ export async function getCourses(): Promise<CoursesResponse> {
   return fetchAPI('/courses');
 }
 
-// Get students for a course with optional filters
+// Get students for a course with optional filters and pagination
 export async function getStudents(
   courseId: string,
   riskLevel?: RiskLevel,
   sortBy: SortBy = 'risk_score',
-  order: SortOrder = 'desc'
+  order: SortOrder = 'desc',
+  page: number = 1,
+  limit: number = 50
 ): Promise<StudentsResponse> {
   const params = new URLSearchParams();
 
@@ -68,6 +70,8 @@ export async function getStudents(
   }
   params.append('sort_by', sortBy);
   params.append('order', order);
+  params.append('page', page.toString());
+  params.append('limit', limit.toString());
 
   const queryString = params.toString();
   const encodedCourseId = encodeURIComponent(courseId);

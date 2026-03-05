@@ -21,10 +21,23 @@ if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 
+def _get_allowed_origins() -> list:
+    """
+    Đọc danh sách CORS origins từ biến môi trường CORS_ORIGINS.
+    Mặc định chỉ cho phép localhost (development).
+    Production: set CORS_ORIGINS=https://your-domain.com,https://dashboard.your-domain.com
+    """
+    raw = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:5174,http://localhost:3000")
+    return [o.strip() for o in raw.split(",") if o.strip()]
+
+
 def create_app():
     """Factory function to create Flask app"""
     app = Flask(__name__)
-    CORS(app)
+
+    allowed_origins = _get_allowed_origins()
+    CORS(app, origins=allowed_origins, supports_credentials=True)
+    logger.info(f"CORS allowed origins: {allowed_origins}")
 
     # Initialize Inference Service (default model)
     model_service = None
@@ -86,4 +99,5 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    app.run(host="0.0.0.0", port=port, debug=debug)

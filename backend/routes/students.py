@@ -19,21 +19,30 @@ students_bp = Blueprint('students', __name__, url_prefix='/api')
 
 @students_bp.get("/students/<path:course_id>")
 def get_students(course_id: str):
-    """Lấy danh sách sinh viên với predictions"""
-    risk_level = request.args.get("risk_level")
-    sort_by = request.args.get("sort_by", "risk_score")
-    order = request.args.get("order", "desc").lower()
+    """Lấy danh sách sinh viên với predictions, hỗ trợ pagination và filter.
 
-    # Validate sort parameters against whitelist to prevent SQL injection
+    Query params:
+        risk_level  : HIGH | MEDIUM | LOW  (optional, filter theo risk)
+        sort_by     : risk_score | name | completion | grade | inactive (default: risk_score)
+        order       : asc | desc (default: desc)
+        page        : số trang, bắt đầu từ 1 (default: 1)
+        limit       : số sinh viên mỗi trang, tối đa 200 (default: 50)
+    """
+    risk_level = request.args.get("risk_level")
+    sort_by    = request.args.get("sort_by", "risk_score")
+    order      = request.args.get("order", "desc").lower()
+    page       = max(1, request.args.get("page", 1, type=int))
+    limit      = min(200, max(1, request.args.get("limit", 50, type=int)))
+    offset     = (page - 1) * limit
+
     if sort_by not in ALLOWED_SORT_COLUMNS:
-        sort_by = "risk_score"  # Default to safe value
+        sort_by = "risk_score"
     if order not in ALLOWED_SORT_ORDERS:
-        order = "desc"  # Default to safe value
+        order = "desc"
 
     sort_col = ALLOWED_SORT_COLUMNS[sort_by]
     sort_dir = "ASC" if order == "asc" else "DESC"
 
-    # Build WHERE clause for risk filtering
     risk_where = ""
     if risk_level == "HIGH":
         risk_where = "AND p.fail_risk_score >= 70"
@@ -42,7 +51,23 @@ def get_students(course_id: str):
     elif risk_level == "LOW":
         risk_where = "AND p.fail_risk_score < 40"
 
+    base_query = f"""
+        FROM student_features f
+        LEFT JOIN enrollments e ON f.user_id = e.user_id AND f.course_id = e.course_id
+        LEFT JOIN mooc_grades g ON f.user_id = g.user_id AND f.course_id = g.course_id
+        LEFT JOIN predictions p ON f.user_id = p.user_id AND f.course_id = p.course_id AND p.is_latest = TRUE
+        WHERE f.course_id = %s {risk_where}
+    """
+
     try:
+        # Đếm tổng số bản ghi (không dùng SELECT * để tránh load toàn bộ data)
+        count_row = fetch_all(
+            f"SELECT COUNT(*) AS total {base_query}",
+            (course_id,),
+        )
+        total = int((count_row[0]["total"] if count_row else 0))
+
+        # Lấy trang hiện tại
         rows = fetch_all(
             f"""
             SELECT
@@ -58,23 +83,26 @@ def get_students(course_id: str):
                 f.mooc_is_passed,
                 p.model_name,
                 p.predicted_at
-            FROM student_features f
-            LEFT JOIN enrollments e ON f.user_id = e.user_id AND f.course_id = e.course_id
-            LEFT JOIN mooc_grades g ON f.user_id = g.user_id AND f.course_id = g.course_id
-            LEFT JOIN predictions p ON f.user_id = p.user_id AND f.course_id = p.course_id AND p.is_latest = TRUE
-            WHERE f.course_id = %s {risk_where}
+            {base_query}
             ORDER BY {sort_col} {sort_dir}
+            LIMIT %s OFFSET %s
             """,
-            (course_id,),
+            (course_id, limit, offset),
         )
 
-        # Add risk_level and completion_status
         for row in rows:
             score = float(row.get("fail_risk_score") or 50)
             row["risk_level"] = classify_risk_level(score)
             row["completion_status"] = get_completion_status(row.get("mooc_is_passed"))
 
-        return jsonify({"students": rows, "total": len(rows), "course_id": course_id})
+        return jsonify({
+            "students": rows,
+            "total": total,
+            "page": page,
+            "limit": limit,
+            "total_pages": max(1, -(-total // limit)),  # ceiling division
+            "course_id": course_id,
+        })
     except Exception:
         logger.exception("Error loading students for course %s", course_id)
         return jsonify({"error": "Database error"}), 500

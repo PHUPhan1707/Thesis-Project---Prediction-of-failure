@@ -1,18 +1,32 @@
 # -*- coding: utf-8 -*-
 """
-Chạy prediction cho môn NLTT sử dụng Model V4
-(Tự động lưu vào CẢ raw_data VÀ predictions table)
+Chạy prediction cho một khóa học sử dụng InferenceService.
+Tự động lưu vào CẢ raw_data VÀ predictions table.
+
+Cách dùng:
+    python run_prediction_nltt.py --course-id course-v1:UEL+NLTT241225+2025_12
+    python run_prediction_nltt.py  # dùng COURSE_ID env var hoặc giá trị mặc định
 """
 import sys
 import os
 import io
+import argparse
 sys.path.insert(0, os.path.dirname(__file__))
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 from backend.inference_service import InferenceService
 from backend.db import fetch_one
 
-course_id = "course-v1:UEL+NLTT241225+2025_12"
+_DEFAULT_COURSE_ID = "course-v1:UEL+NLTT241225+2025_12"
+
+parser = argparse.ArgumentParser(description="Run dropout prediction for a course")
+parser.add_argument(
+    "--course-id",
+    default=os.getenv("COURSE_ID", _DEFAULT_COURSE_ID),
+    help="Course ID to predict (default: env COURSE_ID or NLTT course)",
+)
+args = parser.parse_args()
+course_id = args.course_id
 
 print("=" * 80)
 print(f"CHẠY PREDICTION CHO MÔN NLTT")

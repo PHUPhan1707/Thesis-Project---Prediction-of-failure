@@ -5,7 +5,18 @@ import type { Student } from '../../types';
 import './StudentList.css';
 
 export function StudentList() {
-    const { students, isLoadingStudents, error } = useDashboard();
+    const { 
+        students, 
+        isLoadingStudents, 
+        isLoadingMoreStudents,
+        error,
+        hasMoreStudents,
+        currentPage,
+        totalPages,
+        totalStudents,
+        loadMoreStudents,
+        loadAllStudents,
+    } = useDashboard();
     const navigate = useNavigate();
 
     if (error) {
@@ -32,15 +43,50 @@ export function StudentList() {
     }
 
     return (
-        <div className="student-list">
-            {students.map((student, index) => (
-                <StudentCard
-                    key={student.user_id}
-                    student={student}
-                    index={index}
-                    onClick={() => navigate(`/student/${student.user_id}`)}
-                />
-            ))}
+        <div className="student-list-container">
+            <div className="student-list">
+                {students.map((student, index) => (
+                    <StudentCard
+                        key={student.user_id}
+                        student={student}
+                        index={index}
+                        onClick={() => navigate(`/student/${student.user_id}`)}
+                    />
+                ))}
+            </div>
+
+            {/* Pagination controls */}
+            {hasMoreStudents && (
+                <div className="pagination-controls">
+                    <div className="pagination-info">
+                        Đang hiển thị {students.length} / {totalStudents} sinh viên 
+                        (Trang {currentPage} / {totalPages})
+                    </div>
+                    <div className="pagination-buttons">
+                        <button
+                            className="btn-load-more"
+                            onClick={loadMoreStudents}
+                            disabled={isLoadingMoreStudents}
+                        >
+                            {isLoadingMoreStudents ? 'Đang tải...' : 'Xem thêm 50 sinh viên'}
+                        </button>
+                        <button
+                            className="btn-load-all"
+                            onClick={loadAllStudents}
+                            disabled={isLoadingMoreStudents}
+                        >
+                            {isLoadingMoreStudents ? 'Đang tải...' : 'Xem tất cả'}
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Show loading skeleton when loading more */}
+            {isLoadingMoreStudents && (
+                <div className="loading-more">
+                    <StudentListSkeleton count={3} />
+                </div>
+            )}
         </div>
     );
 }

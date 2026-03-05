@@ -80,8 +80,6 @@ def get_dashboard_summary(course_id: str):
                 inactive_count += 1
 
             # Việc cần làm hôm nay: HIGH risk hoặc MEDIUM + inactive
-            urgency = "medium"
-            reason = ""
             if risk_level == "HIGH":
                 urgency = "critical"
                 reason = "Nguy cơ bỏ học cao"
@@ -92,6 +90,7 @@ def get_dashboard_summary(course_id: str):
                 urgency = "high"
                 reason = "Không hoạt động {} ngày".format(days_inactive)
             else:
+                urgency = "medium"
                 reason = "Theo dõi tiến độ"
 
             today_tasks.append({
@@ -101,7 +100,7 @@ def get_dashboard_summary(course_id: str):
                 "risk_level": risk_level,
                 "fail_risk_score": round(score, 1),
                 "reason": reason,
-                "urgency": "critical" if risk_level == "HIGH" else ("high" if risk_level == "MEDIUM" or days_inactive >= 7 else "medium"),
+                "urgency": urgency,
             })
 
             # Cảnh báo gần đây: risk_increase (HIGH), inactive, low_progress

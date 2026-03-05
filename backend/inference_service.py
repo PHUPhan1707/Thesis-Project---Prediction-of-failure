@@ -21,10 +21,10 @@ from catboost import CatBoostClassifier
 if __package__ in (None, ""):
     import sys
     sys.path.append(str(Path(__file__).resolve().parents[1]))
-    from backend.db import fetch_one, fetch_all, execute, save_prediction  # type: ignore
-    from backend.utils.feature_labels import get_vi_label               # type: ignore
+    from backend.db import fetch_one, fetch_all, execute, save_prediction, save_predictions_batch  # type: ignore
+    from backend.utils.feature_labels import get_vi_label                                          # type: ignore
 else:
-    from .db import fetch_one, fetch_all, execute, save_prediction
+    from .db import fetch_one, fetch_all, execute, save_prediction, save_predictions_batch
     from .utils.feature_labels import get_vi_label
 
 logger = logging.getLogger(__name__)
@@ -202,9 +202,12 @@ class FeaturePreparator:
         X = features_df[self.feature_names].copy()
 
         # Categorical features
+        # Ép kiểu sang string trước rồi mới fillna để tránh lỗi Categorical:
+        # \"Cannot setitem on a Categorical with a new category (missing)\".
         for col in self.categorical_features:
             if col in X.columns:
-                X[col] = X[col].fillna("missing").astype(str)
+                X[col] = X[col].astype(str)
+                X[col] = X[col].fillna("missing")
 
         # Numeric features
         numeric_cols = [c for c in X.columns if c not in self.categorical_features]
@@ -216,8 +219,8 @@ class FeaturePreparator:
 
     def _fallback_engineer(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        [FALLBACK ONLY] Feature engineering đơn giản khi không import được FeatureEngineer.
-        Công thức này CÓ THỂ KHÁC một chút so với training — chỉ là safety net.
+        [FALLBACK ONLY] Feature engineering khi không import được FeatureEngineer.
+        Đồng bộ với feature_engineering.py — hỗ trợ open course (không có deadline).
         """
         df["engagement_score"] = (
             df.get("mooc_completion_rate", 0)
@@ -264,13 +267,29 @@ class FeaturePreparator:
             + df["h5p_engagement_rate"] * 0.3
         ) * 100
 
-        df["progress_rate"] = df.get("mooc_completion_rate", 0) / (
-            df.get("weeks_since_enrollment", pd.Series([1] * len(df))).replace(0, 1)
-        )
-        df["weeks_remaining"] = (16 - df.get("weeks_since_enrollment", 0)).clip(0, 16)
+        # ── Time features (open course) ──────────────────────────────────
+        weeks = df.get(
+            "weeks_since_enrollment", pd.Series([1] * len(df), index=df.index)
+        ).replace(0, 1)
+
+        df["progress_rate"] = df.get("mooc_completion_rate", 0) / weeks
+
+        # learning_pace_score: tốc độ học trên thang log — triệt tiêu ảnh hưởng
+        # của sinh viên đăng ký lâu nhưng không học (nhất quán với feature_engineering.py)
+        df["learning_pace_score"] = (
+            df.get("mooc_completion_rate", 0) / np.log2(weeks + 1)
+        ).clip(0, 200)
+
+        # open course → không có deadline → weeks_remaining = 0
+        df["weeks_remaining"] = 0
 
         if "enrollment_phase" not in df.columns:
-            df["enrollment_phase"] = "mid"
+            wk = df.get("weeks_since_enrollment", pd.Series([0] * len(df), index=df.index))
+            df["enrollment_phase"] = pd.cut(
+                wk,
+                bins=[0, 2, 4, 8, 12, float("inf")],
+                labels=["very_early", "early", "mid", "late", "very_late"],
+            ).astype(str).fillna("mid")
 
         return df
 
@@ -719,39 +738,25 @@ class InferenceService:
     def _save_predictions_to_db(self, predictions_df: pd.DataFrame):
         """
         Lưu fail_risk_score vào raw_data (V1 compat) VÀ predictions table (V2).
-        Dùng executemany-style loop; TODO: batch insert để tối ưu N+1.
+        Dùng save_predictions_batch → 1 connection, 3 câu SQL thay vì N*2 câu.
         """
-        # 1. Update raw_data (V1 backward compat)
-        update_query = """
-            UPDATE raw_data
-            SET fail_risk_score = %s
-            WHERE user_id = %s AND course_id = %s
-        """
-        for _, row in predictions_df.iterrows():
-            execute(
-                update_query,
-                (row["fail_risk_score"], row["user_id"], row["course_id"]),
-            )
-        logger.info(f"Updated {len(predictions_df)} risk scores in raw_data (V1)")
+        predictions = [
+            {
+                "user_id": int(row["user_id"]),
+                "course_id": row["course_id"],
+                "fail_risk_score": float(row["fail_risk_score"]),
+                "risk_level": row["risk_level"],
+                "snapshot_grade": float(row.get("mooc_grade_percentage") or 0),
+                "snapshot_completion_rate": float(row.get("mooc_completion_rate") or 0),
+                "snapshot_days_inactive": int(row.get("days_since_last_activity") or 0),
+            }
+            for _, row in predictions_df.iterrows()
+        ]
 
-        # 2. Save to predictions table (V2)
-        try:
-            saved = 0
-            for _, row in predictions_df.iterrows():
-                ok = save_prediction(
-                    user_id=int(row["user_id"]),
-                    course_id=row["course_id"],
-                    model_name=self.model_name,
-                    fail_risk_score=float(row["fail_risk_score"]),
-                    risk_level=row["risk_level"],
-                    model_version="v5.0.0",
-                    model_path=self.model_path,
-                    snapshot_grade=float(row.get("mooc_grade_percentage", 0)),
-                    snapshot_completion_rate=float(row.get("mooc_completion_rate", 0)),
-                    snapshot_days_inactive=int(row.get("days_since_last_activity", 0)),
-                )
-                if ok:
-                    saved += 1
-            logger.info(f"Saved {saved}/{len(predictions_df)} to predictions table (V2)")
-        except Exception as e:
-            logger.warning(f"Could not save to predictions table (V2): {e}")
+        saved = save_predictions_batch(
+            predictions=predictions,
+            model_name=self.model_name,
+            model_version=getattr(self, "model_version", "v5.0.0"),
+            model_path=self.model_path,
+        )
+        logger.info(f"Batch saved {saved}/{len(predictions_df)} predictions")

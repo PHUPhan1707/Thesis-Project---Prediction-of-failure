@@ -251,6 +251,105 @@ def save_prediction(user_id: int, course_id: str, model_name: str,
             connection.close()
 
 
+def save_predictions_batch(
+    predictions: List[Dict[str, Any]],
+    model_name: str,
+    model_version: str,
+    model_path: str,
+) -> int:
+    """
+    Lưu batch predictions trong 1 connection duy nhất — tránh N+1 query.
+
+    Args:
+        predictions: List dict, mỗi phần tử cần có:
+                     user_id, course_id, fail_risk_score, risk_level,
+                     snapshot_grade, snapshot_completion_rate, snapshot_days_inactive
+        model_name:    Tên model chung cho cả batch
+        model_version: Version model
+        model_path:    Đường dẫn model file
+
+    Returns:
+        Số bản ghi đã lưu thành công
+    """
+    if not predictions:
+        return 0
+
+    connection = get_db_connection()
+    if connection is None:
+        return 0
+
+    try:
+        cursor = connection.cursor()
+
+        # --- Bước 1: Update raw_data (V1 backward compat) --- #
+        # executemany → 1 roundtrip thay vì N roundtrips
+        update_raw_data = [
+            (float(p["fail_risk_score"]), int(p["user_id"]), p["course_id"])
+            for p in predictions
+        ]
+        cursor.executemany(
+            "UPDATE raw_data SET fail_risk_score = %s WHERE user_id = %s AND course_id = %s",
+            update_raw_data,
+        )
+
+        # --- Bước 2: Mark tất cả predictions cũ của course là not latest --- #
+        # Dùng 1 UPDATE với IN clause thay vì N UPDATE riêng lẻ
+        course_ids = list({p["course_id"] for p in predictions})
+        user_ids = [int(p["user_id"]) for p in predictions]
+        placeholders_cid = ", ".join(["%s"] * len(course_ids))
+        placeholders_uid = ", ".join(["%s"] * len(user_ids))
+        cursor.execute(
+            f"""
+            UPDATE predictions SET is_latest = FALSE
+            WHERE course_id IN ({placeholders_cid})
+              AND user_id IN ({placeholders_uid})
+            """,
+            course_ids + user_ids,
+        )
+
+        # --- Bước 3: Batch INSERT tất cả predictions mới --- #
+        insert_data = [
+            (
+                int(p["user_id"]),
+                p["course_id"],
+                model_name,
+                model_version,
+                model_path,
+                float(p["fail_risk_score"]),
+                p["risk_level"],
+                float(p.get("snapshot_grade") or 0),
+                float(p.get("snapshot_completion_rate") or 0),
+                int(p.get("snapshot_days_inactive") or 0),
+            )
+            for p in predictions
+        ]
+        cursor.executemany(
+            """
+            INSERT INTO predictions (
+                user_id, course_id, model_name, model_version, model_path,
+                fail_risk_score, risk_level,
+                snapshot_grade, snapshot_completion_rate, snapshot_days_inactive,
+                is_latest
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, TRUE)
+            """,
+            insert_data,
+        )
+
+        connection.commit()
+        saved = len(insert_data)
+        cursor.close()
+        logger.info(f"Batch saved {saved} predictions (1 connection)")
+        return saved
+
+    except Error as e:
+        logger.error(f"Error in save_predictions_batch: {e}")
+        connection.rollback()
+        return 0
+    finally:
+        if connection.is_connected():
+            connection.close()
+
+
 def get_course_model_mapping(course_id: str) -> Optional[Dict]:
     """
     Lấy model mapping cho course

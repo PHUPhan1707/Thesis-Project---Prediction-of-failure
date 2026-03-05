@@ -69,7 +69,7 @@ def predict_student_v4(user_id: int, course_id: str):
                 "user_id": user_id,
                 "course_id": course_id,
                 "model_name": service.model_name,
-                "model_version": "v4.0.0",
+                "model_version": getattr(service, "model_version", "v5.0.0"),
                 "fail_risk_score": result["fail_risk_score"],
                 "risk_level": result["risk_level"],
             })

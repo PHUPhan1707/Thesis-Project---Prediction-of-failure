@@ -57,12 +57,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         return () => mediaQuery.removeEventListener('change', handleChange);
     }, []);
 
-    const toggleTheme = () => {
-        setThemeState(prev => prev === 'light' ? 'dark' : 'light');
-    };
-
     const setTheme = (newTheme: Theme) => {
         setThemeState(newTheme);
+    };
+
+    const toggleTheme = () => {
+        setThemeState(prev => prev === 'light' ? 'dark' : 'light');
     };
 
     return (

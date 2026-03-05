@@ -1,17 +1,31 @@
 # -*- coding: utf-8 -*-
 """
-Sync predictions từ raw_data → predictions table (V2)
-Dùng cho trường hợp model_v4_service.py (V1) đã ghi vào raw_data
+Sync predictions từ raw_data → predictions table (V2).
+Dùng cho trường hợp model cũ (V1) đã ghi vào raw_data nhưng chưa có trong predictions.
+
+Cách dùng:
+    python sync_predictions_from_raw_data.py --course-id course-v1:UEL+NLTT241225+2025_12
+    python sync_predictions_from_raw_data.py  # dùng COURSE_ID env var hoặc giá trị mặc định
 """
 import sys
 import os
 import io
+import argparse
 sys.path.insert(0, os.path.dirname(__file__))
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 from backend.db import get_db_connection
 
-course_id = "course-v1:UEL+NLTT241225+2025_12"
+_DEFAULT_COURSE_ID = "course-v1:UEL+NLTT241225+2025_12"
+
+parser = argparse.ArgumentParser(description="Sync predictions from raw_data to predictions table")
+parser.add_argument(
+    "--course-id",
+    default=os.getenv("COURSE_ID", _DEFAULT_COURSE_ID),
+    help="Course ID to sync (default: env COURSE_ID or NLTT course)",
+)
+args = parser.parse_args()
+course_id = args.course_id
 
 print("=" * 80)
 print("SYNC PREDICTIONS: raw_data → predictions (V2)")

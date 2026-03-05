@@ -104,34 +104,43 @@ class FeatureEngineer:
             logger.error(f"Error loading raw data: {e}")
             return pd.DataFrame()
     
+    # Ngưỡng tối thiểu tương tác discussion để đạt 100%
+    # Giúp tránh discussion_score = 100 khi khóa chỉ có 1 sinh viên
+    # (vì groupby max sẽ = chính giá trị đó → score luôn = 100)
+    _DISCUSSION_MIN_DENOMINATOR = 10
+
     def create_engagement_score(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Tạo engagement score từ nhiều metrics
-        Công thức: weighted average của discussion, video, h5p, quiz
+        Tạo engagement score từ nhiều metrics.
+        Công thức: weighted average của discussion, video, h5p, quiz.
+
+        Dùng clip(lower=_DISCUSSION_MIN_DENOMINATOR) để tránh discussion_score = 100
+        khi khóa học chỉ có 1 sinh viên (single-batch inference edge case).
         """
         logger.info("Creating engagement score...")
-        
-        # Normalize các metrics về scale 0-100
-        df['discussion_score'] = (
-            df['discussion_total_interactions'] / 
-            df.groupby('course_id')['discussion_total_interactions'].transform('max').replace(0, 1) * 100
+
+        # Normalize discussion: tối thiểu _DISCUSSION_MIN_DENOMINATOR tương tác = 100%
+        # clip(lower=N) đảm bảo denominator luôn >= N, tránh 1-student artifact
+        course_max_discussion = (
+            df.groupby('course_id')['discussion_total_interactions']
+            .transform('max')
+            .clip(lower=self._DISCUSSION_MIN_DENOMINATOR)
         )
-        
+        df['discussion_score'] = (
+            df['discussion_total_interactions'] / course_max_discussion * 100
+        ).clip(0, 100)
+
         df['video_score'] = df['video_completion_rate']
         df['h5p_score'] = df['h5p_completion_rate']
         df['quiz_score'] = df['quiz_avg_score']
-        
-        # Weighted average
+
         df['engagement_score'] = (
             df['discussion_score'] * 0.25 +
             df['video_score'] * 0.25 +
             df['h5p_score'] * 0.25 +
             df['quiz_score'] * 0.25
-        )
-        
-        # Fill NaN với 0
-        df['engagement_score'] = df['engagement_score'].fillna(0)
-        
+        ).fillna(0)
+
         logger.info("Engagement score created")
         return df
     
@@ -188,10 +197,15 @@ class FeatureEngineer:
         """Tạo interaction-related features"""
         logger.info("Creating interaction features...")
         
-        # Discussion engagement rate
+        # Discussion engagement rate (chuẩn hóa theo mean lớp, floor = 5 để tránh
+        # single-student artifact tương tự discussion_score)
+        course_mean_discussion = (
+            df.groupby('course_id')['discussion_total_interactions']
+            .transform('mean')
+            .clip(lower=5)
+        )
         df['discussion_engagement_rate'] = (
-            df['discussion_total_interactions'] / 
-            df.groupby('course_id')['discussion_total_interactions'].transform('mean').replace(0, 1)
+            df['discussion_total_interactions'] / course_mean_discussion
         )
         
         # Has no discussion (không tương tác forum)
@@ -214,26 +228,42 @@ class FeatureEngineer:
         return df
     
     def create_time_features(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Tạo time-related features"""
-        logger.info("Creating time features...")
-        
-        # Weeks since enrollment bins
+        """Tạo time-related features cho open course (không có số tuần cố định).
+
+        Vì khóa học là open-ended (không có deadline), weeks_remaining không có
+        ý nghĩa thực tế. Thay vào đó dùng các features phản ánh tốc độ và
+        chất lượng học tập tương đối so với thời gian đã đăng ký.
+        """
+        logger.info("Creating time features (open course mode)...")
+
+        weeks = df['weeks_since_enrollment'].replace(0, 1)
+
+        # Enrollment phase: mô tả sinh viên đang ở giai đoạn nào của quá trình học.
+        # Bins tuyệt đối theo tuần — vẫn có nghĩa cho open course:
+        # very_early (0-2w), early (2-4w), mid (4-8w), late (8-12w), very_late (>12w)
         df['enrollment_phase'] = pd.cut(
             df['weeks_since_enrollment'],
             bins=[0, 2, 4, 8, 12, float('inf')],
             labels=['very_early', 'early', 'mid', 'late', 'very_late']
         )
-        
-        # Time pressure (weeks remaining if course is 16 weeks)
-        df['weeks_remaining'] = (16 - df['weeks_since_enrollment']).clip(0, 16)
-        
-        # Progress rate (completion per week)
-        df['progress_rate'] = (
-            df['mooc_completion_rate'] / 
-            df['weeks_since_enrollment'].replace(0, 1)
-        )
-        
-        logger.info("Time features created")
+
+        # Progress rate: % hoàn thành / tuần đã học
+        # Cao → học nhanh; thấp → học chậm hoặc bỏ bê
+        df['progress_rate'] = df['mooc_completion_rate'] / weeks
+
+        # Learning pace score: tốc độ học trên thang log (triệt tiêu ảnh hưởng
+        # của sinh viên đăng ký rất lâu nhưng không học gì).
+        # Công thức: completion / log2(weeks + 1)  →  range [0, ~100]
+        df['learning_pace_score'] = (
+            df['mooc_completion_rate'] / np.log2(weeks + 1)
+        ).clip(0, 200)
+
+        # weeks_remaining = 0 cho open course (không có deadline).
+        # Giá trị này nhất quán với training data khi model đã thấy sinh viên
+        # có weeks_since_enrollment lớn (weeks_remaining tự nhiên = 0 sau clipping).
+        df['weeks_remaining'] = 0
+
+        logger.info("Time features created (open course: weeks_remaining=0, added learning_pace_score)")
         return df
     
     def create_all_features(self, df: pd.DataFrame) -> pd.DataFrame:
