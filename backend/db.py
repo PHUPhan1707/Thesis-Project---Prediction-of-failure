@@ -388,3 +388,236 @@ def get_default_model() -> Optional[Dict]:
         """
     )
 
+
+# ============================================================================
+# HELPER FUNCTIONS FOR SCHEDULER (MLOps Lifecycle)
+# ============================================================================
+
+def discover_course_groups() -> Dict[str, List[str]]:
+    """
+    Tự động nhóm các khóa học theo base_name (tách từ course_name).
+
+    Logic: "Kinh tế vĩ mô - Thầy A" → base_name = "Kinh tế vĩ mô"
+           "Kinh tế vĩ mô"           → base_name = "Kinh tế vĩ mô"
+
+    Returns:
+        Dict mapping base_name → list of course_ids
+        VD: {"Kinh tế vĩ mô": ["cid1", "cid2", "cid3"]}
+    """
+    rows = fetch_all("""
+        SELECT DISTINCT course_id, course_name
+        FROM enrollments
+        WHERE course_name IS NOT NULL AND course_name != ''
+        GROUP BY course_id, course_name
+    """)
+
+    groups: Dict[str, List[str]] = {}
+    for row in rows:
+        course_name = row.get("course_name", "")
+        course_id = row.get("course_id", "")
+        if not course_name or not course_id:
+            continue
+
+        # Tách base name: lấy phần trước " - "
+        base_name = course_name.split(" - ")[0].strip()
+        if base_name not in groups:
+            groups[base_name] = []
+        if course_id not in groups[base_name]:
+            groups[base_name].append(course_id)
+
+    return groups
+
+
+def count_labeled_students(course_ids: List[str]) -> int:
+    """
+    Đếm số sinh viên đã có kết quả pass/fail
+    (is_passed IS NOT NULL) trong mooc_grades cho các course đã cho.
+    """
+    if not course_ids:
+        return 0
+    placeholders = ", ".join(["%s"] * len(course_ids))
+    result = fetch_one(
+        f"""
+        SELECT COUNT(*) as labeled
+        FROM mooc_grades
+        WHERE course_id IN ({placeholders}) AND is_passed IS NOT NULL
+        """,
+        tuple(course_ids),
+    )
+    return int(result["labeled"]) if result else 0
+
+
+def get_last_training_record(base_name: str) -> Optional[Dict]:
+    """
+    Lấy bản ghi train/retrain thành công gần nhất cho base_name.
+    """
+    return fetch_one(
+        """
+        SELECT * FROM training_history
+        WHERE base_name = %s AND action IN ('initial_train', 'retrain')
+              AND status = 'success'
+        ORDER BY completed_at DESC
+        LIMIT 1
+        """,
+        (base_name,),
+    )
+
+
+def save_training_record(
+    base_name: str,
+    course_ids: List[str],
+    model_name: Optional[str],
+    action: str,
+    labeled_student_count: Optional[int] = None,
+    predicted_student_count: Optional[int] = None,
+    accuracy: Optional[float] = None,
+    f1_score: Optional[float] = None,
+    auc_roc: Optional[float] = None,
+    status: str = "success",
+    message: Optional[str] = None,
+    started_at: Optional[str] = None,
+    completed_at: Optional[str] = None,
+) -> Optional[int]:
+    """
+    Lưu bản ghi lịch sử vào training_history.
+    """
+    import json
+    return execute(
+        """
+        INSERT INTO training_history (
+            base_name, course_ids, model_name, action,
+            labeled_student_count, predicted_student_count,
+            accuracy, f1_score, auc_roc,
+            status, message, started_at, completed_at
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """,
+        (
+            base_name,
+            json.dumps(course_ids),
+            model_name,
+            action,
+            labeled_student_count,
+            predicted_student_count,
+            accuracy,
+            f1_score,
+            auc_roc,
+            status,
+            message,
+            started_at,
+            completed_at,
+        ),
+    )
+
+
+def get_training_history(
+    base_name: Optional[str] = None, limit: int = 50
+) -> List[Dict]:
+    """
+    Lấy lịch sử training_history, có thể filter theo base_name.
+    """
+    if base_name:
+        return fetch_all(
+            """
+            SELECT * FROM training_history
+            WHERE base_name = %s
+            ORDER BY started_at DESC
+            LIMIT %s
+            """,
+            (base_name, limit),
+        )
+    return fetch_all(
+        """
+        SELECT * FROM training_history
+        ORDER BY started_at DESC
+        LIMIT %s
+        """,
+        (limit,),
+    )
+
+
+def get_model_for_courses(course_ids: List[str]) -> Optional[Dict]:
+    """
+    Kiểm tra xem bất kỳ course nào trong danh sách đã có model mapping chưa.
+    Trả về model info nếu có.
+    """
+    if not course_ids:
+        return None
+    placeholders = ", ".join(["%s"] * len(course_ids))
+    return fetch_one(
+        f"""
+        SELECT cmm.*, mr.model_path, mr.features_csv_path,
+               mr.model_type, mr.model_version
+        FROM course_model_mapping cmm
+        JOIN model_registry mr ON cmm.model_name = mr.model_name
+        WHERE cmm.course_id IN ({placeholders}) AND cmm.is_active = TRUE
+        ORDER BY cmm.assigned_at DESC
+        LIMIT 1
+        """,
+        tuple(course_ids),
+    )
+
+
+def register_model_for_courses(
+    model_name: str,
+    model_version: str,
+    model_path: str,
+    features_csv_path: str,
+    course_ids: List[str],
+    model_type: str = "CatBoost",
+    domain: str = "dropout_prediction",
+) -> bool:
+    """
+    Đăng ký model mới vào model_registry và gán cho tất cả course_ids
+    trong course_model_mapping.
+    """
+    connection = get_db_connection()
+    if connection is None:
+        return False
+
+    try:
+        cursor = connection.cursor()
+
+        # Upsert model_registry
+        cursor.execute(
+            """
+            INSERT INTO model_registry
+                (model_name, model_version, model_path, features_csv_path,
+                 model_type, domain, is_active, is_default)
+            VALUES (%s, %s, %s, %s, %s, %s, TRUE, FALSE)
+            ON DUPLICATE KEY UPDATE
+                model_version = VALUES(model_version),
+                model_path    = VALUES(model_path),
+                features_csv_path = VALUES(features_csv_path),
+                is_active = TRUE
+            """,
+            (model_name, model_version, model_path, features_csv_path,
+             model_type, domain),
+        )
+
+        # Gán model cho tất cả course_ids
+        for cid in course_ids:
+            # Deactivate old mappings
+            cursor.execute(
+                "UPDATE course_model_mapping SET is_active = FALSE WHERE course_id = %s",
+                (cid,),
+            )
+            cursor.execute(
+                """
+                INSERT INTO course_model_mapping
+                    (course_id, model_name, auto_predict, is_active)
+                VALUES (%s, %s, TRUE, TRUE)
+                """,
+                (cid, model_name),
+            )
+
+        connection.commit()
+        cursor.close()
+        return True
+
+    except Error as e:
+        logger.error(f"Error registering model: {e}")
+        connection.rollback()
+        return False
+    finally:
+        if connection.is_connected():
+            connection.close()

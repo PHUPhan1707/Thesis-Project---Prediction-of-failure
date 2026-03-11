@@ -68,6 +68,7 @@ def create_app():
             interventions_bp,
             predictions_bp,
             h5p_bp,
+            scheduler_bp,
         )
     else:
         from .routes import (
@@ -78,6 +79,7 @@ def create_app():
             interventions_bp,
             predictions_bp,
             h5p_bp,
+            scheduler_bp,
         )
 
     app.register_blueprint(health_bp)
@@ -87,8 +89,21 @@ def create_app():
     app.register_blueprint(interventions_bp)
     app.register_blueprint(predictions_bp)
     app.register_blueprint(h5p_bp)
+    app.register_blueprint(scheduler_bp)
 
     logger.info("All blueprints registered successfully")
+
+    # ------------------------------------------------------------------
+    # Initialize MLOps Scheduler (if enabled)
+    # ------------------------------------------------------------------
+    try:
+        if __package__ in (None, ""):
+            from backend.scheduler import init_scheduler
+        else:
+            from .scheduler import init_scheduler
+        init_scheduler(app)
+    except Exception as e:
+        logger.warning(f"Scheduler init skipped: {e}")
 
     return app
 

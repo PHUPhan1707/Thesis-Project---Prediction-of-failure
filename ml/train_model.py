@@ -299,6 +299,132 @@ class DropoutModelTrainer:
             return False
 
 
+# ─────────────────────────────────────────────────────────────
+# Auto-training for Scheduler
+# ─────────────────────────────────────────────────────────────
+
+def train_for_courses(
+    base_name: str,
+    course_ids: List[str],
+    model_dir: str = "models",
+) -> Optional[Dict]:
+    """
+    Train model tự động cho một nhóm khóa học (dùng bởi scheduler).
+
+    Pipeline: load data từ DB → feature engineering → train → evaluate → save.
+
+    Args:
+        base_name:  Tên môn gốc (VD: "Kinh tế vĩ mô")
+        course_ids: Danh sách course_ids cùng nhóm
+        model_dir:  Thư mục lưu model
+
+    Returns:
+        Dict metrics nếu thành công, None nếu thất bại.
+        Keys: model_name, model_path, features_csv_path, accuracy, f1_score,
+              auc_roc, student_count, model_version
+    """
+    import re
+    from dotenv import load_dotenv
+    load_dotenv()
+
+    try:
+        # 1. Load và gộp data từ tất cả courses
+        from ml.feature_engineering import FeatureEngineer
+
+        fe = FeatureEngineer()
+        all_dfs = []
+        for cid in course_ids:
+            logger.info(f"Loading data for course: {cid}")
+            df = fe.load_raw_data(course_id=cid)
+            if df is not None and not df.empty:
+                all_dfs.append(df)
+
+        if not all_dfs:
+            logger.error("Không có data để train!")
+            return None
+
+        combined_df = pd.concat(all_dfs, ignore_index=True)
+        logger.info(f"Combined data: {len(combined_df)} records từ {len(all_dfs)} courses")
+
+        # 2. Feature engineering
+        combined_df = fe.create_all_features(combined_df)
+
+        # 3. Filter chỉ SV có is_passed NOT NULL
+        if "is_passed" not in combined_df.columns:
+            logger.error("Column 'is_passed' không tồn tại trong data!")
+            return None
+
+        labeled_df = combined_df[combined_df["is_passed"].notna()].copy()
+        logger.info(f"Labeled students: {len(labeled_df)}/{len(combined_df)}")
+
+        if len(labeled_df) < 50:
+            logger.error(f"Chỉ có {len(labeled_df)} labeled records — quá ít để train.")
+            return None
+
+        # 4. Determine version
+        sanitized = re.sub(r"[^a-zA-Z0-9_]", "_", base_name.lower().strip())
+        models_path = Path(model_dir)
+        models_path.mkdir(parents=True, exist_ok=True)
+        existing = list(models_path.glob(f"{sanitized}_model_v*.cbm"))
+        version_num = len(existing) + 1
+        model_name = f"{sanitized}_model_v{version_num}"
+        model_version = f"v{version_num}.0.0"
+
+        # 5. Train
+        trainer = DropoutModelTrainer(model_dir=model_dir)
+        X_train, X_test, y_train, y_test = trainer.prepare_data(labeled_df)
+
+        trainer.train_model(
+            X_train, y_train,
+            X_val=X_test, y_val=y_test,
+            iterations=1000,
+            learning_rate=0.05,
+            depth=6,
+        )
+
+        # 6. Evaluate
+        metrics = trainer.evaluate_model(X_test, y_test)
+
+        # 7. Save model
+        trainer.save_model(model_name)
+
+        # 8. Save features list to CSV
+        features_csv_path = str(models_path / f"{model_name}_features.csv")
+        feature_importance = trainer.model.get_feature_importance()
+        fi_df = pd.DataFrame({
+            "feature": trainer.feature_names,
+            "importance": feature_importance,
+        }).sort_values("importance", ascending=False)
+        fi_df.to_csv(features_csv_path, index=False)
+
+        model_path = str(models_path / f"{model_name}.cbm")
+
+        result = {
+            "model_name": model_name,
+            "model_version": model_version,
+            "model_path": model_path,
+            "features_csv_path": features_csv_path,
+            "accuracy": float(
+                metrics.get("classification_report", {})
+                .get("accuracy", metrics.get("auc_roc", 0))
+            ),
+            "f1_score": float(metrics.get("f1_score", 0)),
+            "auc_roc": float(metrics.get("auc_roc", 0)),
+            "student_count": len(labeled_df),
+        }
+
+        logger.info(f"✅ Auto-train complete: {model_name}")
+        logger.info(f"   Accuracy: {result['accuracy']:.4f}")
+        logger.info(f"   F1: {result['f1_score']:.4f}")
+        logger.info(f"   AUC: {result['auc_roc']:.4f}")
+
+        return result
+
+    except Exception as e:
+        logger.exception(f"Error in train_for_courses: {e}")
+        return None
+
+
 def main():
     """Main training function"""
     import argparse

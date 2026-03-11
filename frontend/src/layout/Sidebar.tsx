@@ -27,6 +27,11 @@ export function Sidebar() {
           <span className="nav-icon">👥</span>
           <span className="nav-label">Chi tiết</span>
         </NavLink>
+
+        <NavLink to="/scheduler" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <span className="nav-icon">🤖</span>
+          <span className="nav-label">MLOps Scheduler</span>
+        </NavLink>
       </nav>
 
       <div className="sidebar-footer">

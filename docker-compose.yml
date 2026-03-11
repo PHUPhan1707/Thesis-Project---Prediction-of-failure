@@ -10,7 +10,7 @@ services:
       MYSQL_USER: dropout_user
       MYSQL_PASSWORD: dropout_pass_123
     ports:
-      - "4000:3306"  # Map host port 4000 to container MySQL port 3306
+      - "4000:3306" # Map host port 4000 to container MySQL port 3306
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
@@ -18,7 +18,7 @@ services:
     networks:
       - dropout_network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password_123"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password_123" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -30,12 +30,12 @@ services:
     restart: always
     environment:
       PMA_HOST: mysql
-      PMA_PORT: 3306  # Internal MySQL port in container
+      PMA_PORT: 3306 # Internal MySQL port in container
       PMA_USER: dropout_user
       PMA_PASSWORD: dropout_pass_123
       UPLOAD_LIMIT: 300M
     ports:
-      - "8081:80"  # Access phpMyAdmin at http://localhost:8081
+      - "8081:80" # Access phpMyAdmin at http://localhost:8081
     depends_on:
       mysql:
         condition: service_healthy

@@ -7,6 +7,7 @@ import Overview from './pages/Overview'
 import Details from './pages/Details'
 import StudentDetailPage from './pages/StudentDetailPage'
 import H5PAnalytics from './pages/H5PAnalytics'
+import SchedulerDashboard from './pages/SchedulerDashboard'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
                 <Route path="/h5p-analytics" element={<H5PAnalytics />} />
                 <Route path="/details" element={<Details />} />
                 <Route path="/student/:userId" element={<StudentDetailPage />} />
+                <Route path="/scheduler" element={<SchedulerDashboard />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
             </Routes>
