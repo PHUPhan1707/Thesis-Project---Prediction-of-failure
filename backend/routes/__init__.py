@@ -9,6 +9,7 @@ from .interventions import interventions_bp
 from .predictions import predictions_bp
 from .h5p_analytics import h5p_bp
 from .scheduler_routes import scheduler_bp
+from .pipeline_routes import pipeline_bp
 
 __all__ = [
     'health_bp',
@@ -19,4 +20,5 @@ __all__ = [
     'predictions_bp',
     'h5p_bp',
     'scheduler_bp',
+    'pipeline_bp',
 ]

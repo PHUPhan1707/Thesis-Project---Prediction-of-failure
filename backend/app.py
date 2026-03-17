@@ -6,6 +6,12 @@ import os
 import sys
 import logging
 from pathlib import Path
+
+# Load environment variables early before any other imports
+from dotenv import load_dotenv
+env_path = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(env_path)
+
 from flask import Flask
 from flask_cors import CORS
 
@@ -69,6 +75,7 @@ def create_app():
             predictions_bp,
             h5p_bp,
             scheduler_bp,
+            pipeline_bp,
         )
     else:
         from .routes import (
@@ -80,6 +87,7 @@ def create_app():
             predictions_bp,
             h5p_bp,
             scheduler_bp,
+            pipeline_bp,
         )
 
     app.register_blueprint(health_bp)
@@ -90,6 +98,7 @@ def create_app():
     app.register_blueprint(predictions_bp)
     app.register_blueprint(h5p_bp)
     app.register_blueprint(scheduler_bp)
+    app.register_blueprint(pipeline_bp)
 
     logger.info("All blueprints registered successfully")
 

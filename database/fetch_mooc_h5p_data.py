@@ -73,12 +73,22 @@ class MOOCH5PDataFetcher:
             self.db_connection.close()
             logger.info("Database connection closed")
 
-    def set_mooc_session(self, sessionid: str):
-        """Thiết lập cookie session cho MOOC API"""
-        if not sessionid:
+    def set_mooc_session(self, session_data):
+        """Thiết lập cookie session cho MOOC API
+        
+        Args:
+            session_data: Có thể là ID chuỗi (fallback) hoặc một requests.Session object (ưu tiên)
+        """
+        if not session_data:
             return
-        self.session.cookies.set("sessionid", sessionid)
-        self.session.cookies.set("edx-session", sessionid)
+            
+        if isinstance(session_data, requests.Session):
+            # Nếu truyền vào là 1 session đã auth đầy đủ (chứa jwt, csrf, cookies)
+            self.session = session_data
+        else:
+            # Nếu chỉ là string sessionid (nhập tay trên UI)
+            self.session.cookies.set("sessionid", session_data)
+            self.session.cookies.set("edx-session", session_data)
     
     def url_encode_course_id(self, course_id: str) -> str:
         """URL encode course_id để tránh lỗi với ký tự đặc biệt"""
