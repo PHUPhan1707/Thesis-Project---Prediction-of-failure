@@ -106,6 +106,12 @@
   white-space: nowrap;
 }
 
+.nav-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.06);
+  margin: 4px 12px;
+}
+
 .sidebar-footer {
   margin-top: auto;
   padding: 10px 6px 0;

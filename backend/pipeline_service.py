@@ -130,6 +130,22 @@ class PipelineService:
         self._thread.start()
         return True
 
+    def start_fetch_only(self, course_ids: list, session_id: str = ""):
+        """Chỉ fetch data + feature engineering cho danh sách course_ids cụ thể."""
+        if self._running:
+            self.emit_log("Pipeline đang chạy, vui lòng đợi...", "warning")
+            return False
+
+        self._should_stop = False
+        self._summary = None
+        self._thread = threading.Thread(
+            target=self._run_fetch_only,
+            args=(course_ids, session_id),
+            daemon=True,
+        )
+        self._thread.start()
+        return True
+
     def stop(self):
         self._should_stop = True
         self.emit_log("Đang dừng pipeline...", "warning")
@@ -326,6 +342,31 @@ class PipelineService:
                             f"  Progress: {len(progress_data)} records"
                         )
 
+
+                    # ── Fetch H5P & Video per student (CONCURRENT) ──
+                    if user_ids:
+                        self.emit_log(f"  Fetching H5P & Video for {len(user_ids)} students (concurrent)...")
+
+                        def _progress_cb(done, total_sv, _course_name=course_name, _i=i, _total=total):
+                            if done % 20 == 0 or done == total_sv:
+                                self.emit_progress(2, _i + 1, _total, f"{_course_name} ({done}/{total_sv} SV)")
+
+                        concurrent_result = fetcher.fetch_users_concurrent(
+                            user_ids, course_id, progress_callback=_progress_cb
+                        )
+                        h5p_success = concurrent_result["success_count"]
+                        self.emit_log(
+                            f"  H5P/Video: {h5p_success}/{len(user_ids)} students synced"
+                        )
+
+                        # Aggregate raw data (CRITICAL step to populate raw_data table for predictions)
+                        self.emit_log(f"  Aggregating raw_data for {len(user_ids)} students...")
+                        agg_res = fetcher.aggregate_all_raw_data(course_id)
+                        if agg_res.get("success"):
+                            self.emit_log(f"  Aggregated: {agg_res.get('success_count')}/{agg_res.get('total_users')} success")
+                        else:
+                            self.emit_log(f"  Aggregate raw_data failed: {agg_res.get('message')}", "warning")
+
                     fetched_count += 1
                     time.sleep(0.3)
 
@@ -402,7 +443,6 @@ class PipelineService:
 
     def _step4_training(self) -> list:
         self.emit_step(4, "running", "Đang kiểm tra và training model...")
-        self.emit_log("Bước 4: Kiểm tra course groups, train nếu >= 500 SV hoàn thành")
 
         trained_list = []
 
@@ -411,13 +451,18 @@ class PipelineService:
                 discover_course_groups,
                 count_labeled_students,
                 get_model_for_courses,
+                get_last_training_record,
                 save_training_record,
                 register_model_for_courses,
             )
 
-            min_students = int(
-                os.getenv("MIN_STUDENTS_FOR_TRAINING", "500")
+            min_students = int(os.getenv("MIN_STUDENTS_FOR_TRAINING", "300"))
+            retrain_threshold = int(os.getenv("RETRAIN_THRESHOLD", "50"))
+            self.emit_log(
+                f"Bước 4: Kiểm tra course groups "
+                f"(ngưỡng train: {min_students} SV, retrain: +{retrain_threshold} SV)"
             )
+
             groups = discover_course_groups()
 
             if not groups:
@@ -435,23 +480,93 @@ class PipelineService:
                 labeled = count_labeled_students(course_ids)
                 model_info = get_model_for_courses(course_ids)
 
+                # ── Đã có model → kiểm tra có cần retrain không ──
                 if model_info:
-                    self.emit_log(
-                        f"  {base_name}: đã có model '{model_info['model_name']}' "
-                        f"({labeled} SV labeled) — skip training"
+                    last_record = get_last_training_record(base_name)
+                    last_trained_count = (
+                        last_record.get("labeled_student_count", 0)
+                        if last_record else 0
                     )
+                    new_students = labeled - last_trained_count
+
+                    if new_students >= retrain_threshold:
+                        self.emit_log(
+                            f"  {base_name}: model '{model_info['model_name']}' "
+                            f"đã có, +{new_students} SV mới >= {retrain_threshold} → RETRAIN!"
+                        )
+                        started_at = datetime.now().isoformat()
+                        try:
+                            from ml.train_model import train_for_courses
+
+                            result = train_for_courses(base_name, course_ids)
+                            if result:
+                                register_model_for_courses(
+                                    model_name=result["model_name"],
+                                    model_version=result["model_version"],
+                                    model_path=result["model_path"],
+                                    features_csv_path=result["features_csv_path"],
+                                    course_ids=course_ids,
+                                )
+                                save_training_record(
+                                    base_name=base_name,
+                                    course_ids=course_ids,
+                                    model_name=result["model_name"],
+                                    action="retrain",
+                                    labeled_student_count=result["student_count"],
+                                    accuracy=result["accuracy"],
+                                    f1_score=result["f1_score"],
+                                    auc_roc=result["auc_roc"],
+                                    status="success",
+                                    message=(
+                                        f"Pipeline retrain: +{new_students} SV mới, "
+                                        f"tổng {result['student_count']} SV"
+                                    ),
+                                    started_at=started_at,
+                                    completed_at=datetime.now().isoformat(),
+                                )
+                                self.emit_log(
+                                    f"  RETRAIN THÀNH CÔNG: {result['model_name']} "
+                                    f"(Acc={result['accuracy']:.3f}, "
+                                    f"F1={result['f1_score']:.3f}, "
+                                    f"AUC={result['auc_roc']:.3f})"
+                                )
+                                trained_list.append(
+                                    {
+                                        "base_name": base_name,
+                                        "model_name": result["model_name"],
+                                        "action": "retrain",
+                                        "accuracy": result["accuracy"],
+                                        "f1_score": result["f1_score"],
+                                        "auc_roc": result["auc_roc"],
+                                        "student_count": result["student_count"],
+                                        "new_students": new_students,
+                                    }
+                                )
+                            else:
+                                self.emit_log(
+                                    f"  Retrain thất bại cho {base_name}", "error"
+                                )
+                        except Exception as e:
+                            self.emit_log(f"  Lỗi retrain {base_name}: {e}", "error")
+                    else:
+                        self.emit_log(
+                            f"  {base_name}: model '{model_info['model_name']}' đã có "
+                            f"({labeled} SV, +{new_students} mới) — "
+                            f"chưa đủ ngưỡng retrain (cần +{retrain_threshold - new_students} SV nữa)"
+                        )
                     continue
 
+                # ── Chưa có model → kiểm tra đủ data train lần đầu chưa ──
                 if labeled < min_students:
                     self.emit_log(
                         f"  {base_name}: {labeled}/{min_students} SV — "
-                        f"chưa đủ, cần thêm {min_students - labeled}"
+                        f"chưa đủ data, cần thêm {min_students - labeled} SV"
                     )
                     continue
 
                 self.emit_log(
                     f"  {base_name}: {labeled} SV >= {min_students} — "
-                    f"BẮT ĐẦU TRAINING!"
+                    f"BẮT ĐẦU INITIAL TRAINING!"
                 )
 
                 started_at = datetime.now().isoformat()
@@ -478,7 +593,7 @@ class PipelineService:
                             f1_score=result["f1_score"],
                             auc_roc=result["auc_roc"],
                             status="success",
-                            message=f"Pipeline auto-train: {result['model_name']}",
+                            message=f"Pipeline initial_train: {result['model_name']}",
                             started_at=started_at,
                             completed_at=datetime.now().isoformat(),
                         )
@@ -492,6 +607,7 @@ class PipelineService:
                             {
                                 "base_name": base_name,
                                 "model_name": result["model_name"],
+                                "action": "initial_train",
                                 "accuracy": result["accuracy"],
                                 "f1_score": result["f1_score"],
                                 "auc_roc": result["auc_roc"],
@@ -509,7 +625,7 @@ class PipelineService:
                             action="initial_train",
                             labeled_student_count=labeled,
                             status="failed",
-                            message="Pipeline auto-train failed",
+                            message="Pipeline initial_train failed",
                             started_at=started_at,
                             completed_at=datetime.now().isoformat(),
                         )
@@ -519,9 +635,9 @@ class PipelineService:
                     )
 
             status_msg = (
-                f"Trained {len(trained_list)} nhóm"
+                f"Đã xử lý {len(trained_list)} nhóm (initial/retrain)"
                 if trained_list
-                else "Không có nhóm nào cần training"
+                else "Không có nhóm nào cần training/retrain"
             )
             self.emit_step(4, "completed", status_msg)
             self.emit_log(f"Bước 4 hoàn thành: {status_msg}")
@@ -568,7 +684,7 @@ class PipelineService:
                 try:
                     service = InferenceService(
                         model_path=model_info.get("model_path"),
-                        features_csv=model_info.get("features_csv_path"),
+                        feature_fallback_csv=model_info.get("features_csv_path"),
                     )
 
                     predicted_count = 0
@@ -627,6 +743,100 @@ class PipelineService:
             self.emit_log(f"Lỗi bước prediction: {e}", "error")
             self.emit_step(5, "error", str(e))
             return []
+
+    # ──────────────────────────────────────────────────────────
+    #  SELECTIVE FETCH: Chỉ Step 2 + Step 3 cho courses cụ thể
+    # ──────────────────────────────────────────────────────────
+
+    def _run_fetch_only(self, course_ids: list, session_id: str = ""):
+        """
+        Pipeline rút gọn: chỉ Fetch + Feature Engineering cho course_ids được chọn.
+
+        Args:
+            course_ids: Danh sách course_id string
+            session_id: MOOC session (optional)
+        """
+        self._running = True
+        started = datetime.now()
+
+        self.emit("pipeline_start", message="Fetch có chọn lọc — bắt đầu")
+        self.emit_log("=" * 50)
+        self.emit_log(f"⚡ Fetch có chọn lọc — {len(course_ids)} khóa học")
+        self.emit_log("=" * 50)
+
+        summary = {
+            "started_at": started.isoformat(),
+            "courses_discovered": len(course_ids),
+            "courses_fetched": 0,
+            "students_featured": 0,
+            "courses_trained": [],
+            "courses_predicted": [],
+            "errors": [],
+        }
+
+        # Lấy course info từ DB để có course_name
+        try:
+            from backend.db import fetch_all
+            rows = fetch_all(
+                f"""
+                SELECT DISTINCT course_id, MAX(course_name) as course_name
+                FROM enrollments
+                WHERE course_id IN ({','.join(['%s'] * len(course_ids))})
+                GROUP BY course_id
+                """,
+                tuple(course_ids),
+            )
+            course_map = {r["course_id"]: r.get("course_name", r["course_id"]) for r in rows}
+            courses = [
+                {"id": cid, "display_name": course_map.get(cid, cid)}
+                for cid in course_ids
+            ]
+        except Exception as e:
+            courses = [{"id": cid, "display_name": cid} for cid in course_ids]
+            self.emit_log(f"Không lấy được tên khóa học từ DB: {e}", "warning")
+
+        try:
+            # ── Step 2: Fetch data ──
+            self.emit_log(f"Sẽ fetch {len(courses)} khóa học đã chọn")
+            fetched = self._step2_fetch(courses, session_id)
+            summary["courses_fetched"] = fetched
+            self._check_stop()
+
+            # ── Step 3: Feature Engineering ──
+            featured = self._step3_features(courses)
+            summary["students_featured"] = featured
+            self._check_stop()
+
+            # ── Step 4: Training ──
+            # Step 4 tự phát hiện groups và train nếu đủ threshold
+            trained_list = self._step4_training()
+            summary["courses_trained"] = trained_list
+            self._check_stop()
+
+            # ── Step 5: Prediction ──
+            predicted_list = self._step5_prediction()
+            summary["courses_predicted"] = predicted_list
+
+        except InterruptedError:
+            self.emit_log("Tiến trình bị dừng bởi user.", "warning")
+            summary["errors"].append("Stopped by user")
+        except Exception as e:
+            logger.exception("Selective pipeline error")
+            self.emit_log(f"Lỗi: {e}", "error")
+            summary["errors"].append(str(e))
+
+        elapsed = (datetime.now() - started).total_seconds()
+        summary["elapsed_seconds"] = round(elapsed, 1)
+        summary["completed_at"] = datetime.now().isoformat()
+        self._summary = summary
+
+        self.emit_log("=" * 50)
+        self.emit_log(
+            f"⚡ Hoàn thành Pipeline có chọn lọc trong {elapsed:.1f}s — "
+            f"{fetched} courses fetched, {len(summary['courses_trained'])} models updated"
+        )
+        self.emit("done", summary=summary)
+        self._running = False
 
 
 # ── Singleton ──

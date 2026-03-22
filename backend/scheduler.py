@@ -3,7 +3,7 @@ MLOps Background Scheduler Service.
 
 Chạy mỗi 30 ngày, tự động:
 1. Discover nhóm khóa học theo tên (base_name)
-2. Check số SV có is_passed — nếu ≥500 → auto-train model
+2. Check số SV có is_passed — nếu ≥300 → auto-train model
 3. Predict cho SV mới — nếu thêm ≥100 labeled SV → retrain
 
 Dùng APScheduler tích hợp trong Flask app.

@@ -12,6 +12,7 @@ import mysql.connector
 from mysql.connector import Error
 from urllib.parse import quote
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Thêm parent directory vào path để import config
 sys.path.append(str(Path(__file__).parent.parent))
@@ -19,6 +20,12 @@ sys.path.append(str(Path(__file__).parent.parent))
 # Cấu hình APIs
 MOOC_API_BASE_URL = "https://mooc.vnuhcm.edu.vn/api/custom/v1"  # Open edX (MOOC)
 H5P_API_BASE_URL = "https://h5p.itp.vn/wp-json/mooc/v1"  # H5P API
+
+
+import os as _os
+EXPORT_API_TIMEOUT = int(_os.environ.get("MOOC_EXPORT_TIMEOUT", "600"))  # default 10 phút
+STANDARD_API_TIMEOUT = int(_os.environ.get("MOOC_API_TIMEOUT", "30"))    # default 30 giây
+H5P_FETCH_WORKERS = int(_os.environ.get("H5P_FETCH_WORKERS", "8"))       # số worker song song
 
 # Database configuration
 DB_CONFIG = {
@@ -795,12 +802,19 @@ class MOOCH5PDataFetcher:
             cursor.close()
     
     def fetch_mooc_grades(self, course_id: str) -> Optional[Dict]:
-        """Fetch MOOC grades từ Export API"""
+        """Fetch MOOC grades từ Export API.
+        
+        Sử dụng EXPORT_API_TIMEOUT (default 600s) vì server cần tổng hợp
+        điểm của toàn bộ sinh viên trong khóa học, rất chậm với 200+ SV.
+        """
         try:
             encoded_course_id = self.url_encode_course_id(course_id)
             url = f"{self.mooc_base_url}/export/student-grades/{encoded_course_id}/"
-            
-            response = self.session.get(url, timeout=30)
+            logger.info(
+                f"Fetching grades for {course_id} "
+                f"(timeout={EXPORT_API_TIMEOUT}s)..."
+            )
+            response = self.session.get(url, timeout=EXPORT_API_TIMEOUT)
             response.raise_for_status()
             data = response.json()
             
@@ -866,12 +880,15 @@ class MOOCH5PDataFetcher:
             cursor.close()
     
     def fetch_mooc_progress(self, course_id: str) -> Optional[Dict]:
-        """Fetch MOOC progress từ Export API"""
+        """Fetch MOOC progress từ Export API (timeout lớn vì data nặng)."""
         try:
             encoded_course_id = self.url_encode_course_id(course_id)
             url = f"{self.mooc_base_url}/export/student-progress/{encoded_course_id}/"
-            
-            response = self.session.get(url, timeout=30)
+            logger.info(
+                f"Fetching progress for {course_id} "
+                f"(timeout={EXPORT_API_TIMEOUT}s)..."
+            )
+            response = self.session.get(url, timeout=EXPORT_API_TIMEOUT)
             response.raise_for_status()
             data = response.json()
             
@@ -942,12 +959,11 @@ class MOOCH5PDataFetcher:
             cursor.close()
     
     def fetch_mooc_discussions(self, course_id: str) -> Optional[Dict]:
-        """Fetch MOOC discussions từ Export API"""
+        """Fetch MOOC discussions từ Export API (timeout lớn vì data nặng)."""
         try:
             encoded_course_id = self.url_encode_course_id(course_id)
             url = f"{self.mooc_base_url}/export/student-discussions/{encoded_course_id}/"
-            
-            response = self.session.get(url, timeout=30)
+            response = self.session.get(url, timeout=EXPORT_API_TIMEOUT)
             response.raise_for_status()
             data = response.json()
             
@@ -957,12 +973,11 @@ class MOOCH5PDataFetcher:
             return None
     
     def fetch_mooc_complete_data(self, course_id: str) -> Optional[Dict]:
-        """Fetch complete student data (grades + progress + discussions) từ Export API"""
+        """Fetch complete student data (grades + progress + discussions) từ Export API."""
         try:
             encoded_course_id = self.url_encode_course_id(course_id)
             url = f"{self.mooc_base_url}/export/complete-student-data/{encoded_course_id}/"
-            
-            response = self.session.get(url, timeout=30)
+            response = self.session.get(url, timeout=EXPORT_API_TIMEOUT)
             response.raise_for_status()
             data = response.json()
             
@@ -1495,7 +1510,9 @@ class MOOCH5PDataFetcher:
                     SUM(CASE WHEN finished > 0 AND percentage >= 60 THEN 1 ELSE 0 END) as successful_count,
                     SUM(CASE WHEN finished > 0 THEN 1 ELSE 0 END) as finished_count,
                     SUM(CASE WHEN finished > 0 AND percentage < 60 THEN 1 ELSE 0 END) as struggling_count,
-                    AVG(opened) as avg_opened_per_content
+                    AVG(opened) as avg_opened_per_content,
+                    MAX(opened) as max_opened,
+                    MAX(finished) as max_finished
                 FROM h5p_scores
                 WHERE user_id = %s AND course_id = %s
             """, (user_id, course_id))
@@ -1508,6 +1525,21 @@ class MOOCH5PDataFetcher:
             ) if h5p_detail else 0
             assessment_attempts_avg = min(round(float(h5p_detail['avg_opened_per_content'] or 0), 2), 999.99) if h5p_detail else 0
             struggling_assessments_count = int(h5p_detail['struggling_count'] or 0) if h5p_detail else 0
+            
+            # Cập nhật lại days_since_last_activity nếu người dùng có tương tác H5P gần đây
+            # (API MOOC progress thường bị lỗi không cập nhật last_activity khi user chỉ xem H5P)
+            if h5p_detail:
+                h5p_max_opened = h5p_detail.get('max_opened') or 0
+                h5p_max_finished = h5p_detail.get('max_finished') or 0
+                latest_h5p_ts = max(h5p_max_opened, h5p_max_finished)
+                
+                if latest_h5p_ts > 0:
+                    latest_h5p_dt = datetime.fromtimestamp(latest_h5p_ts)
+                    delta_h5p = datetime.now() - latest_h5p_dt
+                    h5p_days_inactive = max(0, delta_h5p.days)
+                    
+                    if h5p_days_inactive < days_since_last_activity:
+                        days_since_last_activity = h5p_days_inactive
             
             # --- Video views từ video_progress detail ---
             cursor.execute("""
@@ -1835,6 +1867,145 @@ class MOOCH5PDataFetcher:
         time.sleep(delay)
         
         return success
+
+    def _fetch_user_worker(self, user_id: int, course_id: str, shared_session) -> bool:
+        """
+        Worker function chạy trong thread riêng biệt.
+        Tạo DB connection riêng cho mỗi thread để tránh xung đột.
+        Dùng chung requests.Session (thread-safe với GET requests).
+        """
+        worker_fetcher = MOOCH5PDataFetcher()
+        worker_fetcher.session = shared_session  # Dùng chung session đã auth
+        if not worker_fetcher.connect_db():
+            logger.warning(f"Worker: Cannot connect DB for user {user_id}")
+            return False
+
+        try:
+            success = True
+
+            # Fetch H5P scores
+            h5p_scores = worker_fetcher.fetch_h5p_scores(user_id, course_id)
+            if h5p_scores:
+                worker_fetcher.save_h5p_scores(user_id, course_id, h5p_scores)
+            else:
+                success = False
+
+            # Fetch video progress
+            video_progress = worker_fetcher.fetch_video_progress(user_id, course_id)
+            if video_progress:
+                worker_fetcher.save_video_progress(user_id, course_id, video_progress)
+            else:
+                success = False
+
+            # Fetch combined progress (version mới nhất, thay thế dashboard API)
+            combined_progress = worker_fetcher.fetch_combined_progress(user_id, course_id)
+            if combined_progress:
+                worker_fetcher.save_combined_progress(user_id, course_id, combined_progress)
+            else:
+                # Fallback
+                dashboard = worker_fetcher.fetch_dashboard(user_id, course_id)
+                if dashboard:
+                    worker_fetcher.save_dashboard_summary(user_id, course_id, dashboard)
+
+            return success
+        except Exception as e:
+            logger.warning(f"Worker error for user {user_id}: {e}")
+            return False
+        finally:
+            worker_fetcher.close_db()
+
+    def fetch_users_concurrent(
+        self,
+        user_ids: List[int],
+        course_id: str,
+        max_workers: int = H5P_FETCH_WORKERS,
+        progress_callback=None
+    ) -> Dict:
+        """
+        Fetch H5P/Video data cho nhiều students song song dùng ThreadPoolExecutor.
+
+        Args:
+            user_ids: Danh sách user IDs
+            course_id: Course ID
+            max_workers: Số threads chạy song song (default từ env H5P_FETCH_WORKERS)
+            progress_callback: Optional callable(done, total) để cập nhật progress
+
+        Returns:
+            Dict với success_count và failed_count
+        """
+        total = len(user_ids)
+        if total == 0:
+            return {"success_count": 0, "failed_count": 0, "total": 0}
+
+        # Giới hạn workers tối đa = số users (tránh tạo nhiều thread thừa)
+        effective_workers = min(max_workers, total)
+        logger.info(
+            f"[Concurrent] Fetching H5P/Video for {total} students "
+            f"with {effective_workers} workers..."
+        )
+
+        success_count = 0
+        failed_count = 0
+        done_count = 0
+        shared_session = self.session  # Dùng chung session đã auth
+
+        with ThreadPoolExecutor(max_workers=effective_workers) as executor:
+            futures = {
+                executor.submit(self._fetch_user_worker, uid, course_id, shared_session): uid
+                for uid in user_ids
+            }
+
+            for future in as_completed(futures):
+                uid = futures[future]
+                done_count += 1
+                try:
+                    result = future.result()
+                    if result:
+                        success_count += 1
+                    else:
+                        failed_count += 1
+                except Exception as e:
+                    logger.warning(f"Future error for user {uid}: {e}")
+                    failed_count += 1
+
+                # Log mỗi 20 SV để không spam log
+                if done_count % 20 == 0 or done_count == total:
+                    logger.info(
+                        f"[Concurrent] Progress: {done_count}/{total} done "
+                        f"({success_count} ok, {failed_count} failed)"
+                    )
+
+                if progress_callback:
+                    progress_callback(done_count, total)
+
+        logger.info(
+            f"[Concurrent] Completed: {success_count}/{total} success, "
+            f"{failed_count} failed"
+        )
+        
+        # Log thống kê chi tiết dữ liệu thực tế đã lưu vào DB
+        try:
+            if self.connect_db():
+                cursor = self.db_connection.cursor(dictionary=True)
+                
+                cursor.execute("SELECT COUNT(DISTINCT user_id) as u, COUNT(*) as t FROM h5p_scores WHERE course_id = %s", (course_id,))
+                h5p = cursor.fetchone()
+                cursor.execute("SELECT COUNT(DISTINCT user_id) as u, COUNT(*) as t FROM video_progress WHERE course_id = %s", (course_id,))
+                vid = cursor.fetchone()
+                cursor.execute("SELECT COUNT(DISTINCT user_id) as u FROM dashboard_summary WHERE course_id = %s", (course_id,))
+                dash = cursor.fetchone()
+                
+                logger.info("=" * 60)
+                logger.info(f"📊 KẾT QUẢ DỮ LIỆU ĐÃ LẤY CHO KHÓA HỌC: {course_id}")
+                logger.info(f"   ► Bài tập H5P: {h5p['t']} lượt làm (từ {h5p['u']} sinh viên)")
+                logger.info(f"   ► Video bài giảng: {vid['t']} lượt xem (từ {vid['u']} sinh viên)")
+                logger.info(f"   ► Dashboard tổng quan: {dash['u']} sinh viên")
+                logger.info("=" * 60)
+                cursor.close()
+        except Exception as e:
+            logger.error(f"Cannot count stats for log: {e}")
+            
+        return {"success_count": success_count, "failed_count": failed_count, "total": total}
     
     def fetch_all_course_data(self, course_id: str, delay: float = 0.5, max_users: Optional[int] = None, aggregate: bool = True) -> Dict:
         """Fetch tất cả data cho một course"""

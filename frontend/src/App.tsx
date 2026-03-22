@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { DashboardProvider } from './context/DashboardContext'
 import { ThemeProvider } from './context/ThemeContext'
 import DashboardLayout from './layout/DashboardLayout'
+import PipelineLayout from './layout/PipelineLayout'
 import Overview from './pages/Overview'
 import Details from './pages/Details'
 import StudentDetailPage from './pages/StudentDetailPage'
@@ -17,14 +18,19 @@ function App() {
         <DashboardProvider>
           <BrowserRouter>
             <Routes>
+              {/* Dashboard pages */}
               <Route element={<DashboardLayout />}>
                 <Route path="/" element={<Overview />} />
                 <Route path="/h5p-analytics" element={<H5PAnalytics />} />
                 <Route path="/details" element={<Details />} />
                 <Route path="/student/:userId" element={<StudentDetailPage />} />
-                <Route path="/scheduler" element={<SchedulerDashboard />} />
-                <Route path="/pipeline" element={<PipelineMonitor />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
+              </Route>
+
+              {/* Pipeline — separate layout with course sidebar */}
+              <Route path="/pipeline" element={<PipelineLayout />}>
+                <Route index element={<PipelineMonitor />} />
+                <Route path="scheduler" element={<SchedulerDashboard />} />
               </Route>
             </Routes>
           </BrowserRouter>

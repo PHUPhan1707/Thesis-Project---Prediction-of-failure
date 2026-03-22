@@ -1,0 +1,332 @@
+{
+  "Nguyên lý thị trường tài chính": [
+    "course-v1:DHQG-HCM+FM101+2025_S2",
+    "course-v1:UEL+NLTT241225+2025_12"
+  ],
+  "Kinh tế vĩ mô": [
+    "course-v1:UEL+252BEE1038_05+2025_12",
+    "course-v1:DHQG-HCM+ECON101+2026_S1",
+    "course-v1:UEL+252BEE1038_01+2025_12",
+    "course-v1:UEL+252BEE1038_02+2025_12",
+    "course-v1:UEL+252BEE1038_03+2025_12",
+    "course-v1:UEL+252BEE1038_04+2025_12",
+    "course-v1:UEL+252BEE1038_06+2025_12",
+    "course-v1:UEL+252BEE1038_07+2025_12",
+    "course-v1:UEL+KTVM221225222+2025_12"
+  ],
+  "Testing": [
+    "course-v1:123+TEST261225+2025_12",
+    "course-v1:DHQG-HCM+Test001+2026_S1",
+    "course-v1:ITP+TEST080825+2025_08"
+  ],
+  "Kinh tế chính trị Mác": [
+    "course-v1:AGU+KTCT170925+2025_09",
+    "course-v1:HCMIU+KTCT060825+2025_08",
+    "course-v1:VNUHCM+KTCT130326+2026_03"
+  ],
+  "Pháp luật đại cương": [
+    "course-v1:AGU+LAW101+2025_08"
+  ],
+  "New Test": [
+    "course-v1:AGU+NT070825+2025_08"
+  ],
+  "PHÁP LUẬT ĐẠI CƯƠNG new": [
+    "course-v1:AGU+PLAC060825+2025_08"
+  ],
+  "Pháp luật đầu tư": [
+    "course-v1:AGU+PLAT060825+2025_08"
+  ],
+  "speech-to-text": [
+    "course-v1:AGU+SPEE060825+2025_08"
+  ],
+  "test": [
+    "course-v1:AGU+TEST070825+2025_08",
+    "course-v1:HCMUS+TEST060825+2025_08"
+  ],
+  "công nghệ": [
+    "course-v1:BKU+CN010925+2025_09",
+    "course-v1:HCMIU+CN010925+2025_09",
+    "course-v1:VNUHCM+CN010925+2025_09"
+  ],
+  "Lập trình c++": [
+    "course-v1:BKU+LTC030925+2025_09"
+  ],
+  "Zũ trụ học": [
+    "course-v1:BKU+ZTH060825+2025_08"
+  ],
+  "Nhập môn trí tuệ nhân tạo": [
+    "course-v1:DHQG-HCM+AI101+2026_S1"
+  ],
+  "Nguyên lý kế toán": [
+    "course-v1:DHQG-HCM+AP101+2026_S1"
+  ],
+  "Sinh học đại cương": [
+    "course-v1:DHQG-HCM+BIO101+2026_S1"
+  ],
+  "Kiến trúc máy tính": [
+    "course-v1:DHQG-HCM+CA101+2026_S1"
+  ],
+  "Giải tích 1": [
+    "course-v1:DHQG-HCM+CAL101+2026_S1"
+  ],
+  "Hóa đại cương": [
+    "course-v1:DHQG-HCM+CHEM101+2026_S1",
+    "course-v1:HCMIU+HAC060825+2025_08"
+  ],
+  "Long Test": [
+    "course-v1:DHQG-HCM+CS123+2014_T1"
+  ],
+  "Nhập môn Khoa Học Dữ Liệu": [
+    "course-v1:DHQG-HCM+DS101+2025_S2"
+  ],
+  "Cơ sở thiết kế vi mạch": [
+    "course-v1:DHQG-HCM+EE101+2026_S1"
+  ],
+  "Hệ tim mạch": [
+    "course-v1:DHQG-HCM+HTM101+2025_S2"
+  ],
+  "Đại số tuyến tính": [
+    "course-v1:DHQG-HCM+LA101+2026_S1"
+  ],
+  "Lịch sử đảng cộng sản Việt Nam": [
+    "course-v1:DHQG-HCM+LSD101+2026_S1"
+  ],
+  "Triết học Marx-Lenin": [
+    "course-v1:DHQG-HCM+MLN101+2025_S2"
+  ],
+  "Lập trình hướng đối tượng": [
+    "course-v1:DHQG-HCM+OOP101+2026_S1"
+  ],
+  "Vật Lý 1": [
+    "course-v1:DHQG-HCM+PHY101+2026_S1"
+  ],
+  "Vật Lý 2": [
+    "course-v1:DHQG-HCM+PHY2101+2026_S1"
+  ],
+  "Môn lập trình Python": [
+    "course-v1:DHQG-HCM+PY102+2025_S2"
+  ],
+  "Quản trị học": [
+    "course-v1:DHQG-HCM+QTH101+2026_S1"
+  ],
+  "Thống kê trong kinh doanh": [
+    "course-v1:DHQG-HCM+ST101+2025_S2"
+  ],
+  "Test": [
+    "course-v1:DHQG-HCM+Test1+2025_S2"
+  ],
+  "Luantest": [
+    "course-v1:DHQG-HCM+Test1+2025_T5"
+  ],
+  "Khóa học mẫu": [
+    "course-v1:DHQG-HCM+test101+2026_S1",
+    "course-v1:VNUHCM+KHM050825+2025_08"
+  ],
+  "Khóa học ...": [
+    "course-v1:DHQG-HCM+Test111+2026_S1"
+  ],
+  "Biology": [
+    "course-v1:HCMIU+BIOL170925+2025_09"
+  ],
+  "Analytical Chemistry": [
+    "course-v1:HCMIU+BT315IU+2025_08"
+  ],
+  "Computer Networks": [
+    "course-v1:HCMIU+CN150126+2026_01"
+  ],
+  "fefsfes": [
+    "course-v1:HCMIU+FEFS060825+2025_08"
+  ],
+  "Intro of Mac": [
+    "course-v1:HCMIU+IOM021025+2025_10"
+  ],
+  "Kỹ Năng Số": [
+    "course-v1:HCMIU+KNS060825+2025_08"
+  ],
+  "ĐONGNT": [
+    "course-v1:HCMIU+ONGN060825+2025_08"
+  ],
+  "sinh học": [
+    "course-v1:HCMIU+SH060825+2025_08"
+  ],
+  "Kỹ năng số cho sinh viên Đại học": [
+    "course-v1:HCMIU+SPEE060825+2025_08_07"
+  ],
+  "Trực Quan Hoá Dữ Liệu": [
+    "course-v1:HCMIU+TQHD040226+2026_02"
+  ],
+  "c++1": [
+    "course-v1:HCMUS+C060825+2025_08"
+  ],
+  "DS": [
+    "course-v1:HCMUS+D060825+2025_08"
+  ],
+  "Hóa học Các hợp chất Thiên Nhiên": [
+    "course-v1:HCMUS+HHCH170925+2025_09"
+  ],
+  "Điện tử cơ bản": [
+    "course-v1:HCMUS+ITCB060825+2025_08"
+  ],
+  "jjjnnnjn": [
+    "course-v1:HCMUS+JJJN060825+2025_08"
+  ],
+  "Vật lý Đại cương 1": [
+    "course-v1:HCMUS+KCM2602+2025_08"
+  ],
+  "Kỹ thuật siêu âm trong y khoa": [
+    "course-v1:HCMUS+KTSA170925+2025_09"
+  ],
+  "nhâp": [
+    "course-v1:HCMUS+NHAP060825+2025_08"
+  ],
+  "Chất điện môi_Bài giảng 1": [
+    "course-v1:HCMUS+PHY-MU15+2026_09"
+  ],
+  "Physics II": [
+    "course-v1:HCMUS+PI060825+2025_08"
+  ],
+  "SDFDSFSF": [
+    "course-v1:HCMUS+SDFD060825+2025_08"
+  ],
+  "Sinh thái học": [
+    "course-v1:HCMUS+STH060825+2025_08"
+  ],
+  "ty": [
+    "course-v1:HCMUS+T060825+2025_08"
+  ],
+  "zasadas": [
+    "course-v1:HCMUS+ZASA060825+2025_08"
+  ],
+  "CHƯƠNG I: Khai báo biến trong C++": [
+    "course-v1:HCMUSSH+CIKB060825+2025_08"
+  ],
+  "Chủ nghĩa xã hội khoa học": [
+    "course-v1:HCMUSSH+CNXH170925+2025_09"
+  ],
+  "Học phần Chủ nghĩa xã hội khoa học": [
+    "course-v1:HCMUSSH+HPCN170925+2025_09"
+  ],
+  "Môn học Chủ nghĩa xã hội khoa học": [
+    "course-v1:HCMUSSH+MHCN170925+2025_09"
+  ],
+  "Tâm lý học": [
+    "course-v1:HCMUSSH+TLH060825+2025_08"
+  ],
+  "Tâm lý học xã hội": [
+    "course-v1:HCMUSSH+TLHX060825+2025_08"
+  ],
+  "Xây dựng Đảng": [
+    "course-v1:HCMUSSH+XDA060825+2025_08"
+  ],
+  "Calculus 2": [
+    "course-v1:HCMUT+C2060825+2025_08"
+  ],
+  "Cơ sở kỹ thuật y sinh": [
+    "course-v1:HCMUT+CSKT160925+2025_09"
+  ],
+  "gfh": [
+    "course-v1:HCMUT+GFH060825+2025_08"
+  ],
+  "Physics 1": [
+    "course-v1:HCMUT+PH1003+2025_08"
+  ],
+  "Sinh học tế bào": [
+    "course-v1:HCMUT+SHTB060825+2025_08"
+  ],
+  "Khóa học .....": [
+    "course-v1:IER+KH160925+2025_09"
+  ],
+  "C++": [
+    "course-v1:ITP+CS001+2025_T3"
+  ],
+  "Cơ sở dữ liệu": [
+    "course-v1:UEL+CS102+CSDL.2025"
+  ],
+  "Kinh tế học": [
+    "course-v1:UEL+KTH060825+2025_08"
+  ],
+  "Kinh tế học vi mô": [
+    "course-v1:UEL+KTHV060825+2025_08"
+  ],
+  "Kinh tế học vi mô1": [
+    "course-v1:UEL+KTHV0608256+2025_08"
+  ],
+  "Artificial Intelligence": [
+    "course-v1:UIT+AI170925+2025_09"
+  ],
+  "Cấu trúc rời rạc": [
+    "course-v1:UIT+CTRR060825+2025_08"
+  ],
+  "Chủ nghĩa Xã hội Khoa học": [
+    "course-v1:VNUHCM+CNXH110126+2026_01"
+  ],
+  "Cơ Sở Dữ Liệu": [
+    "course-v1:VNUHCM+CSDL290925+2025_09"
+  ],
+  "DBCourse": [
+    "course-v1:VNUHCM+DBCO060825+2025_08"
+  ],
+  "Dược lý 1": [
+    "course-v1:VNUHCM+DL1090326+2026_03"
+  ],
+  "d sev": [
+    "course-v1:vnuhcm+DS060825+2025_08"
+  ],
+  "Hệ sinh dục, thai nghén và sinh sản": [
+    "course-v1:VNUHCM+HSDT161225+2025_12"
+  ],
+  "Hệ tiêu hóa": [
+    "course-v1:VNUHCM+HTH260126+2026_01"
+  ],
+  "Khóa học thử": [
+    "course-v1:VNUHCM+KHT020925+2025_09"
+  ],
+  "Khóa học thử nghiệm": [
+    "course-v1:VNUHCM+KHTN101025+2025_10"
+  ],
+  "Kinh tế chính trị": [
+    "course-v1:VNUHCM+KTCT120126+2026_01"
+  ],
+  "Kinh tế vi mô": [
+    "course-v1:VNUHCM+KTVM040226+2026_02"
+  ],
+  "Longtest1": [
+    "course-v1:VNUHCM+LONG060825+2025_08"
+  ],
+  "Môn Tư Tưởng Hồ Chí Minh": [
+    "course-v1:VNUHCM+MTTH170925+2025_09"
+  ],
+  "Pháp Luật Đại Cương": [
+    "course-v1:VNUHCM+PLAC260126+2026_01"
+  ],
+  "Phân tích dữ liệu với Python": [
+    "course-v1:VNUHCM+PTDL070326+2026_03"
+  ],
+  "Sinh học Đại cương 1": [
+    "course-v1:VNUHCM+SHAC170925+2025_09"
+  ],
+  "Sơ sinh, trẻ em và vị thành niên": [
+    "course-v1:VNUHCM+SSTE120825+2025_08"
+  ],
+  "Toán": [
+    "course-v1:VNUHCM+TAST270126+2026_01",
+    "course-v1:VNUHCM+TTGT280226+2026_02",
+    "course-v1:VNUHCM+TTRR050226+2026_02",
+    "course-v1:VNUHCM+XSTK110126+2026_01"
+  ],
+  "Tế bào và sinh học phân tử": [
+    "course-v1:VNUHCM+TBVS031225+2025_12"
+  ],
+  "TH_MOOC-6-8-2025": [
+    "course-v1:VNUHCM+THMO060825+2025_08"
+  ],
+  "Tư tưởng Hồ Chí Minh": [
+    "course-v1:VNUHCM+TTHC080126+2026_01"
+  ],
+  "Vật lý (microU)": [
+    "course-v1:VNUHCM+VLM190326+2026_03"
+  ],
+  "VẬT LÝ ĐẠI CƯƠNG": [
+    "course-v1:VNUHCM+VLAC210326+2026_03"
+  ]
+}

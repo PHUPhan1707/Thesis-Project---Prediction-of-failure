@@ -16,12 +16,7 @@ def get_scheduler_status():
     Trạng thái mỗi nhóm môn học: waiting / active / no_data.
     """
     try:
-        from ..db import (
-            discover_course_groups,
-            count_labeled_students,
-            get_model_for_courses,
-            get_last_training_record,
-        )
+        from ..db import discover_course_groups, fetch_all
         import os
 
         min_students = int(os.getenv("MIN_STUDENTS_FOR_TRAINING", "500"))
@@ -30,12 +25,34 @@ def get_scheduler_status():
         groups = discover_course_groups()
         statuses = []
 
-        for base_name, course_ids in groups.items():
-            labeled = count_labeled_students(course_ids)
-            model_info = get_model_for_courses(course_ids)
-            last_record = get_last_training_record(base_name)
+        # -- Bulk Queries for Performance --
+        # 1. Labeled students per course
+        labeled_rows = fetch_all("SELECT course_id, COUNT(*) as labeled FROM mooc_grades WHERE is_passed IS NOT NULL GROUP BY course_id")
+        labeled_map = {r['course_id']: r['labeled'] for r in labeled_rows}
 
-            if model_info:
+        # 2. Model mapping per course
+        model_rows = fetch_all("SELECT course_id, model_name FROM course_model_mapping WHERE is_active = TRUE")
+        model_map = {r['course_id']: r['model_name'] for r in model_rows}
+
+        # 3. Last training records per base_name
+        history_rows = fetch_all("""
+            SELECT base_name, completed_at, labeled_student_count 
+            FROM training_history 
+            WHERE action IN ('initial_train', 'retrain') AND status = 'success'
+            ORDER BY completed_at DESC
+        """)
+        last_record_map = {}
+        for r in history_rows:
+            bn = r['base_name']
+            if bn not in last_record_map:
+                last_record_map[bn] = r
+
+        for base_name, course_ids in groups.items():
+            labeled = sum(labeled_map.get(cid, 0) for cid in course_ids)
+            model_name = next((model_map[cid] for cid in course_ids if cid in model_map), None)
+            last_record = last_record_map.get(base_name)
+
+            if model_name:
                 last_trained = (
                     last_record.get("labeled_student_count", 0)
                     if last_record
@@ -54,8 +71,8 @@ def get_scheduler_status():
                 "course_ids": course_ids,
                 "labeled_students": labeled,
                 "min_required": min_students,
-                "model_name": model_info["model_name"] if model_info else None,
-                "new_since_last_train": new_since_train,
+                "model_name": model_name,
+                "new_since_last_train": max(0, new_since_train),
                 "retrain_threshold": retrain_threshold,
                 "last_train_at": (
                     last_record.get("completed_at").isoformat()

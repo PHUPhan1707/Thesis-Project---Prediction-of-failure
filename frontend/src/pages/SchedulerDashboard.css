@@ -1,6 +1,9 @@
 /* ── Scheduler Dashboard Page ───────────────────────────── */
 
 .scheduler-page {
+  padding: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -141,10 +144,88 @@
 }
 
 /* Groups Grid */
+.status-filters {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+    background: var(--card-bg);
+    padding: 0.85rem 1.25rem;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.filter-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.filter-group select {
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color, rgba(0,0,0,0.1));
+    background: var(--bg-tertiary, #f8fafc);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.filter-group select:focus {
+    border-color: var(--accent-primary, #6366f1);
+}
+
 .groups-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 1rem;
+}
+
+.groups-grid.compact-grid {
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 0.85rem;
+}
+
+.compact-grid .group-card {
+    padding: 1rem;
+}
+
+.compact-grid .group-name {
+    font-size: 0.95rem;
+}
+
+.compact-grid .group-status {
+    font-size: 0.75rem;
+}
+
+.compact-grid .stat-label {
+    font-size: 0.75rem;
+}
+
+.compact-grid .stat-value {
+    font-size: 0.8rem;
+}
+
+.compact-grid .model-tag {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+}
+
+.compact-grid .course-chip {
+    padding: 0.15rem 0.45rem;
+    font-size: 0.65rem;
+}
+
+.compact-grid .stat-row {
+    padding: 0.2rem 0;
 }
 
 /* Group Card */

@@ -28,9 +28,11 @@ export function Sidebar() {
           <span className="nav-label">Chi tiết</span>
         </NavLink>
 
-        <NavLink to="/scheduler" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-          <span className="nav-icon">🤖</span>
-          <span className="nav-label">MLOps Scheduler</span>
+
+
+        <NavLink to="/pipeline" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <span className="nav-icon">🔬</span>
+          <span className="nav-label">Pipeline Monitor</span>
         </NavLink>
       </nav>
 

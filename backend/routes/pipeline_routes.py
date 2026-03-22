@@ -3,6 +3,7 @@ Pipeline API Routes — SSE streaming, trigger, status.
 """
 import logging
 from flask import Blueprint, Response, jsonify, request, stream_with_context
+from ..db import fetch_all
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,70 @@ def start_pipeline():
     except Exception:
         logger.exception("Error starting pipeline")
         return jsonify({"error": "Failed to start pipeline"}), 500
+
+
+@pipeline_bp.post("/fetch-selected")
+def fetch_selected_courses():
+    """
+    Chỉ fetch data + feature engineering cho danh sách course_ids cụ thể.
+
+    Body:
+        {"course_ids": ["course-v1:...", "course-v1:..."], "session_id": "..."}
+    """
+    try:
+        from ..pipeline_service import get_pipeline_service
+
+        service = get_pipeline_service()
+
+        if service.is_running:
+            return jsonify({
+                "success": False,
+                "message": "Pipeline đang chạy, vui lòng đợi.",
+            }), 409
+
+        data = request.get_json(silent=True) or {}
+        course_ids = data.get("course_ids", [])
+        session_id = data.get("session_id", "")
+
+        if not course_ids:
+            return jsonify({
+                "success": False,
+                "message": "Vui lòng chọn ít nhất 1 khóa học.",
+            }), 400
+
+        service.start_fetch_only(course_ids=course_ids, session_id=session_id)
+
+        return jsonify({
+            "success": True,
+            "message": f"Đang fetch {len(course_ids)} khóa học đã chọn",
+            "course_count": len(course_ids),
+        })
+
+    except Exception:
+        logger.exception("Error starting selective fetch")
+        return jsonify({"error": "Failed to start fetch"}), 500
+
+
+@pipeline_bp.get("/local-courses")
+def local_courses():
+    """Lấy toàn bộ khóa học local từ enrollments cho Pipeline sidebar."""
+    try:
+        rows = fetch_all("""
+            SELECT
+                e.course_id,
+                COUNT(DISTINCT e.user_id) AS student_count,
+                MAX(e.course_name)        AS course_name
+            FROM enrollments e
+            WHERE e.course_id IS NOT NULL
+              AND e.course_id != ''
+            GROUP BY e.course_id
+            HAVING COUNT(DISTINCT e.user_id) > 20
+            ORDER BY e.course_id
+        """)
+        return jsonify({"courses": rows, "total": len(rows)})
+    except Exception:
+        logger.exception("Error loading local courses for pipeline")
+        return jsonify({"error": "Database error"}), 500
 
 
 @pipeline_bp.get("/stream")

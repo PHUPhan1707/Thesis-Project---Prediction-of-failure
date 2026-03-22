@@ -6,6 +6,7 @@ import sys
 import logging
 import pandas as pd
 import numpy as np
+from decimal import Decimal
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Tuple, Optional
@@ -329,15 +330,35 @@ def train_for_courses(
 
     try:
         # 1. Load và gộp data từ tất cả courses
-        from ml.feature_engineering import FeatureEngineer
+        # Ưu tiên student_features (đã được populate bởi pipeline), fallback raw_data
+        from backend.db import fetch_all
 
-        fe = FeatureEngineer()
         all_dfs = []
+        loaded_any_from_student_features = False
         for cid in course_ids:
             logger.info(f"Loading data for course: {cid}")
-            df = fe.load_raw_data(course_id=cid)
-            if df is not None and not df.empty:
+            
+            # Thử load từ student_features trước (join với mooc_grades để lấy is_passed)
+            rows = fetch_all("""
+                SELECT sf.*, mg.is_passed, mg.grade_percentage as mooc_grade_percentage
+                FROM student_features sf
+                LEFT JOIN mooc_grades mg ON sf.user_id = mg.user_id AND sf.course_id = mg.course_id
+                WHERE sf.course_id = %s
+            """, (cid,))
+            
+            if rows:
+                df = pd.DataFrame(rows)
+                logger.info(f"  Loaded {len(df)} records from student_features")
                 all_dfs.append(df)
+                loaded_any_from_student_features = True
+            else:
+                # Fallback: load từ raw_data
+                from ml.feature_engineering import FeatureEngineer
+                fe = FeatureEngineer()
+                df = fe.load_raw_data(course_id=cid)
+                if df is not None and not df.empty:
+                    logger.info(f"  Loaded {len(df)} records from raw_data (fallback)")
+                    all_dfs.append(df)
 
         if not all_dfs:
             logger.error("Không có data để train!")
@@ -346,8 +367,22 @@ def train_for_courses(
         combined_df = pd.concat(all_dfs, ignore_index=True)
         logger.info(f"Combined data: {len(combined_df)} records từ {len(all_dfs)} courses")
 
+        # Chuẩn hóa kiểu Decimal -> float (tránh lỗi arithmetic Decimal * float)
+        for col in combined_df.columns:
+            if combined_df[col].map(lambda x: isinstance(x, Decimal)).any():
+                combined_df[col] = pd.to_numeric(combined_df[col], errors="coerce")
+
         # 2. Feature engineering
-        combined_df = fe.create_all_features(combined_df)
+        # Nếu có dữ liệu từ student_features thì bỏ qua FE để tránh re-compute không cần thiết
+        # (student_features đã là output của FE pipeline).
+        required_features = ['engagement_score', 'activity_score', 'consistency_score']
+        has_features = all(col in combined_df.columns for col in required_features)
+
+        if not has_features and not loaded_any_from_student_features:
+            logger.info("Running feature engineering...")
+            from ml.feature_engineering import FeatureEngineer
+            fe = FeatureEngineer()
+            combined_df = fe.create_all_features(combined_df)
 
         # 3. Filter chỉ SV có is_passed NOT NULL
         if "is_passed" not in combined_df.columns:

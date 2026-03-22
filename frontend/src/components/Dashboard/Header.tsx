@@ -25,7 +25,9 @@ export function Header() {
                 {selectedCourse && (
                     <div className="course-info">
                         <span className="course-label">Khóa học đang xem:</span>
-                        <span className="course-name">{selectedCourse.course_id.split(':').pop()}</span>
+                        <span className="course-name">
+                            {selectedCourse.course_name || selectedCourse.course_id.split(':').pop()}
+                        </span>
                         {statistics && (
                             <span className="student-count">
                                 {statistics.total_students} sinh viên

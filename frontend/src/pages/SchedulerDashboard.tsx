@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import './SchedulerDashboard.css';
 
 /* ── Types ────────────────────────────────────────────────── */
@@ -217,6 +217,30 @@ export default function SchedulerDashboard() {
 /* ── Status Tab ────────────────────────────────────────── */
 
 function StatusTab({ groups }: { groups: CourseGroup[] }) {
+    const [filterStatus, setFilterStatus] = useState<string>('active');
+    const [sortBy, setSortBy] = useState<string>('status');
+
+    const processed = useMemo(() => {
+        let res = groups.filter(g => filterStatus === 'all' || g.status === filterStatus);
+        res.sort((a, b) => {
+            if (sortBy === 'name') {
+                return a.base_name.localeCompare(b.base_name);
+            }
+            if (sortBy === 'students') {
+                return b.labeled_students - a.labeled_students;
+            }
+            if (sortBy === 'status') {
+                const weight: Record<string, number> = { active: 3, waiting: 2, no_data: 1 };
+                const wA = weight[a.status] || 0;
+                const wB = weight[b.status] || 0;
+                if (wA !== wB) return wB - wA; // Active first
+                return b.labeled_students - a.labeled_students;
+            }
+            return 0;
+        });
+        return res;
+    }, [groups, filterStatus, sortBy]);
+
     if (groups.length === 0) {
         return (
             <div className="empty-state">
@@ -228,10 +252,37 @@ function StatusTab({ groups }: { groups: CourseGroup[] }) {
     }
 
     return (
-        <div className="groups-grid">
-            {groups.map((g) => (
-                <GroupCard key={g.base_name} group={g} />
-            ))}
+        <div className="status-tab-container">
+            <div className="status-filters">
+                <div className="filter-group">
+                    <label>Trạng thái:</label>
+                    <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
+                        <option value="all">Tất cả ({groups.length})</option>
+                        <option value="active">Đang hoạt động ({groups.filter((g: CourseGroup)=>g.status==='active').length})</option>
+                        <option value="waiting">Chờ dữ liệu ({groups.filter((g: CourseGroup)=>g.status==='waiting').length})</option>
+                        <option value="no_data">Chưa có data ({groups.filter((g: CourseGroup)=>g.status==='no_data').length})</option>
+                    </select>
+                </div>
+                <div className="filter-group">
+                    <label>Sắp xếp:</label>
+                    <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
+                        <option value="status">Trạng thái ưu tiên</option>
+                        <option value="name">Tên nhóm (A-Z)</option>
+                        <option value="students">Số SV có dữ liệu</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div className="groups-grid compact-grid">
+                {processed.map((g) => (
+                    <GroupCard key={g.base_name} group={g} />
+                ))}
+                {processed.length === 0 && (
+                    <div className="empty-state" style={{ gridColumn: '1 / -1', minHeight: '150px' }}>
+                        <p>Không có nhóm nào phù hợp với bộ lọc hiện tại.</p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

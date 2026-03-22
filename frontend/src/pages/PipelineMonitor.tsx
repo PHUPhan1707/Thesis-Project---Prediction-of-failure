@@ -46,11 +46,10 @@ interface PipelineSummary {
     errors: string[];
 }
 
-interface AuthStatus {
-    configured: boolean;
-    authenticated: boolean;
-    email: string | null;
-    authenticated_at: string | null;
+interface LocalCourse {
+    course_id: string;
+    course_name: string | null;
+    student_count: number;
 }
 
 /* ── API ─────────────────────────────────────────────────── */
@@ -85,9 +84,13 @@ export default function PipelineMonitor() {
     const [progress, setProgress] = useState<ProgressState | null>(null);
     const [running, setRunning] = useState(false);
     const [summary, setSummary] = useState<PipelineSummary | null>(null);
-    const [auth, setAuth] = useState<AuthStatus | null>(null);
     const [loading, setLoading] = useState(true);
-    const [loggingIn, setLoggingIn] = useState(false);
+
+    // Selective fetch modal state
+    const [showSelectModal, setShowSelectModal] = useState(false);
+    const [localCourses, setLocalCourses] = useState<LocalCourse[]>([]);
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+    const [loadingCourses, setLoadingCourses] = useState(false);
 
     const logRef = useRef<HTMLDivElement>(null);
     const eventSourceRef = useRef<EventSource | null>(null);
@@ -116,7 +119,6 @@ export default function PipelineMonitor() {
             const data = await r.json();
             setRunning(data.running);
             if (data.summary) setSummary(data.summary);
-            if (data.mooc_auth) setAuth(data.mooc_auth);
         } catch {
             /* ignore on initial load */
         } finally {
@@ -195,27 +197,29 @@ export default function PipelineMonitor() {
         };
     }, [addLog]);
 
+    const resetState = () => {
+        setLogs([]);
+        setSummary(null);
+        setProgress(null);
+        setSteps(
+            STEP_NAMES.map((name, i) => ({
+                step: i + 1,
+                name,
+                status: 'pending',
+                detail: '',
+            })),
+        );
+    };
+
     const handleStart = async () => {
         try {
-            setLogs([]);
-            setSummary(null);
-            setProgress(null);
-            setSteps(
-                STEP_NAMES.map((name, i) => ({
-                    step: i + 1,
-                    name,
-                    status: 'pending',
-                    detail: '',
-                })),
-            );
-
+            resetState();
             const r = await fetch(`${getApiBase()}/start`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({}),
             });
             const data = await r.json();
-
             if (data.success) {
                 setRunning(true);
                 setTimeout(connectSSE, 300);
@@ -236,26 +240,63 @@ export default function PipelineMonitor() {
         }
     };
 
-    const handleLoginMOOC = async () => {
+    // ── Selective Fetch ──────────────────────────────────────
+
+    const openSelectModal = async () => {
+        setShowSelectModal(true);
+        setSelectedIds(new Set());
+        setLoadingCourses(true);
         try {
-            setLoggingIn(true);
-            const r = await fetch(`${getApiBase()}/login-mooc`, {
-                method: 'POST',
-            });
+            const r = await fetch(`${getApiBase()}/local-courses`);
             const data = await r.json();
-            if (data.status) setAuth(data.status);
-            addLog(
-                data.success
-                    ? 'Login MOOC thành công!'
-                    : `Login MOOC thất bại: ${data.message}`,
-                data.success ? 'info' : 'error',
-            );
-        } catch (e: any) {
-            addLog(`Lỗi login: ${e.message}`, 'error');
+            setLocalCourses(data.courses || []);
+        } catch {
+            setLocalCourses([]);
         } finally {
-            setLoggingIn(false);
+            setLoadingCourses(false);
         }
     };
+
+    const toggleCourse = (id: string) => {
+        setSelectedIds((prev) => {
+            const next = new Set(prev);
+            next.has(id) ? next.delete(id) : next.add(id);
+            return next;
+        });
+    };
+
+    const toggleAll = () => {
+        if (selectedIds.size === localCourses.length) {
+            setSelectedIds(new Set());
+        } else {
+            setSelectedIds(new Set(localCourses.map((c) => c.course_id)));
+        }
+    };
+
+    const handleFetchSelected = async () => {
+        if (selectedIds.size === 0) return;
+        setShowSelectModal(false);
+        resetState();
+        try {
+            const r = await fetch(`${getApiBase()}/fetch-selected`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ course_ids: Array.from(selectedIds) }),
+            });
+            const data = await r.json();
+            if (data.success) {
+                setRunning(true);
+                setTimeout(connectSSE, 300);
+            } else {
+                addLog(data.message || 'Không thể fetch', 'error');
+            }
+        } catch (e: any) {
+            addLog(`Lỗi: ${e.message}`, 'error');
+        }
+    };
+
+    const getDisplayName = (c: LocalCourse) =>
+        c.course_name || c.course_id.split(':')[1]?.split('+').slice(0, 2).join(' / ') || c.course_id;
 
     /* ── Render ───────────────────────────────────────────── */
 
@@ -272,35 +313,6 @@ export default function PipelineMonitor() {
 
     return (
         <div className="pipeline-page">
-            {/* Header */}
-            <div className="pipeline-header">
-                <div className="header-info">
-                    <h2>
-                        <span className="header-icon">🔬</span> Pipeline Monitor
-                    </h2>
-                    <p className="header-desc">
-                        Tự động: Discover &rarr; Fetch &rarr; Feature Engineering &rarr;
-                        Training &rarr; Prediction
-                    </p>
-                </div>
-                <div className="header-badges">
-                    {auth && (
-                        <span
-                            className={`auth-badge ${auth.authenticated ? 'auth-ok' : auth.configured ? 'auth-configured' : 'auth-none'}`}
-                        >
-                            {auth.authenticated
-                                ? `🟢 MOOC: ${auth.email}`
-                                : auth.configured
-                                  ? '🟡 MOOC: Chưa login'
-                                  : '🔴 MOOC: Chưa cấu hình'}
-                        </span>
-                    )}
-                    <span className={`run-badge ${running ? 'badge-running' : 'badge-idle'}`}>
-                        {running ? '⏳ Đang chạy' : '⏸ Sẵn sàng'}
-                    </span>
-                </div>
-            </div>
-
             {/* Controls */}
             <div className="pipeline-controls">
                 <button
@@ -311,6 +323,14 @@ export default function PipelineMonitor() {
                     {running ? '⏳ Đang chạy...' : '▶ Chạy Full Pipeline'}
                 </button>
                 <button
+                    className="btn-pipeline btn-select-fetch"
+                    onClick={openSelectModal}
+                    disabled={running}
+                    title="Chọn khóa học cụ thể để fetch data"
+                >
+                    ⚡ Fetch có chọn lọc
+                </button>
+                <button
                     className="btn-pipeline btn-stop"
                     onClick={handleStop}
                     disabled={!running}
@@ -318,18 +338,14 @@ export default function PipelineMonitor() {
                     ⏹ Dừng
                 </button>
                 <button
-                    className="btn-pipeline btn-login"
-                    onClick={handleLoginMOOC}
-                    disabled={loggingIn || running}
-                >
-                    {loggingIn ? '⏳ Đang login...' : '🔑 Login MOOC'}
-                </button>
-                <button
                     className="btn-pipeline btn-refresh"
                     onClick={loadStatus}
                 >
                     🔄 Refresh
                 </button>
+                <span className={`run-badge ${running ? 'badge-running' : 'badge-idle'}`}>
+                    {running ? '⏳ Đang chạy' : '⏸ Sẵn sàng'}
+                </span>
             </div>
 
             {/* Stepper */}
@@ -380,7 +396,7 @@ export default function PipelineMonitor() {
                 <div className="logs-terminal" ref={logRef}>
                     {logs.length === 0 ? (
                         <div className="logs-empty">
-                            Nhấn "Chạy Full Pipeline" để bắt đầu...
+                            Nhấn "▶ Chạy Full Pipeline" hoặc "⚡ Fetch có chọn lọc" để bắt đầu...
                         </div>
                     ) : (
                         logs.map((log) => (
@@ -469,6 +485,82 @@ export default function PipelineMonitor() {
                             ))}
                         </div>
                     )}
+                </div>
+            )}
+
+            {/* ── Selective Fetch Modal ─────────────────────── */}
+            {showSelectModal && (
+                <div className="select-modal-overlay" onClick={() => setShowSelectModal(false)}>
+                    <div className="select-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="select-modal-header">
+                            <div>
+                                <h3>⚡ Fetch có chọn lọc</h3>
+                                <p className="select-modal-desc">
+                                    Chọn khóa học muốn fetch grades &amp; features. Chỉ Step 2+3 được chạy.
+                                </p>
+                            </div>
+                            <button className="select-modal-close" onClick={() => setShowSelectModal(false)}>✕</button>
+                        </div>
+
+                        <div className="select-modal-actions-top">
+                            <button className="btn-select-all" onClick={toggleAll}>
+                                {selectedIds.size === localCourses.length ? '☐ Bỏ chọn tất cả' : '☑ Chọn tất cả'}
+                            </button>
+                            <span className="select-count-info">
+                                Đã chọn: <strong>{selectedIds.size}</strong> / {localCourses.length} khóa học
+                            </span>
+                        </div>
+
+                        <div className="select-modal-list">
+                            {loadingCourses ? (
+                                <div className="select-loading">
+                                    <div className="loading-spinner" />
+                                    <span>Đang tải danh sách...</span>
+                                </div>
+                            ) : localCourses.length === 0 ? (
+                                <div className="select-empty">Không tìm thấy khóa học nào trong DB.</div>
+                            ) : (
+                                localCourses.map((course) => {
+                                    const checked = selectedIds.has(course.course_id);
+                                    return (
+                                        <label
+                                            key={course.course_id}
+                                            className={`course-select-row ${checked ? 'selected' : ''}`}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={checked}
+                                                onChange={() => toggleCourse(course.course_id)}
+                                                className="course-checkbox"
+                                            />
+                                            <div className="course-select-info">
+                                                <span className="course-select-name">
+                                                    {getDisplayName(course)}
+                                                </span>
+                                                <span className="course-select-meta">
+                                                    <span className="meta-id">{course.course_id.split(':')[1]?.split('+').slice(0,2).join('+')||course.course_id}</span>
+                                                    <span className="meta-count">👥 {course.student_count} SV</span>
+                                                </span>
+                                            </div>
+                                        </label>
+                                    );
+                                })
+                            )}
+                        </div>
+
+                        <div className="select-modal-footer">
+                            <button className="btn-pipeline btn-refresh" onClick={() => setShowSelectModal(false)}>
+                                Hủy
+                            </button>
+                            <button
+                                className="btn-pipeline btn-fetch-confirm"
+                                onClick={handleFetchSelected}
+                                disabled={selectedIds.size === 0}
+                            >
+                                ⚡ Fetch {selectedIds.size > 0 ? `${selectedIds.size} khóa học` : ''}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

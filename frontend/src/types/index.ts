@@ -34,6 +34,7 @@ export interface Suggestion {
 export interface Course {
   course_id: string;
   student_count: number;
+  course_name?: string;
 }
 
 // Statistics types
