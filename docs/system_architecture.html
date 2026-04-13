@@ -1,0 +1,502 @@
+      <!DOCTYPE html>
+      <html lang="en">
+
+      <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>System Architecture — Dropout Prediction</title>
+            <style>
+                  body {
+                        margin: 0;
+                        padding: 24px;
+                        background: #e8edf4;
+                        font-family: 'Segoe UI', Arial, sans-serif;
+                  }
+
+                  h2 {
+                        text-align: center;
+                        color: #1a3d70;
+                        font-size: 16px;
+                        margin-bottom: 12px;
+                        letter-spacing: 0.5px;
+                  }
+
+                  .wrap {
+                        display: inline-block;
+                        background: white;
+                        border-radius: 10px;
+                        box-shadow: 0 3px 18px rgba(0, 0, 0, 0.13);
+                        padding: 10px;
+                  }
+            </style>
+      </head>
+
+      <body>
+            <h2>Figure: System Architecture — Early Dropout Prediction System (Open edX + MOOC–H5P)</h2>
+            <div class="wrap">
+                  <svg width="1360" height="790" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                              <!-- Dotted background -->
+                              <pattern id="dots" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+                                    <circle cx="11" cy="11" r="1.1" fill="#b8cce0" opacity="0.65" />
+                              </pattern>
+
+                              <!-- Arrow markers -->
+                              <marker id="arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                                    <polygon points="0 0,9 3.5,0 7" fill="#556677" />
+                              </marker>
+                              <marker id="arr-blue" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                                    <polygon points="0 0,9 3.5,0 7" fill="#3a70b8" />
+                              </marker>
+                              <marker id="arr-orange" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                                    <polygon points="0 0,9 3.5,0 7" fill="#c86820" />
+                              </marker>
+                              <marker id="arr-green" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                                    <polygon points="0 0,9 3.5,0 7" fill="#2e7848" />
+                              </marker>
+                              <marker id="arr-gray" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                                    <polygon points="0 0,9 3.5,0 7" fill="#6a7a8a" />
+                              </marker>
+                        </defs>
+
+                        <!-- ── Background ── -->
+                        <rect width="1360" height="790" fill="url(#dots)" rx="6" />
+
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <!--  "Fetch & Normalize" dashed zone                       -->
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <rect x="686" y="56" width="662" height="548" rx="10" fill="rgba(236,245,255,0.35)" stroke="#7a9ec8"
+                              stroke-width="1.6" stroke-dasharray="10,5" />
+                        <text x="1017" y="48" text-anchor="middle" font-size="12" fill="#4a6888" font-style="italic">Fetch
+                              &amp; Normalize</text>
+
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <!--  PRESENTATION LAYER                                     -->
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <rect x="10" y="148" width="168" height="370" rx="8" fill="#d6e8f8" stroke="#4a80c0"
+                              stroke-width="1.5" />
+                        <text x="94" y="168" text-anchor="middle" font-size="10.5" fill="#12356a"
+                              font-weight="bold">Presentation Layer</text>
+
+                        <!-- React Dashboard card -->
+                        <rect x="22" y="176" width="144" height="72" rx="5" fill="white" stroke="#4a80c0"
+                              stroke-width="1.2" />
+                        <text x="94" y="193" text-anchor="middle" font-size="9.5" fill="#12356a" font-weight="bold">React
+                              Dashboard</text>
+                        <text x="94" y="207" text-anchor="middle" font-size="8.5" fill="#3a608a">(Instructor UI)</text>
+                        <text x="94" y="221" text-anchor="middle" font-size="7.5" fill="#8898b0">TypeScript / React · Port
+                              :3000</text>
+                        <text x="94" y="233" text-anchor="middle" font-size="7.5" fill="#8898b0">DashboardContext ·
+                              ThemeContext</text>
+
+                        <!-- Pages list -->
+                        <text x="26" y="264" font-size="8.5" fill="#22446a" font-weight="bold"> Pages:</text>
+                        <text x="30" y="278" font-size="8" fill="#334"> ▸ Overview</text>
+                        <text x="30" y="292" font-size="8" fill="#334"> ▸ Student Detail + SHAP</text>
+                        <text x="30" y="306" font-size="8" fill="#334"> ▸ H5P Analytics</text>
+                        <text x="30" y="320" font-size="8" fill="#334"> ▸ Pipeline Monitor (SSE)</text>
+                        <text x="30" y="334" font-size="8" fill="#334"> ▸ Scheduler Dashboard</text>
+                        <text x="30" y="348" font-size="8" fill="#334"> ▸ Report Page</text>
+
+                        <line x1="22" y1="358" x2="166" y2="358" stroke="#a0c0df" stroke-width="0.8" stroke-dasharray="3,2" />
+
+                        <text x="26" y="372" font-size="8.5" fill="#22446a" font-weight="bold"> Services:</text>
+                        <text x="30" y="386" font-size="8" fill="#334"> ▸ api.ts (REST client)</text>
+                        <text x="30" y="400" font-size="8" fill="#334"> ▸ Retry: 0→400→1200 ms</text>
+                        <text x="30" y="414" font-size="8" fill="#334"> ▸ SSE streaming consumer</text>
+                        <text x="30" y="428" font-size="8" fill="#334"> ▸ exportCsv.ts</text>
+                        <text x="30" y="442" font-size="8" fill="#334"> ▸ Dark / Light theme</text>
+                        <text x="30" y="456" font-size="8" fill="#334"> ▸ LoadingSkeleton / ErrorBoundary</text>
+                        <text x="30" y="470" font-size="8" fill="#334"> ▸ TypeScript interfaces</text>
+                        <text x="30" y="484" font-size="8" fill="#334"> ▸ Sidebar (course select)</text>
+                        <text x="30" y="498" font-size="8" fill="#334"> ▸ ThemeToggle</text>
+
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <!--  APPLICATION / BACKEND LAYER                            -->
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <rect x="196" y="96" width="472" height="582" rx="8" fill="#d6e8f8" stroke="#4a80c0"
+                              stroke-width="1.5" />
+                        <text x="432" y="114" text-anchor="middle" font-size="10.5" fill="#12356a"
+                              font-weight="bold">Application / Backend Layer</text>
+                        <text x="432" y="128" text-anchor="middle" font-size="8.5" fill="#2a5080">Python / Flask · Port
+                              :5000</text>
+
+                        <!-- ── APScheduler ── -->
+                        <rect x="210" y="137" width="206" height="50" rx="5" fill="white" stroke="#4a80c0"
+                              stroke-width="1.1" />
+                        <text x="313" y="153" text-anchor="middle" font-size="9" fill="#12356a" font-weight="bold">Background
+                              Scheduler</text>
+                        <text x="313" y="166" text-anchor="middle" font-size="8" fill="#3a6080">(APScheduler)</text>
+                        <text x="313" y="179" text-anchor="middle" font-size="7.5" fill="#8898b0">Auto-retrain · Auto-predict
+                              · Cron jobs</text>
+
+                        <!-- ── REST API Layer ── -->
+                        <rect x="428" y="137" width="226" height="50" rx="5" fill="white" stroke="#4a80c0"
+                              stroke-width="1.1" />
+                        <text x="541" y="153" text-anchor="middle" font-size="9" fill="#12356a" font-weight="bold">REST API
+                              Layer</text>
+                        <text x="541" y="166" text-anchor="middle" font-size="8" fill="#3a6080">10 Flask Blueprints</text>
+                        <text x="541" y="179" text-anchor="middle" font-size="7.5" fill="#8898b0">courses · students ·
+                              predictions · h5p · email …</text>
+
+                        <!-- ── API Aggregation Layer (central, emphasized) ── -->
+                        <rect x="210" y="204" width="444" height="70" rx="6" fill="#a8c8e8" stroke="#2860a8"
+                              stroke-width="1.8" />
+                        <text x="432" y="224" text-anchor="middle" font-size="11" fill="#082848" font-weight="bold">API
+                              Aggregation Layer</text>
+                        <text x="432" y="240" text-anchor="middle" font-size="8.5" fill="#1a4068">fetch_mooc_h5p_data.py ·
+                              MoocH5PDataFetcher class</text>
+                        <text x="432" y="254" text-anchor="middle" font-size="8" fill="#2a5080">ThreadPoolExecutor (8 workers)
+                              · Session-cookie Auth · Upsert strategy (INSERT … ON DUPLICATE KEY)</text>
+                        <text x="432" y="266" text-anchor="middle" font-size="8" fill="#2a5080">Standard timeout: 30 s ·
+                              Export timeout: 600 s · Sleep 0.5 s between calls</text>
+
+                        <!-- ── Inference Service ── -->
+                        <rect x="210" y="292" width="206" height="86" rx="5" fill="white" stroke="#4a80c0"
+                              stroke-width="1.1" />
+                        <text x="313" y="309" text-anchor="middle" font-size="9" fill="#12356a" font-weight="bold">Inference
+                              Service</text>
+                        <text x="313" y="322" text-anchor="middle" font-size="8" fill="#3a6080">(Risk Scoring)</text>
+                        <text x="220" y="338" font-size="7.5" fill="#334"> ▸ DataFetcher</text>
+                        <text x="220" y="350" font-size="7.5" fill="#334"> ▸ FeaturePreparator</text>
+                        <text x="220" y="362" font-size="7.5" fill="#334"> ▸ RiskPredictor (CatBoost)</text>
+                        <text x="220" y="374" font-size="7.5" fill="#334"> ▸ SHAP Explanations</text>
+
+                        <!-- ── Pipeline Service ── -->
+                        <rect x="428" y="292" width="226" height="86" rx="5" fill="white" stroke="#4a80c0"
+                              stroke-width="1.1" />
+                        <text x="541" y="309" text-anchor="middle" font-size="9" fill="#12356a" font-weight="bold">Pipeline
+                              Service</text>
+                        <text x="541" y="322" text-anchor="middle" font-size="8" fill="#3a6080">5-Step SSE Streaming</text>
+                        <text x="438" y="338" font-size="7.5" fill="#334"> ① Discover Courses</text>
+                        <text x="438" y="350" font-size="7.5" fill="#334"> ② Fetch Data (MOOC + H5P)</text>
+                        <text x="438" y="362" font-size="7.5" fill="#334"> ③ Feature Engineering</text>
+                        <text x="438" y="374" font-size="7.5" fill="#334"> ④ Train Model ⑤ Predict</text>
+
+                        <!-- ── Feature Engineering ── -->
+                        <rect x="210" y="395" width="206" height="66" rx="5" fill="white" stroke="#4a80c0"
+                              stroke-width="1.1" />
+                        <text x="313" y="412" text-anchor="middle" font-size="9" fill="#12356a" font-weight="bold">Feature
+                              Engineering</text>
+                        <text x="313" y="425" text-anchor="middle" font-size="7.5"
+                              fill="#3a6080">populate_student_features.py</text>
+                        <text x="220" y="440" font-size="7.5" fill="#334"> ▸ 50+ features · 6 groups</text>
+                        <text x="220" y="452" font-size="7.5" fill="#334"> ▸ Upsert → student_features</text>
+                        <text x="220" y="464" font-size="7.5" fill="#334"> ▸ Leakage prevention</text>
+
+                        <!-- ── ML Training Pipeline ── -->
+                        <rect x="428" y="395" width="226" height="66" rx="5" fill="white" stroke="#4a80c0"
+                              stroke-width="1.1" />
+                        <text x="541" y="412" text-anchor="middle" font-size="9" fill="#12356a" font-weight="bold">ML Training
+                              Pipeline</text>
+                        <text x="541" y="425" text-anchor="middle" font-size="7.5" fill="#3a6080">ml/train_model.py</text>
+                        <text x="438" y="440" font-size="7.5" fill="#334"> ▸ CatBoost · LR=0.05 · Depth=6</text>
+                        <text x="438" y="452" font-size="7.5" fill="#334"> ▸ F1 metric · Early stop 50 rounds</text>
+                        <text x="438" y="464" font-size="7.5" fill="#334"> ▸ Min 300 students · v1/v2/v3…</text>
+
+                        <!-- ── Predictions Store ── -->
+                        <rect x="210" y="479" width="206" height="54" rx="5" fill="white" stroke="#4a80c0"
+                              stroke-width="1.1" />
+                        <text x="313" y="496" text-anchor="middle" font-size="9" fill="#12356a" font-weight="bold">Predictions
+                              Store</text>
+                        <text x="220" y="511" font-size="7.5" fill="#334"> ▸ fail_risk_score · risk_level</text>
+                        <text x="220" y="523" font-size="7.5" fill="#334"> ▸ HIGH ≥70 / MED 40–70 / LOW &lt;40</text>
+                        <text x="220" y="535" font-size="7.5" fill="#334"> ▸ is_latest · prediction history</text>
+
+                        <!-- ── Model Registry ── -->
+                        <rect x="428" y="479" width="226" height="54" rx="5" fill="white" stroke="#4a80c0"
+                              stroke-width="1.1" />
+                        <text x="541" y="496" text-anchor="middle" font-size="9" fill="#12356a" font-weight="bold">Model
+                              Registry</text>
+                        <text x="438" y="511" font-size="7.5" fill="#334"> ▸ model_registry table</text>
+                        <text x="438" y="523" font-size="7.5" fill="#334"> ▸ course_model_mapping</text>
+                        <text x="438" y="535" font-size="7.5" fill="#334"> ▸ is_active · is_default · versioning</text>
+
+                        <!-- ── Email + Intervention (bottom row) ── -->
+                        <rect x="210" y="550" width="206" height="48" rx="5" fill="white" stroke="#4a80c0"
+                              stroke-width="1.1" />
+                        <text x="313" y="567" text-anchor="middle" font-size="9" fill="#12356a" font-weight="bold">Email
+                              Notification</text>
+                        <text x="220" y="582" font-size="7.5" fill="#334"> ▸ email_bp · mailto link</text>
+                        <text x="220" y="594" font-size="7.5" fill="#334"> ▸ High-risk / Inactive / All</text>
+
+                        <rect x="428" y="550" width="226" height="48" rx="5" fill="white" stroke="#4a80c0"
+                              stroke-width="1.1" />
+                        <text x="541" y="567" text-anchor="middle" font-size="9" fill="#12356a"
+                              font-weight="bold">Intervention Tracker</text>
+                        <text x="438" y="582" font-size="7.5" fill="#334"> ▸ interventions_bp</text>
+                        <text x="438" y="594" font-size="7.5" fill="#334"> ▸ Log: email / call / note per student</text>
+
+                        <!-- ── Aggregate footer inside backend box ── -->
+                        <rect x="210" y="614" width="444" height="34" rx="5" fill="#e0eefa" stroke="#4a80c0"
+                              stroke-width="1" />
+                        <text x="432" y="628" text-anchor="middle" font-size="8" fill="#12356a"
+                              font-weight="bold">aggregate_raw_data() → raw_data table (65+ computed features per student per
+                              course)</text>
+                        <text x="432" y="642" text-anchor="middle" font-size="7.5" fill="#3a6080">is_dropout · is_passed
+                              (labels) · fail_risk_score (null until model runs)</text>
+
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <!--  H5P PLATFORM                                           -->
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <rect x="700" y="74" width="210" height="400" rx="8" fill="#fff4ec" stroke="#c86820"
+                              stroke-width="1.5" />
+                        <text x="805" y="93" text-anchor="middle" font-size="10.5" fill="#6a2800" font-weight="bold">H5P
+                              Platform</text>
+                        <text x="805" y="107" text-anchor="middle" font-size="8"
+                              fill="#9a4010">h5p.itp.vn/wp-json/mooc/v1</text>
+
+                        <!-- H5P API boxes -->
+                        <rect x="713" y="116" width="184" height="42" rx="4" fill="white" stroke="#c86820" stroke-width="1" />
+                        <text x="805" y="132" text-anchor="middle" font-size="9" fill="#2c4a7a" font-weight="bold">Scores
+                              API</text>
+                        <text x="805" y="146" text-anchor="middle" font-size="7.5" fill="#556">GET
+                              /scores/{user_id}/{course_id}</text>
+                        <text x="805" y="156" text-anchor="middle" font-size="7" fill="#889">→ h5p_scores ·
+                              h5p_scores_summary</text>
+
+                        <rect x="713" y="166" width="184" height="42" rx="4" fill="white" stroke="#c86820" stroke-width="1" />
+                        <text x="805" y="182" text-anchor="middle" font-size="9" fill="#2c4a7a" font-weight="bold">Video
+                              Progress API</text>
+                        <text x="805" y="196" text-anchor="middle" font-size="7.5" fill="#556">GET
+                              /video-progress/{user_id}/{course_id}</text>
+                        <text x="805" y="206" text-anchor="middle" font-size="7" fill="#889">→ video_progress ·
+                              video_progress_summary</text>
+
+                        <rect x="713" y="216" width="184" height="42" rx="4" fill="white" stroke="#c86820" stroke-width="1" />
+                        <text x="805" y="232" text-anchor="middle" font-size="9" fill="#2c4a7a" font-weight="bold">Combined
+                              Progress API</text>
+                        <text x="805" y="246" text-anchor="middle" font-size="7.5" fill="#556">GET
+                              /combined-progress/{user_id}/{course_id}</text>
+                        <text x="805" y="256" text-anchor="middle" font-size="7" fill="#889">→ dashboard_summary
+                              (primary)</text>
+
+                        <rect x="713" y="266" width="184" height="42" rx="4" fill="white" stroke="#c86820" stroke-width="1" />
+                        <text x="805" y="282" text-anchor="middle" font-size="9" fill="#2c4a7a" font-weight="bold">Dashboard
+                              API</text>
+                        <text x="805" y="296" text-anchor="middle" font-size="7.5" fill="#888">GET
+                              /dashboard/{user_id}/{course_id}</text>
+                        <text x="805" y="306" text-anchor="middle" font-size="7" fill="#c86820">(Fallback if combined-progress
+                              fails)</text>
+
+                        <line x1="713" y1="318" x2="892" y2="318" stroke="#d4a060" stroke-width="0.8"
+                              stroke-dasharray="3,2" />
+                        <text x="716" y="331" font-size="7.5" fill="#7a4010">Timeout: 30 s · Concurrent: 8 threads</text>
+                        <text x="716" y="344" font-size="7.5" fill="#7a4010">Shared requests.Session · per-thread DB
+                              conn</text>
+                        <text x="716" y="357" font-size="7.5" fill="#7a4010">Progress callback every 20 users</text>
+                        <text x="716" y="370" font-size="7.5" fill="#7a4010">Completed threshold: percentage ≥ 70%</text>
+                        <text x="716" y="383" font-size="7.5" fill="#7a4010">Sleep 0.5 s between sequential calls</text>
+                        <text x="716" y="396" font-size="7.5" fill="#7a4010">Logs: logs/fetch_data_YYYYMMDD.log</text>
+                        <text x="716" y="409" font-size="7.5" fill="#7a4010">Auth: none (public API)</text>
+                        <text x="716" y="449" font-size="7.5" fill="#c86820" font-weight="bold">Stored: h5p_scores ·
+                              video_progress</text>
+                        <text x="716" y="461" font-size="7.5" fill="#c86820" font-weight="bold"> summaries ·
+                              dashboard_summary</text>
+
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <!--  MOOC PLATFORM                                          -->
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <rect x="930" y="62" width="228" height="512" rx="8" fill="#edf8f2" stroke="#2e7848"
+                              stroke-width="1.5" />
+                        <text x="1044" y="81" text-anchor="middle" font-size="10.5" fill="#0e3c22" font-weight="bold">MOOC
+                              Platform</text>
+                        <text x="1044" y="95" text-anchor="middle" font-size="8.5" fill="#186032">(Open edX)</text>
+                        <text x="1044" y="108" text-anchor="middle" font-size="7.5"
+                              fill="#287848">mooc.vnuhcm.edu.vn/api/custom/v1</text>
+
+                        <!-- MOOC API boxes -->
+                        <rect x="943" y="116" width="202" height="44" rx="4" fill="white" stroke="#2e7848" stroke-width="1" />
+                        <text x="1044" y="132" text-anchor="middle" font-size="9" fill="#2c4a7a" font-weight="bold">User
+                              APIs</text>
+                        <text x="1044" y="146" text-anchor="middle" font-size="7.5" fill="#556">GET
+                              /course-enrollments-attributes/{id}</text>
+                        <text x="1044" y="157" text-anchor="middle" font-size="7" fill="#889">→ enrollments (user_id, mssv,
+                              faculty, mode…)</text>
+
+                        <rect x="943" y="168" width="202" height="50" rx="4" fill="white" stroke="#2e7848" stroke-width="1" />
+                        <text x="1044" y="184" text-anchor="middle" font-size="9" fill="#2c4a7a"
+                              font-weight="bold">Leaderboard &amp; Course Detail APIs</text>
+                        <text x="1044" y="197" text-anchor="middle" font-size="7.5" fill="#556">GET
+                              /course-details/display-name</text>
+                        <text x="1044" y="209" text-anchor="middle" font-size="7.5" fill="#556">GET
+                              /export/student-grades/{id}</text>
+                        <text x="1044" y="218" text-anchor="middle" font-size="7" fill="#889">→ mooc_grades (is_passed —
+                              training label)</text>
+
+                        <rect x="943" y="226" width="202" height="50" rx="4" fill="white" stroke="#2e7848" stroke-width="1" />
+                        <text x="1044" y="242" text-anchor="middle" font-size="9" fill="#2c4a7a" font-weight="bold">Video
+                              Analytics APIs</text>
+                        <text x="1044" y="255" text-anchor="middle" font-size="7.5" fill="#556">GET
+                              /export/student-progress/{id}</text>
+                        <text x="1044" y="267" text-anchor="middle" font-size="7.5" fill="#556">(block-level completion ·
+                              last_activity)</text>
+                        <text x="1044" y="276" text-anchor="middle" font-size="7" fill="#889">→ mooc_progress</text>
+
+                        <rect x="943" y="284" width="202" height="50" rx="4" fill="white" stroke="#2e7848" stroke-width="1" />
+                        <text x="1044" y="300" text-anchor="middle" font-size="9" fill="#2c4a7a" font-weight="bold">Advanced
+                              Statistics APIs</text>
+                        <text x="1044" y="313" text-anchor="middle" font-size="7.5" fill="#556">GET
+                              /export/student-discussions/{id}</text>
+                        <text x="1044" y="325" text-anchor="middle" font-size="7.5" fill="#556">GET /stats/activity ·
+                              /stats/assessment</text>
+                        <text x="1044" y="334" text-anchor="middle" font-size="7" fill="#889">→ mooc_discussions ·
+                              course_stats_benchmarks</text>
+
+                        <rect x="943" y="342" width="202" height="42" rx="4" fill="white" stroke="#2e7848" stroke-width="1" />
+                        <text x="1044" y="358" text-anchor="middle" font-size="9" fill="#2c4a7a" font-weight="bold">Course
+                              Statistics APIs</text>
+                        <text x="1044" y="371" text-anchor="middle" font-size="7.5" fill="#556">GET /stats/progress ·
+                              /course-details</text>
+                        <text x="1044" y="382" text-anchor="middle" font-size="7" fill="#889">→ mooc_progress ·
+                              course_stats_benchmarks</text>
+
+                        <line x1="943" y1="394" x2="1145" y2="394" stroke="#6ab080" stroke-width="0.8"
+                              stroke-dasharray="3,2" />
+                        <text x="946" y="408" font-size="7.5" fill="#1a5030">Export Timeout: 600 s (10 min)</text>
+                        <text x="946" y="421" font-size="7.5" fill="#1a5030">Standard Timeout: 30 s</text>
+                        <text x="946" y="434" font-size="7.5" fill="#1a5030">Auth: Session Cookie (sessionid +
+                              edx-session)</text>
+                        <text x="946" y="447" font-size="7.5" fill="#1a5030">Pagination: limit=200, offset=0</text>
+                        <text x="946" y="460" font-size="7.5" fill="#1a5030">Flexible response parsing (data.data /
+                              data.results)</text>
+                        <text x="946" y="473" font-size="7.5" fill="#1a5030">INSERT … ON DUPLICATE KEY UPDATE</text>
+                        <text x="946" y="486" font-size="7.5" fill="#1a5030">DB reconnect on-demand</text>
+                        <text x="946" y="499" font-size="7.5" fill="#1a5030">Logs: logs/fetch_data_YYYYMMDD.log</text>
+                        <text x="946" y="518" font-size="7.5" fill="#2e7848" font-weight="bold">Stored: enrollments ·
+                              mooc_grades</text>
+                        <text x="946" y="531" font-size="7.5" fill="#2e7848" font-weight="bold"> mooc_progress ·
+                              mooc_discussions</text>
+                        <text x="946" y="544" font-size="7.5" fill="#2e7848" font-weight="bold">
+                              course_stats_benchmarks</text>
+                        <text x="946" y="560" font-size="7.5" fill="#2e7848">Training label: mooc_grades.is_passed</text>
+
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <!--  DATA LAYER                                             -->
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <rect x="196" y="700" width="472" height="82" rx="8" fill="#eeeff8" stroke="#6a7a9a"
+                              stroke-width="1.5" />
+                        <text x="432" y="718" text-anchor="middle" font-size="10.5" fill="#242438" font-weight="bold">Data
+                              Layer</text>
+
+                        <!-- MySQL cylinder -->
+                        <ellipse cx="230" cy="735" rx="24" ry="10" fill="#a8c8e8" stroke="#4a80c0" stroke-width="1.2" />
+                        <rect x="206" y="735" width="48" height="22" fill="#bcd4ee" stroke="none" />
+                        <line x1="206" y1="735" x2="206" y2="757" stroke="#4a80c0" stroke-width="1.2" />
+                        <line x1="254" y1="735" x2="254" y2="757" stroke="#4a80c0" stroke-width="1.2" />
+                        <ellipse cx="230" cy="757" rx="24" ry="10" fill="#a8c8e8" stroke="#4a80c0" stroke-width="1.2" />
+                        <text x="230" y="748" text-anchor="middle" font-size="7.5" fill="#082848"
+                              font-weight="bold">MySQL</text>
+
+                        <text x="284" y="733" font-size="8.5" fill="#2a3460" font-weight="bold">dropout_prediction_db · Port
+                              :4000</text>
+                        <text x="284" y="747" font-size="7.5" fill="#3a4a70">enrollments · mooc_grades · mooc_progress ·
+                              mooc_discussions · h5p_scores · video_progress</text>
+                        <text x="284" y="760" font-size="7.5" fill="#3a4a70">h5p_scores_summary · video_progress_summary ·
+                              dashboard_summary · raw_data</text>
+                        <text x="284" y="773" font-size="7.5" fill="#3a4a70">student_features · predictions · model_registry ·
+                              course_model_mapping · interventions</text>
+
+                        <!-- ═══════════════════════════════════════════════════════ -->
+                        <!--  ARROWS / CONNECTIONS                                   -->
+                        <!-- ═══════════════════════════════════════════════════════ -->
+
+                        <!-- 1. Presentation Layer → REST API Layer (HTTP) -->
+                        <line x1="178" y1="330" x2="196" y2="168" stroke="#3a70b8" stroke-width="1.6"
+                              marker-end="url(#arr-blue)" stroke-dasharray="6,3" />
+                        <rect x="108" y="248" width="66" height="16" rx="3" fill="rgba(255,255,255,0.7)" />
+                        <text x="141" y="259" text-anchor="middle" font-size="7.5" fill="#3a70b8">HTTP :5000</text>
+
+                        <!-- 2. API Aggregation Layer → H5P Scores API -->
+                        <line x1="654" y1="232" x2="700" y2="155" stroke="#c86820" stroke-width="1.4"
+                              marker-end="url(#arr-orange)" />
+
+                        <!-- 3. API Aggregation Layer → H5P Video Progress API -->
+                        <line x1="654" y1="243" x2="700" y2="207" stroke="#c86820" stroke-width="1.4"
+                              marker-end="url(#arr-orange)" />
+
+                        <!-- 4. API Aggregation Layer → H5P Combined Progress API -->
+                        <line x1="654" y1="254" x2="700" y2="258" stroke="#c86820" stroke-width="1.4"
+                              marker-end="url(#arr-orange)" />
+
+                        <!--
+                        ═══════════════════════════════════════════════════════════
+                        GREEN: 1 đường backbone vòng qua H5P + 3 nhánh mũi tên
+                              ① RIGHT → thoát backend (x=654→680, khe trái H5P=700)
+                              ② DOWN  → xuống dưới H5P (y→498 > H5P bottom=474)
+                              ③ RIGHT → ngang bên dưới H5P (x→922, H5P right=910)
+                              ④ UP    → lên dọc bên phải H5P (y→138)
+                        + 3 nhánh mũi tên từ x=922 → x=930 tại y=138, 193, 309
+                        ═══════════════════════════════════════════════════════════
+                        -->
+
+                        <!-- Backbone: 1 đường duy nhất vòng quanh H5P -->
+                        <!-- marker-mid đặt mũi tên tại mỗi điểm ngoặt để chỉ hướng -->
+                        <polyline points="654,240 680,240 680,498 922,498 922,138" stroke="#2e7848" stroke-width="1.4"
+                              fill="none" marker-mid="url(#arr-green)" marker-end="url(#arr-green)" />
+
+                        <!-- Nhánh → MOOC User APIs (y≈138) -->
+                        <line x1="922" y1="138" x2="930" y2="138" stroke="#2e7848" stroke-width="1.4"
+                              marker-end="url(#arr-green)" />
+
+                        <!-- Nhánh → MOOC Leaderboard &amp; Course Detail APIs (y≈193) -->
+                        <line x1="922" y1="193" x2="930" y2="193" stroke="#2e7848" stroke-width="1.4"
+                              marker-end="url(#arr-green)" />
+
+                        <!-- Nhánh → MOOC Advanced Statistics APIs (y≈309) -->
+                        <line x1="922" y1="309" x2="930" y2="309" stroke="#2e7848" stroke-width="1.4"
+                              marker-end="url(#arr-green)" />
+
+                        <!-- 8. Backend → Data Layer (down) -->
+                        <line x1="432" y1="678" x2="432" y2="700" stroke="#6a7a9a" stroke-width="1.8"
+                              marker-end="url(#arr-gray)" />
+                        <rect x="384" y="685" width="96" height="14" rx="3" fill="rgba(255,255,255,0.75)" />
+                        <text x="432" y="695" text-anchor="middle" font-size="7.5" fill="#445">Read / Write (MySQL)</text>
+
+                        <!-- 9. REST API → Inference Service (internal vertical dashed) -->
+                        <line x1="313" y1="187" x2="313" y2="292" stroke="#3a70b8" stroke-width="1" stroke-dasharray="4,2"
+                              marker-end="url(#arr-blue)" />
+
+                        <!-- 10. REST API → Pipeline Service (internal vertical dashed) -->
+                        <line x1="541" y1="187" x2="541" y2="292" stroke="#3a70b8" stroke-width="1" stroke-dasharray="4,2"
+                              marker-end="url(#arr-blue)" />
+
+                        <!-- 11. Pipeline Service → API Aggregation (triggers) -->
+                        <path d="M 541 292 L 541 283 L 432 283 L 432 274" stroke="#3a70b8" stroke-width="1" fill="none"
+                              stroke-dasharray="4,2" marker-end="url(#arr-blue)" />
+
+                        <!-- 12. Inference Service → Predictions Store (down) -->
+                        <line x1="313" y1="378" x2="313" y2="395" stroke="#3a70b8" stroke-width="1" stroke-dasharray="4,2"
+                              marker-end="url(#arr-blue)" />
+
+                        <!-- 13. ML Training → Model Registry (down) -->
+                        <line x1="541" y1="461" x2="541" y2="479" stroke="#3a70b8" stroke-width="1" stroke-dasharray="4,2"
+                              marker-end="url(#arr-blue)" />
+
+                        <!-- 14. Feature Eng → Inference Service (feeds) -->
+                        <line x1="313" y1="461" x2="313" y2="479" stroke="#3a70b8" stroke-width="1" stroke-dasharray="4,2"
+                              marker-end="url(#arr-blue)" />
+
+                        <!-- ── Legend ── -->
+                        <rect x="10" y="688" width="168" height="90" rx="6" fill="rgba(255,255,255,0.85)" stroke="#a0b8d0"
+                              stroke-width="1" />
+                        <text x="94" y="703" text-anchor="middle" font-size="8.5" fill="#22446a"
+                              font-weight="bold">Legend</text>
+                        <line x1="20" y1="714" x2="50" y2="714" stroke="#3a70b8" stroke-width="1.4" stroke-dasharray="5,2" />
+                        <polygon points="50 711, 58 714, 50 717" fill="#3a70b8" />
+                        <text x="68" y="718" font-size="7.5" fill="#334">Internal call / REST</text>
+                        <line x1="20" y1="730" x2="58" y2="730" stroke="#c86820" stroke-width="1.4"
+                              marker-end="url(#arr-orange)" />
+                        <text x="68" y="734" font-size="7.5" fill="#334">→ H5P API call</text>
+                        <line x1="20" y1="746" x2="58" y2="746" stroke="#2e7848" stroke-width="1.4"
+                              marker-end="url(#arr-green)" />
+                        <text x="68" y="750" font-size="7.5" fill="#334">→ MOOC API call</text>
+                        <line x1="20" y1="762" x2="58" y2="762" stroke="#6a7a9a" stroke-width="1.8"
+                              marker-end="url(#arr-gray)" />
+                        <text x="68" y="766" font-size="7.5" fill="#334">→ DB Read / Write</text>
+
+                  </svg>
+            </div>
+      </body>
+
+      </html>

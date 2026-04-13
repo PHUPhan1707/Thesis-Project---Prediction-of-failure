@@ -324,9 +324,9 @@ CREATE TABLE IF NOT EXISTS raw_data (
     video_completion_rate DECIMAL(5,2) DEFAULT 0, -- completed/total
     video_watch_rate DECIMAL(5,2) DEFAULT 0, -- watched_time/total_duration
     
-    -- Assessment/Quiz features (từ H5P scores)
+    -- Assessment/H5P features (từ H5P scores - bao gồm video + bài tập tương tác)
     quiz_attempts INT DEFAULT 0, -- số lần làm bài (completed_contents)
-    quiz_avg_score DECIMAL(5,2) DEFAULT 0, -- h5p_overall_percentage
+    h5p_avg_score DECIMAL(5,2) DEFAULT 0, -- h5p_overall_percentage (video + interactive, NOT quiz only)
     quiz_completion_rate DECIMAL(5,2) DEFAULT 0,
     
     -- Forum/Discussion features (Legacy - TODO: từ API khác nếu có)
@@ -422,9 +422,9 @@ CREATE TABLE IF NOT EXISTS student_features (
     video_completion_rate DECIMAL(5,2) DEFAULT 0,
     video_watch_rate DECIMAL(5,2) DEFAULT 0,
 
-    -- Assessment/Quiz features
+    -- Assessment/H5P features (bao gồm video + bài tập tương tác, NOT quiz only)
     quiz_attempts INT DEFAULT 0,
-    quiz_avg_score DECIMAL(5,2) DEFAULT 0,
+    h5p_avg_score DECIMAL(5,2) DEFAULT 0,
     quiz_completion_rate DECIMAL(5,2) DEFAULT 0,
 
     -- Forum/Discussion (Legacy)

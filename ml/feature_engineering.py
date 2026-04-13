@@ -132,7 +132,7 @@ class FeatureEngineer:
 
         df['video_score'] = df['video_completion_rate']
         df['h5p_score'] = df['h5p_completion_rate']
-        df['quiz_score'] = df['quiz_avg_score']
+        df['quiz_score'] = df['h5p_avg_score']
 
         df['engagement_score'] = (
             df['discussion_score'] * 0.25 +

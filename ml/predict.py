@@ -121,8 +121,8 @@ class DropoutPredictor:
             suggestions.append("📝 Cung cấp transcript hoặc tài liệu thay thế")
         
         # Check quiz performance
-        if student_data.get('quiz_avg_score', 100) < 50:
-            suggestions.append("✍️ Tổ chức buổi giải đáp thắc mắc về quiz")
+        if student_data.get('h5p_avg_score', 100) < 50:
+            suggestions.append("✍️ Tổ chức buổi giải đáp thắc mắc về bài tập H5P")
             suggestions.append("📖 Cung cấp bài tập luyện tập thêm")
         
         # General high risk

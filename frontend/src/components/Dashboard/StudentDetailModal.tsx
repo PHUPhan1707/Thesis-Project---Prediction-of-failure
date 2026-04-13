@@ -173,15 +173,15 @@ export function StudentDetailModal() {
                                 <div className="metric-card">
                                     <div className="metric-header">
                                         <span className="metric-icon">📝</span>
-                                        <span className="metric-title">Điểm Trung Bình</span>
+                                        <span className="metric-title">Điểm Quiz</span>
                                     </div>
                                     <div className="metric-value-large">
-                                        {selectedStudent.mooc_grade_percentage?.toFixed(1) || 'N/A'}%
+                                        {selectedStudent.h5p_avg_score?.toFixed(1) || 'N/A'}%
                                     </div>
                                     <div className="metric-bar">
                                         <div
                                             className="bar-fill fill-blue"
-                                            style={{ width: `${selectedStudent.mooc_grade_percentage || 0}%` }}
+                                            style={{ width: `${selectedStudent.h5p_avg_score || 0}%` }}
                                         ></div>
                                     </div>
                                 </div>
@@ -225,9 +225,9 @@ export function StudentDetailModal() {
                                         </span>
                                     </div>
                                     <div className="additional-item">
-                                        <span className="additional-label">📝 Quiz TB</span>
+                                        <span className="additional-label">🎯 H5P TB</span>
                                         <span className="additional-value">
-                                            {selectedStudent.quiz_avg_score?.toFixed(1) || 'N/A'}%
+                                            {selectedStudent.h5p_avg_score?.toFixed(1) || 'N/A'}%
                                         </span>
                                     </div>
                                     <div className="additional-item">

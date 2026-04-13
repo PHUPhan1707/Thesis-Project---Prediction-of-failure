@@ -161,13 +161,16 @@ class DropoutModelTrainer:
         logger.info("Training CatBoost model...")
         
         # Create model
+        # auto_class_weights='Balanced' tự tính weight = n_total / (n_classes * n_class_i)
+        # giúp model không bị lệch về majority class (pass) khi fail_rate ~20%
         self.model = CatBoostClassifier(
             iterations=iterations,
             learning_rate=learning_rate,
             depth=depth,
             l2_leaf_reg=l2_leaf_reg,
             loss_function='Logloss',
-            eval_metric='AUC',
+            eval_metric='F1',
+            auto_class_weights='Balanced',
             cat_features=self.categorical_features,
             random_seed=random_seed,
             verbose=100,
@@ -198,9 +201,9 @@ class DropoutModelTrainer:
         """Evaluate model performance"""
         logger.info("Evaluating model...")
         
-        # Predictions
+        # Predictions — dùng threshold 0.55 khớp với classify_risk_level (HIGH >= 55)
         y_pred_proba = self.model.predict_proba(X_test)[:, 1]
-        y_pred = (y_pred_proba >= 0.5).astype(int)
+        y_pred = (y_pred_proba >= 0.55).astype(int)
         
         # Calculate metrics
         metrics = {

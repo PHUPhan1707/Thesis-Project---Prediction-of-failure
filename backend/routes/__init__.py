@@ -10,10 +10,11 @@ from .predictions import predictions_bp
 from .h5p_analytics import h5p_bp
 from .scheduler_routes import scheduler_bp
 from .pipeline_routes import pipeline_bp
+from .email_routes import email_bp
 
 __all__ = [
     'health_bp',
-    'courses_bp', 
+    'courses_bp',
     'students_bp',
     'dashboard_bp',
     'interventions_bp',
@@ -21,4 +22,5 @@ __all__ = [
     'h5p_bp',
     'scheduler_bp',
     'pipeline_bp',
+    'email_bp',
 ]

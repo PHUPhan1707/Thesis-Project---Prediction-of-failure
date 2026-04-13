@@ -35,7 +35,7 @@ FEATURE_LABELS_VI: dict[str, str] = {
     # Quiz / Problem
     "problem_avg_score": "Điểm trung bình bài tập",
     "quiz_attempts": "Số lần làm quiz",
-    "quiz_avg_score": "Điểm trung bình quiz",
+    "h5p_avg_score": "Tỷ lệ H5P trung bình",
     "relative_to_course_problem_score": "Điểm bài tập so với lớp",
 
     # H5P

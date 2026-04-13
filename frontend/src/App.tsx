@@ -10,6 +10,7 @@ import StudentDetailPage from './pages/StudentDetailPage'
 import H5PAnalytics from './pages/H5PAnalytics'
 import SchedulerDashboard from './pages/SchedulerDashboard'
 import PipelineMonitor from './pages/PipelineMonitor'
+import ReportPage from './pages/ReportPage'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/h5p-analytics" element={<H5PAnalytics />} />
                 <Route path="/details" element={<Details />} />
                 <Route path="/student/:userId" element={<StudentDetailPage />} />
+                <Route path="/report" element={<ReportPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
 

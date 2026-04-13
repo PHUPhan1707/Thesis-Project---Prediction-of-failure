@@ -14,11 +14,11 @@ export interface Student {
   days_since_last_activity: number;
   mooc_is_passed?: boolean | number | null;  // Can be boolean (true/false) or int (1/0) from MySQL
   completion_status?: CompletionStatus;
+  h5p_avg_score?: number;
 }
 
 export interface StudentDetail extends Student {
   video_completion_rate?: number;
-  quiz_avg_score?: number;
   discussion_threads_count?: number;
   suggestions: Suggestion[];
 }

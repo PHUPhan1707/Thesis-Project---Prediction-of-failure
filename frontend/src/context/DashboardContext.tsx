@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type {
     Course,
@@ -112,6 +112,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     // Error state
     const [error, setError] = useState<string | null>(null);
 
+    // Request deduplication: track current load ID to discard stale responses
+    const loadIdRef = useRef(0);
+
     // Load courses on mount
     useEffect(() => {
         const loadCourses = async () => {
@@ -146,38 +149,38 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             return;
         }
 
+        const currentLoadId = ++loadIdRef.current;
+
         const loadData = async () => {
             try {
                 setIsLoadingStudents(true);
                 setIsLoadingStatistics(true);
                 setError(null);
-                setCurrentPage(1); // Reset to page 1 when filters change
+                setCurrentPage(1);
 
-                // Load students and statistics in parallel
                 const [studentsResponse, statsResponse] = await Promise.all([
                     api.getStudents(
                         selectedCourse.course_id,
                         filters.riskLevel === 'ALL' ? undefined : filters.riskLevel as RiskLevel,
                         filters.sortBy,
                         filters.order,
-                        1, // Start from page 1
-                        50 // Default limit
+                        1,
+                        50
                     ),
                     api.getCourseStatistics(selectedCourse.course_id),
                 ]);
 
-                // Filter locally by completion status and search query
+                // Discard stale response if a newer request was started
+                if (currentLoadId !== loadIdRef.current) return;
+
                 let filteredStudents = studentsResponse.students;
-                
-                // Filter by completion status
+
                 if (filters.completionFilter === 'completed') {
                     filteredStudents = filteredStudents.filter(s => s.completion_status === 'completed');
                 } else if (filters.completionFilter === 'not_completed') {
                     filteredStudents = filteredStudents.filter(s => s.completion_status !== 'completed');
                 }
-                // 'ALL' -> no filter
-                
-                // Filter by search query
+
                 if (filters.searchQuery) {
                     const query = filters.searchQuery.toLowerCase();
                     filteredStudents = filteredStudents.filter(
@@ -193,10 +196,13 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
                 setTotalStudents(studentsResponse.total || 0);
                 setStatistics(normalizeCourseStatistics(statsResponse.statistics));
             } catch (err) {
+                if (currentLoadId !== loadIdRef.current) return;
                 setError(err instanceof Error ? err.message : 'Failed to load data');
             } finally {
-                setIsLoadingStudents(false);
-                setIsLoadingStatistics(false);
+                if (currentLoadId === loadIdRef.current) {
+                    setIsLoadingStudents(false);
+                    setIsLoadingStatistics(false);
+                }
             }
         };
 

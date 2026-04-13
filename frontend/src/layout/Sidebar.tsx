@@ -30,6 +30,11 @@ export function Sidebar() {
 
 
 
+        <NavLink to="/report" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <span className="nav-icon">📄</span>
+          <span className="nav-label">Báo Cáo</span>
+        </NavLink>
+
         <NavLink to="/pipeline" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
           <span className="nav-icon">🔬</span>
           <span className="nav-label">Pipeline Monitor</span>

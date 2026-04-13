@@ -183,7 +183,7 @@ function StudentCard({ student, index, onClick }: StudentCardProps) {
                     <div className="metric">
                         <span className="metric-label">Điểm TB</span>
                         <span className="metric-value">
-                            {formatPercent(student.mooc_grade_percentage)}
+                            {formatPercent(student.h5p_avg_score)}
                         </span>
                     </div>
                     <div className="metric">

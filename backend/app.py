@@ -67,27 +67,15 @@ def create_app():
     # ------------------------------------------------------------------
     if __package__ in (None, ""):
         from backend.routes import (
-            health_bp,
-            courses_bp,
-            students_bp,
-            dashboard_bp,
-            interventions_bp,
-            predictions_bp,
-            h5p_bp,
-            scheduler_bp,
-            pipeline_bp,
+            health_bp, courses_bp, students_bp, dashboard_bp,
+            interventions_bp, predictions_bp, h5p_bp,
+            scheduler_bp, pipeline_bp, email_bp,
         )
     else:
         from .routes import (
-            health_bp,
-            courses_bp,
-            students_bp,
-            dashboard_bp,
-            interventions_bp,
-            predictions_bp,
-            h5p_bp,
-            scheduler_bp,
-            pipeline_bp,
+            health_bp, courses_bp, students_bp, dashboard_bp,
+            interventions_bp, predictions_bp, h5p_bp,
+            scheduler_bp, pipeline_bp, email_bp,
         )
 
     app.register_blueprint(health_bp)
@@ -99,6 +87,7 @@ def create_app():
     app.register_blueprint(h5p_bp)
     app.register_blueprint(scheduler_bp)
     app.register_blueprint(pipeline_bp)
+    app.register_blueprint(email_bp)
 
     logger.info("All blueprints registered successfully")
 

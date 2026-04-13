@@ -81,6 +81,7 @@ def get_students(course_id: str):
                 f.mooc_completion_rate,
                 f.days_since_last_activity,
                 f.mooc_is_passed,
+                f.h5p_avg_score,
                 p.model_name,
                 p.predicted_at
             {base_query}
@@ -138,7 +139,7 @@ def get_student_detail(user_id: int, course_id: str):
             return jsonify({"error": "Student not found"}), 404
 
         # Convert to native types
-        for key in ["mooc_grade_percentage", "mooc_completion_rate", "video_completion_rate", "quiz_avg_score"]:
+        for key in ["mooc_grade_percentage", "mooc_completion_rate", "video_completion_rate", "h5p_avg_score"]:
             if key in student:
                 student[key] = float(student.get(key) or 0)
 
@@ -173,7 +174,7 @@ def get_student_detail(user_id: int, course_id: str):
             suggestions = model_service.generate_suggestions(student)
 
         # Calculate the best grade available (since MOOC API sometimes times out)
-        best_grade = max(float(student.get("mooc_grade_percentage") or 0), float(student.get("quiz_avg_score") or 0))
+        best_grade = max(float(student.get("mooc_grade_percentage") or 0), float(student.get("h5p_avg_score") or 0))
 
         # Build response
         response = {
@@ -189,7 +190,7 @@ def get_student_detail(user_id: int, course_id: str):
             "mooc_completion_rate": float(student.get("overall_completion") or 0),
             "days_since_last_activity": int(student.get("days_since_last_activity") or 0),
             "video_completion_rate": float(student.get("video_completion_rate") or 0),
-            "quiz_avg_score": float(student.get("quiz_avg_score") or 0),
+            "h5p_avg_score": float(student.get("h5p_avg_score") or 0),
             "discussion_threads_count": int(student.get("discussion_threads_count") or 0),
             "suggestions": suggestions,
             "model_name": student.get("model_name"),
@@ -230,13 +231,13 @@ def get_statistics(course_id: str):
             SELECT
                 COUNT(*) AS total_students,
                 AVG(COALESCE(p.fail_risk_score, 50)) AS avg_risk_score,
-                AVG(GREATEST(f.mooc_grade_percentage, f.quiz_avg_score)) AS avg_grade,
+                AVG(GREATEST(f.mooc_grade_percentage, f.h5p_avg_score)) AS avg_grade,
                 AVG(f.overall_completion) AS avg_completion_rate,
                 
                 -- Risk counts (chỉ students chưa hoàn thành)
-                SUM(CASE WHEN p.fail_risk_score >= 70 AND f.mooc_is_passed != 1 THEN 1 ELSE 0 END) AS high_risk_count,
-                SUM(CASE WHEN p.fail_risk_score >= 40 AND p.fail_risk_score < 70 AND f.mooc_is_passed != 1 THEN 1 ELSE 0 END) AS medium_risk_count,
-                SUM(CASE WHEN p.fail_risk_score < 40 AND f.mooc_is_passed != 1 THEN 1 ELSE 0 END) AS low_risk_count,
+                SUM(CASE WHEN p.fail_risk_score >= 70 AND (f.mooc_is_passed IS NULL OR f.mooc_is_passed != 1) THEN 1 ELSE 0 END) AS high_risk_count,
+                SUM(CASE WHEN p.fail_risk_score >= 40 AND p.fail_risk_score < 70 AND (f.mooc_is_passed IS NULL OR f.mooc_is_passed != 1) THEN 1 ELSE 0 END) AS medium_risk_count,
+                SUM(CASE WHEN p.fail_risk_score < 40 AND (f.mooc_is_passed IS NULL OR f.mooc_is_passed != 1) THEN 1 ELSE 0 END) AS low_risk_count,
                 
                 -- Completion status counts
                 SUM(CASE WHEN f.mooc_is_passed = 1 THEN 1 ELSE 0 END) AS completed_count,

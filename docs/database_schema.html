@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Database Schema — dropout_prediction_db</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#c8d2e0; font-family:'Segoe UI',Arial,sans-serif; padding:20px; display:flex; flex-direction:column; gap:28px; }
+
+/* ── Section wrapper ─────────────────────────────── */
+.section {
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 4px 20px rgba(0,0,0,.13);
+  overflow:hidden;
+  display:inline-block;
+}
+.section-title {
+  background:#1a3d70;
+  color:#fff;
+  font-size:12px;
+  font-weight:bold;
+  padding:8px 16px;
+  letter-spacing:.5px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.section-title .badge {
+  background:rgba(255,255,255,.2);
+  border-radius:10px;
+  padding:1px 8px;
+  font-size:10px;
+  font-weight:normal;
+}
+.section-title .sub {
+  font-weight:normal;
+  opacity:.75;
+  font-size:10px;
+}
+.canvas-wrap {
+  overflow:auto;
+  padding:10px;
+}
+
+/* ── Canvas ──────────────────────────────────────── */
+.canvas {
+  position:relative;
+  background-image: radial-gradient(circle, #b8c0d0 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ── Table box ───────────────────────────────────── */
+.tbl {
+  position:absolute;
+  border-radius:7px;
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.18);
+  font-family:'Courier New',monospace;
+  font-size:9.5px;
+  z-index:10;
+  transition: box-shadow .1s;
+}
+.tbl.dragging {
+  box-shadow:0 10px 32px rgba(0,0,0,.38);
+  opacity:.93;
+  z-index:999 !important;
+  transition: none;
+}
+.tbl-head {
+  padding:5px 8px 4px;
+  color:#fff;
+  font-size:10.5px;
+  font-weight:bold;
+  text-align:center;
+  letter-spacing:.3px;
+  cursor:grab;
+  user-select:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+}
+.tbl-head:active { cursor:grabbing; }
+.tbl-head::before { content:'⠿'; opacity:.45; font-size:10px; }
+.tbl-sub {
+  padding:2px 8px 4px;
+  color:rgba(255,255,255,.82);
+  font-size:8px;
+  text-align:center;
+  font-style:italic;
+  margin-top:-3px;
+  user-select:none;
+  cursor:grab;
+}
+.tbl-body {
+  background:#fff;
+  border:1.5px solid;
+  border-top:none;
+  border-radius:0 0 6px 6px;
+}
+.col {
+  display:flex; align-items:center;
+  padding:1px 6px; min-height:17px;
+  border-bottom:1px solid #eef;
+  gap:3px; line-height:1.3;
+}
+.col:last-child { border-bottom:none; }
+.ci  { width:10px; flex-shrink:0; font-size:8px; }
+.cn  { flex:1; color:#1a2840; white-space:nowrap; }
+.ct  { color:#7788bb; font-size:8.5px; white-space:nowrap; }
+.col.pk  { background:#fff8e0; }
+.col.uk  { background:#eef0ff; }
+.col.fk  { background:#e8f5ee; }
+.col.lbl { background:#fff0f0; }
+.col.sep { background:#f4f5f8; min-height:14px; padding:1px 6px;
+           font-size:8px; color:#778; font-style:italic; }
+
+/* ── Color themes ────────────────────────────────── */
+.t-enroll .tbl-head, .t-enroll .tbl-sub { background:#1a60a8; }
+.t-enroll .tbl-body  { border-color:#1a60a8; }
+.t-mooc   .tbl-head, .t-mooc .tbl-sub   { background:#1a7840; }
+.t-mooc   .tbl-body  { border-color:#1a7840; }
+.t-h5p    .tbl-head, .t-h5p .tbl-sub    { background:#b05010; }
+.t-h5p    .tbl-body  { border-color:#b05010; }
+.t-feat   .tbl-head, .t-feat .tbl-sub   { background:#6428a0; }
+.t-feat   .tbl-body  { border-color:#6428a0; }
+.t-ml     .tbl-head, .t-ml .tbl-sub     { background:#b02828; }
+.t-ml     .tbl-body  { border-color:#b02828; }
+.t-stub   .tbl-head  { background:#888; cursor:default !important; }
+.t-stub   .tbl-head::before { content:''; }
+.t-stub   .tbl-body  { border-color:#888; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PART 1: Data Collection                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section" id="section-1">
+  <div class="section-title">
+    📦 Phần 1: Data Collection
+    <span class="badge">9 tables</span>
+    <span class="sub">— enrollments · mooc_grades · mooc_progress · mooc_discussions · h5p_scores · h5p_scores_summary · video_progress · video_progress_summary · dashboard_summary</span>
+  </div>
+  <div class="canvas-wrap">
+  <div class="canvas" id="canvas-1" style="width:1420px;height:1000px;">
+
+    <svg id="svg-1" style="position:absolute;top:0;left:0;pointer-events:none;overflow:visible;" width="1420" height="1000">
+    <defs>
+      <marker id="a1-fk"  markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#90a8c8"/></marker>
+      <marker id="a1-agg" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#a090c0"/></marker>
+    </defs>
+    </svg>
+
+    <!-- enrollments -->
+    <div class="tbl t-enroll" id="p1-enrollments" style="left:380px;top:60px;width:283px;">
+      <div class="tbl-head">enrollments</div>
+      <div class="tbl-sub">API: /course-enrollments-attributes</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col uk"><span class="ci">🆔</span><span class="cn">enrollment_id</span><span class="ct">INT UNIQUE</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">user_id</span><span class="ct">INT (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">course_id</span><span class="ct">VARCHAR(255) (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">username</span><span class="ct">VARCHAR(255)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">email</span><span class="ct">VARCHAR(255)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">full_name</span><span class="ct">VARCHAR(500)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">mode</span><span class="ct">VARCHAR(50) DEFAULT 'audit'</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">is_active</span><span class="ct">BOOLEAN DEFAULT TRUE</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">created</span><span class="ct">DATETIME</span></div>
+        <div class="col sep">— Course Info —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">course_name</span><span class="ct">VARCHAR(500)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">course_start / course_end</span><span class="ct">DATETIME</span></div>
+        <div class="col sep">— Student Profile —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">mssv</span><span class="ct">VARCHAR(100)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">first_name / middle_name</span><span class="ct">VARCHAR(255)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">last_name / full_name_vn</span><span class="ct">VARCHAR</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">class_code</span><span class="ct">VARCHAR(100)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">department / faculty</span><span class="ct">VARCHAR(255)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">all_attributes</span><span class="ct">JSON</span></div>
+        <div class="col sep">— Metadata —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">fetched_at</span><span class="ct">DATETIME DEFAULT NOW</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">updated_at</span><span class="ct">DATETIME ON UPDATE</span></div>
+      </div>
+    </div>
+
+    <!-- mooc_grades -->
+    <div class="tbl t-mooc" id="p1-mooc-grades" style="left:10px;top:60px;width:258px;">
+      <div class="tbl-head">mooc_grades</div>
+      <div class="tbl-sub">API: /export/student-grades/{course_id}</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col uk"><span class="ci">🆔</span><span class="cn">user_id + course_id</span><span class="ct">UNIQUE</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">username / email</span><span class="ct">VARCHAR</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">full_name</span><span class="ct">VARCHAR(500)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">percent_grade</span><span class="ct">DECIMAL(5,2) [0–1]</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">grade_percentage</span><span class="ct">DECIMAL(5,2) [0–100]</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">letter_grade</span><span class="ct">VARCHAR(5)</span></div>
+        <div class="col lbl"><span class="ci">⚑</span><span class="cn">is_passed</span><span class="ct">BOOLEAN ← training label</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">fetched_at / updated_at</span><span class="ct">DATETIME</span></div>
+      </div>
+    </div>
+
+    <!-- mooc_progress -->
+    <div class="tbl t-mooc" id="p1-mooc-progress" style="left:10px;top:305px;width:258px;">
+      <div class="tbl-head">mooc_progress</div>
+      <div class="tbl-sub">API: /export/student-progress/{course_id}</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col uk"><span class="ci">🆔</span><span class="cn">user_id + course_id</span><span class="ct">UNIQUE</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">total_blocks</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">completed_blocks</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">progress_percent</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">current_chapter</span><span class="ct">VARCHAR(500)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">current_section</span><span class="ct">VARCHAR(500)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">current_unit</span><span class="ct">VARCHAR(500)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">completion_rate</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">last_activity</span><span class="ct">DATETIME (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">fetched_at / updated_at</span><span class="ct">DATETIME</span></div>
+      </div>
+    </div>
+
+    <!-- mooc_discussions -->
+    <div class="tbl t-mooc" id="p1-mooc-discussions" style="left:10px;top:570px;width:258px;">
+      <div class="tbl-head">mooc_discussions</div>
+      <div class="tbl-sub">API: /export/student-discussions/{course_id}</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col uk"><span class="ci">🆔</span><span class="cn">user_id + course_id</span><span class="ct">UNIQUE</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">username / email</span><span class="ct">VARCHAR</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">threads_count</span><span class="ct">INT DEFAULT 0</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">comments_count</span><span class="ct">INT DEFAULT 0</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">total_interactions</span><span class="ct">INT DEFAULT 0</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">questions_count</span><span class="ct">INT DEFAULT 0</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">total_upvotes</span><span class="ct">INT DEFAULT 0</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">fetched_at / updated_at</span><span class="ct">DATETIME</span></div>
+      </div>
+    </div>
+
+    <!-- h5p_scores -->
+    <div class="tbl t-h5p" id="p1-h5p-scores" style="left:760px;top:60px;width:272px;">
+      <div class="tbl-head">h5p_scores</div>
+      <div class="tbl-sub">API: /scores/{user_id}/{course_id}</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">user_id</span><span class="ct">INT (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">course_id</span><span class="ct">VARCHAR(255) (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">content_id</span><span class="ct">INT (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">content_title</span><span class="ct">VARCHAR(500)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">score / max_score</span><span class="ct">INT DEFAULT 0</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">percentage</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">opened / finished</span><span class="ct">BIGINT (unix ts)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">time_spent</span><span class="ct">BIGINT (seconds)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">folder_id / folder_name</span><span class="ct">INT/VARCHAR</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">fetched_at</span><span class="ct">DATETIME</span></div>
+      </div>
+    </div>
+
+    <!-- h5p_scores_summary -->
+    <div class="tbl t-h5p" id="p1-h5p-scores-summary" style="left:760px;top:380px;width:272px;">
+      <div class="tbl-head">h5p_scores_summary</div>
+      <div class="tbl-sub">Aggregated from h5p_scores per user</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col uk"><span class="ci">🆔</span><span class="cn">user_id + course_id</span><span class="ct">UNIQUE</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">total_contents</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">completed_contents</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">total_score / total_max_score</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">overall_percentage</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">total_time_spent</span><span class="ct">INT (seconds)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">fetched_at / updated_at</span><span class="ct">DATETIME</span></div>
+      </div>
+    </div>
+
+    <!-- video_progress -->
+    <div class="tbl t-h5p" id="p1-video-progress" style="left:1130px;top:60px;width:265px;">
+      <div class="tbl-head">video_progress</div>
+      <div class="tbl-sub">API: /video-progress/{user_id}/{course_id}</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">user_id</span><span class="ct">INT (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">course_id</span><span class="ct">VARCHAR(255) (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">content_id</span><span class="ct">INT (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">content_title</span><span class="ct">VARCHAR(500)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">progress_percent</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">current_time / duration</span><span class="ct">INT (seconds)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">status</span><span class="ct">VARCHAR(50) (IDX)</span></div>
+        <div class="col sep">— completed / in_progress / not_started —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">folder_id / folder_name</span><span class="ct">INT/VARCHAR</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">fetched_at</span><span class="ct">DATETIME</span></div>
+      </div>
+    </div>
+
+    <!-- video_progress_summary -->
+    <div class="tbl t-h5p" id="p1-video-progress-summary" style="left:1130px;top:380px;width:265px;">
+      <div class="tbl-head">video_progress_summary</div>
+      <div class="tbl-sub">Aggregated from video_progress per user</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col uk"><span class="ci">🆔</span><span class="cn">user_id + course_id</span><span class="ct">UNIQUE</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">total_videos</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">completed_videos</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">in_progress_videos</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">not_started_videos</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">total_duration / watched_time</span><span class="ct">INT (sec)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">overall_progress</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">fetched_at / updated_at</span><span class="ct">DATETIME</span></div>
+      </div>
+    </div>
+
+    <!-- dashboard_summary -->
+    <div class="tbl t-h5p" id="p1-dashboard-summary" style="left:1130px;top:618px;width:265px;">
+      <div class="tbl-head">dashboard_summary</div>
+      <div class="tbl-sub">API: /combined-progress/{user_id}/{course_id}</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col uk"><span class="ci">🆔</span><span class="cn">user_id + course_id</span><span class="ct">UNIQUE</span></div>
+        <div class="col sep">— Overview —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">overall_completion</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">total_items / completed_items</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">items_to_complete</span><span class="ct">INT</span></div>
+        <div class="col sep">— H5P Stats —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_total_contents</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_completed_contents</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_average_percentage</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_total_time_spent</span><span class="ct">INT</span></div>
+        <div class="col sep">— Video Stats —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">video_total_videos</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">video_completed_videos</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">video_average_progress</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col sep">— Folder Stats —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">folder_total_folders</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">folder_average_percentage</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">fetched_at / updated_at</span><span class="ct">DATETIME</span></div>
+      </div>
+    </div>
+
+  </div><!-- canvas-1 -->
+  </div><!-- canvas-wrap -->
+</div><!-- section-1 -->
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PART 2: Feature Engineering                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section" id="section-2">
+  <div class="section-title">
+    🧮 Phần 2: Feature Engineering
+    <span class="badge">2 tables</span>
+    <span class="sub">— raw_data (historical) · student_features (production) · aggregated from Part 1</span>
+  </div>
+  <div class="canvas-wrap">
+  <div class="canvas" id="canvas-2" style="width:710px;height:860px;">
+
+    <svg id="svg-2" style="position:absolute;top:0;left:0;pointer-events:none;overflow:visible;" width="710" height="860">
+    <defs>
+      <marker id="a2-agg" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#a090c0"/></marker>
+    </defs>
+    </svg>
+
+    <!-- raw_data -->
+    <div class="tbl t-feat" id="p2-raw-data" style="left:15px;top:40px;width:278px;">
+      <div class="tbl-head">raw_data</div>
+      <div class="tbl-sub">Historical training snapshot — aggregate_raw_data()</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col uk"><span class="ci">🆔</span><span class="cn">user_id + course_id</span><span class="ct">UNIQUE</span></div>
+        <div class="col sep">— Enrollment (3 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">enrollment_mode</span><span class="ct">VARCHAR(50)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">is_active</span><span class="ct">BOOLEAN</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">weeks_since_enrollment</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col sep">— MOOC Grades (3 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">mooc_grade_percentage</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">mooc_letter_grade</span><span class="ct">VARCHAR(5)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">mooc_is_passed</span><span class="ct">BOOLEAN</span></div>
+        <div class="col sep">— Progress (8 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">progress_percent</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">mooc_completion_rate</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">completed_blocks / total_blocks</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">last_activity</span><span class="ct">DATETIME</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">days_since_last_activity</span><span class="ct">INT DEFAULT 999</span></div>
+        <div class="col sep">— Activity (2 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">access_frequency</span><span class="ct">DECIMAL(10,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">active_days</span><span class="ct">INT</span></div>
+        <div class="col sep">— H5P Scores (7 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_total / completed_contents</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_overall_percentage</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_total_time_spent</span><span class="ct">INT (sec)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_avg_score / completion_rate</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col sep">— Video (7 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">video_total / completed_videos</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">video_total_duration</span><span class="ct">INT (sec)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">video_completion / watch_rate</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col sep">— Assessment (2 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">quiz_attempts</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">quiz_completion_rate</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col sep">— Discussion (3 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">discussion_threads_count</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">discussion_total_interactions</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">discussion_total_upvotes</span><span class="ct">INT</span></div>
+        <div class="col sep">— Target Labels —</div>
+        <div class="col lbl"><span class="ci">⚑</span><span class="cn">is_dropout</span><span class="ct">BOOLEAN (auto-label)</span></div>
+        <div class="col lbl"><span class="ci">⚑</span><span class="cn">is_passed</span><span class="ct">BOOLEAN ← training label</span></div>
+        <div class="col lbl"><span class="ci">⚑</span><span class="cn">fail_risk_score</span><span class="ct">DECIMAL(5,2) NULL</span></div>
+        <div class="col sep">— Metadata —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">extracted_at</span><span class="ct">DATETIME</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">extraction_batch_id</span><span class="ct">VARCHAR(100)</span></div>
+      </div>
+    </div>
+
+    <!-- student_features -->
+    <div class="tbl t-feat" id="p2-student-features" style="left:418px;top:40px;width:278px;">
+      <div class="tbl-head">student_features</div>
+      <div class="tbl-sub">V2 Production — populate_student_features.py</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col uk"><span class="ci">🆔</span><span class="cn">user_id + course_id</span><span class="ct">UNIQUE</span></div>
+        <div class="col sep">— Enrollment (3 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">enrollment_mode</span><span class="ct">VARCHAR(50)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">is_active</span><span class="ct">BOOLEAN</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">weeks_since_enrollment</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col sep">— MOOC Grades (3 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">mooc_grade_percentage</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">mooc_letter_grade</span><span class="ct">VARCHAR(5)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">mooc_is_passed</span><span class="ct">BOOLEAN</span></div>
+        <div class="col sep">— Progress (8 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">progress_percent</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">mooc_completion_rate</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">completed_blocks / total_blocks</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">last_activity</span><span class="ct">DATETIME</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">days_since_last_activity</span><span class="ct">INT DEFAULT 999</span></div>
+        <div class="col sep">— Activity (2 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">access_frequency</span><span class="ct">DECIMAL(10,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">active_days</span><span class="ct">INT</span></div>
+        <div class="col sep">— H5P Scores (7 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_total / completed_contents</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_overall_percentage</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_total_time_spent</span><span class="ct">INT (sec)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">h5p_avg_score / completion_rate</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col sep">— Video (7 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">video_total / completed_videos</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">video_total_duration</span><span class="ct">INT (sec)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">video_completion / watch_rate</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col sep">— Assessment (2 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">quiz_attempts</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">quiz_completion_rate</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col sep">— Discussion (3 cols) —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">discussion_threads_count</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">discussion_total_interactions</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">discussion_total_upvotes</span><span class="ct">INT</span></div>
+        <div class="col sep">— Metadata —</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">extracted_at</span><span class="ct">DATETIME</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">extraction_batch_id</span><span class="ct">VARCHAR(100)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">updated_at</span><span class="ct">DATETIME ON UPDATE</span></div>
+      </div>
+    </div>
+
+  </div><!-- canvas-2 -->
+  </div>
+</div><!-- section-2 -->
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PART 3: ML Pipeline                           -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section" id="section-3">
+  <div class="section-title">
+    🤖 Phần 3: ML Pipeline
+    <span class="badge">4 tables</span>
+    <span class="sub">— predictions · model_registry · course_model_mapping · training_history</span>
+  </div>
+  <div class="canvas-wrap">
+  <div class="canvas" id="canvas-3" style="width:960px;height:700px;">
+
+    <svg id="svg-3" style="position:absolute;top:0;left:0;pointer-events:none;overflow:visible;" width="960" height="700">
+    <defs>
+      <marker id="a3-lbl" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#c07070"/></marker>
+      <marker id="a3-agg" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0,7 3,0 6" fill="#a090c0"/></marker>
+    </defs>
+    </svg>
+
+    <!-- stub: student_features reference -->
+    <div class="tbl t-stub" id="p3-stub" style="left:15px;top:40px;width:190px;cursor:default;">
+      <div class="tbl-head" style="cursor:default;font-size:9.5px;">student_features</div>
+      <div class="tbl-body" style="border-color:#999;">
+        <div class="col sep" style="justify-content:center;color:#999;">← From Part 2</div>
+        <div class="col">   <span class="ci"> </span><span class="cn">user_id + course_id</span><span class="ct"></span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">~34 feature columns</span><span class="ct"></span></div>
+      </div>
+    </div>
+
+    <!-- predictions -->
+    <div class="tbl t-ml" id="p3-predictions" style="left:280px;top:40px;width:268px;">
+      <div class="tbl-head">predictions</div>
+      <div class="tbl-sub">Model output history · is_latest = current</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">user_id</span><span class="ct">INT (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">course_id</span><span class="ct">VARCHAR(255) (IDX)</span></div>
+        <div class="col fk"><span class="ci">🔗</span><span class="cn">model_name</span><span class="ct">VARCHAR(100) → model_registry</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">model_version / model_path</span><span class="ct">VARCHAR</span></div>
+        <div class="col lbl"><span class="ci">⚑</span><span class="cn">fail_risk_score</span><span class="ct">DECIMAL(5,2) NOT NULL</span></div>
+        <div class="col lbl"><span class="ci">⚑</span><span class="cn">risk_level</span><span class="ct">VARCHAR(20) HIGH/MED/LOW</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">snapshot_grade</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">snapshot_completion_rate</span><span class="ct">DECIMAL(5,2)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">snapshot_days_inactive</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">predicted_at</span><span class="ct">DATETIME (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">is_latest</span><span class="ct">BOOLEAN DEFAULT TRUE</span></div>
+      </div>
+    </div>
+
+    <!-- model_registry -->
+    <div class="tbl t-ml" id="p3-model-registry" style="left:640px;top:40px;width:268px;">
+      <div class="tbl-head">model_registry</div>
+      <div class="tbl-sub">Trained model catalog · is_default = active</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">model_name</span><span class="ct">VARCHAR(100) PK</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">model_version</span><span class="ct">VARCHAR(50)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">model_path</span><span class="ct">VARCHAR(500)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">features_csv_path</span><span class="ct">VARCHAR(500)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">model_type / domain</span><span class="ct">VARCHAR</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">is_active</span><span class="ct">BOOLEAN DEFAULT TRUE (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">is_default</span><span class="ct">BOOLEAN DEFAULT FALSE (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">created_at</span><span class="ct">DATETIME</span></div>
+      </div>
+    </div>
+
+    <!-- training_history -->
+    <div class="tbl t-ml" id="p3-training-history" style="left:280px;top:390px;width:278px;">
+      <div class="tbl-head">training_history</div>
+      <div class="tbl-sub">MLOps: auto-train / retrain / predict logs</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">base_name</span><span class="ct">VARCHAR(255) (IDX)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">course_ids</span><span class="ct">TEXT (JSON array)</span></div>
+        <div class="col fk"><span class="ci">🔗</span><span class="cn">model_name</span><span class="ct">VARCHAR(100)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">action</span><span class="ct">ENUM initial/retrain/predict</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">labeled_student_count</span><span class="ct">INT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">predicted_student_count</span><span class="ct">INT</span></div>
+        <div class="col lbl"><span class="ci">⚑</span><span class="cn">accuracy</span><span class="ct">DECIMAL(5,4)</span></div>
+        <div class="col lbl"><span class="ci">⚑</span><span class="cn">f1_score</span><span class="ct">DECIMAL(5,4)</span></div>
+        <div class="col lbl"><span class="ci">⚑</span><span class="cn">auc_roc</span><span class="ct">DECIMAL(5,4)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">status</span><span class="ct">ENUM success/failed/skipped</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">message</span><span class="ct">TEXT</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">started_at / completed_at</span><span class="ct">DATETIME (IDX)</span></div>
+      </div>
+    </div>
+
+    <!-- course_model_mapping -->
+    <div class="tbl t-ml" id="p3-course-model-mapping" style="left:640px;top:335px;width:268px;">
+      <div class="tbl-head">course_model_mapping</div>
+      <div class="tbl-sub">Maps course_id → model for auto-prediction</div>
+      <div class="tbl-body">
+        <div class="col pk"><span class="ci">🔑</span><span class="cn">id</span><span class="ct">BIGINT AI PK</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">course_id</span><span class="ct">VARCHAR(255) (IDX)</span></div>
+        <div class="col fk"><span class="ci">🔗</span><span class="cn">model_name</span><span class="ct">VARCHAR(100) FK → model_registry</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">auto_predict</span><span class="ct">BOOLEAN DEFAULT TRUE</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">predict_frequency</span><span class="ct">VARCHAR(50)</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">is_active</span><span class="ct">BOOLEAN DEFAULT TRUE</span></div>
+        <div class="col">   <span class="ci"> </span><span class="cn">assigned_at</span><span class="ct">DATETIME</span></div>
+      </div>
+    </div>
+
+  </div><!-- canvas-3 -->
+  </div>
+</div><!-- section-3 -->
+
+<!-- ── Legend ── -->
+<div style="display:inline-block;background:#fff;border-radius:8px;padding:10px 16px;
+     font-size:9px;color:#334;box-shadow:0 2px 10px rgba(0,0,0,.1);line-height:20px;">
+  <b style="font-size:10px;color:#1a3d70;">Legend &nbsp;</b>
+  <span style="background:#fff8e0;padding:1px 5px;border-radius:2px;">🔑 PK</span>&nbsp;
+  <span style="background:#eef0ff;padding:1px 5px;border-radius:2px;">🆔 Unique</span>&nbsp;
+  <span style="background:#e8f5ee;padding:1px 5px;border-radius:2px;">🔗 FK</span>&nbsp;
+  <span style="background:#fff0f0;padding:1px 5px;border-radius:2px;">⚑ Label/Output</span>&nbsp;&nbsp;
+  <svg width="28" height="10" style="vertical-align:middle"><line x1="0" y1="5" x2="23" y2="5" stroke="#4a9060" stroke-width="1.3" stroke-dasharray="4,2"/><polygon points="23,2.5 28,5 23,7.5" fill="#90a8c8"/></svg> MOOC &nbsp;
+  <svg width="28" height="10" style="vertical-align:middle"><line x1="0" y1="5" x2="23" y2="5" stroke="#c87030" stroke-width="1.3" stroke-dasharray="4,2"/><polygon points="23,2.5 28,5 23,7.5" fill="#90a8c8"/></svg> H5P &nbsp;
+  <svg width="28" height="10" style="vertical-align:middle"><line x1="0" y1="5" x2="28" y2="5" stroke="#9060c0" stroke-width="1.2" stroke-dasharray="3,2"/></svg> Aggregation &nbsp;
+  <svg width="28" height="10" style="vertical-align:middle"><line x1="0" y1="5" x2="28" y2="5" stroke="#c04040" stroke-width="1.3"/></svg> ML pipeline
+  &nbsp;·&nbsp; ☰ Drag header để di chuyển bảng
+</div>
+
+<script>
+// ── Connection definitions per canvas ──────────────────────────────────────
+const CONNS = {
+  'canvas-1': [
+    {from:'p1-mooc-grades',          to:'p1-enrollments',             color:'#4a9060', dash:'5,2', arrow:'a1-fk',  w:1.3},
+    {from:'p1-mooc-progress',        to:'p1-enrollments',             color:'#4a9060', dash:'5,2', arrow:'a1-fk',  w:1.3},
+    {from:'p1-mooc-discussions',     to:'p1-enrollments',             color:'#4a9060', dash:'5,2', arrow:'a1-fk',  w:1.3},
+    {from:'p1-enrollments',          to:'p1-h5p-scores',              color:'#c87030', dash:'5,2', arrow:'a1-fk',  w:1.3},
+    {from:'p1-enrollments',          to:'p1-h5p-scores-summary',      color:'#c87030', dash:'5,2', arrow:'a1-fk',  w:1.3},
+    {from:'p1-enrollments',          to:'p1-video-progress',          color:'#c87030', dash:'5,2', arrow:'a1-fk',  w:1.3},
+    {from:'p1-enrollments',          to:'p1-video-progress-summary',  color:'#c87030', dash:'5,2', arrow:'a1-fk',  w:1.3},
+    {from:'p1-enrollments',          to:'p1-dashboard-summary',       color:'#c87030', dash:'5,2', arrow:'a1-fk',  w:1.3},
+    {from:'p1-h5p-scores',           to:'p1-h5p-scores-summary',      color:'#c87030', dash:'',    arrow:'a1-fk',  w:1.1},
+    {from:'p1-video-progress',       to:'p1-video-progress-summary',  color:'#c87030', dash:'',    arrow:'a1-fk',  w:1.1},
+  ],
+  'canvas-2': [
+    {from:'p2-raw-data',             to:'p2-student-features',        color:'#9060c0', dash:'',    arrow:'a2-agg', w:1.5},
+  ],
+  'canvas-3': [
+    {from:'p3-stub',                 to:'p3-predictions',             color:'#9060c0', dash:'4,2', arrow:'a3-agg', w:1.2},
+    {from:'p3-model-registry',       to:'p3-predictions',             color:'#c04040', dash:'',    arrow:'a3-lbl', w:1.3},
+    {from:'p3-model-registry',       to:'p3-course-model-mapping',    color:'#c04040', dash:'',    arrow:'a3-lbl', w:1.3},
+    {from:'p3-training-history',     to:'p3-model-registry',          color:'#c04040', dash:'4,2', arrow:'a3-lbl', w:1.2},
+  ]
+};
+
+// We need to add a1-fk marker to svg-1 (it wasn't in defs). Inject it:
+window.addEventListener('DOMContentLoaded', () => {
+  const svg1 = document.getElementById('svg-1');
+  const defs1 = svg1.querySelector('defs');
+  const mk = document.createElementNS('http://www.w3.org/2000/svg','marker');
+  mk.setAttribute('id','a1-fk'); mk.setAttribute('markerWidth','7'); mk.setAttribute('markerHeight','6');
+  mk.setAttribute('refX','6'); mk.setAttribute('refY','3'); mk.setAttribute('orient','auto');
+  const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  poly.setAttribute('points','0 0,7 3,0 6'); poly.setAttribute('fill','#90a8c8');
+  mk.appendChild(poly); defs1.appendChild(mk);
+});
+
+// ── Routing helpers ─────────────────────────────────────────────────────────
+function rectOf(el) {
+  const l = parseInt(el.style.left)||0, t = parseInt(el.style.top)||0;
+  const w = el.offsetWidth, h = el.offsetHeight;
+  return {l, t, r:l+w, b:t+h, cx:l+w/2, cy:t+h/2};
+}
+function bestEdge(a, b) {
+  const opts = [
+    {x1:a.r,  y1:a.cy, x2:b.l,  y2:b.cy, d:Math.abs(a.r-b.l)  +Math.abs(a.cy-b.cy)},
+    {x1:a.l,  y1:a.cy, x2:b.r,  y2:b.cy, d:Math.abs(a.l-b.r)  +Math.abs(a.cy-b.cy)},
+    {x1:a.cx, y1:a.b,  x2:b.cx, y2:b.t,  d:Math.abs(a.cx-b.cx)+Math.abs(a.b-b.t)},
+    {x1:a.cx, y1:a.t,  x2:b.cx, y2:b.b,  d:Math.abs(a.cx-b.cx)+Math.abs(a.t-b.b)},
+  ];
+  return opts.reduce((best,c)=>c.d<best.d?c:best);
+}
+function makePath(c) {
+  const {x1,y1,x2,y2}=c;
+  if (Math.abs(x1-x2)>=15) { const mx=(x1+x2)/2; return `M${x1} ${y1} H${mx} V${y2} H${x2}`; }
+  const my=(y1+y2)/2; return `M${x1} ${y1} V${my} H${x2} V${y2}`;
+}
+
+// ── Draw lines for one canvas ───────────────────────────────────────────────
+function drawLines(canvasId) {
+  const svgId = 'svg-' + canvasId.split('-')[1];
+  const svg = document.getElementById(svgId);
+  svg.querySelectorAll('path').forEach(e=>e.remove());
+  (CONNS[canvasId]||[]).forEach(conn=>{
+    const fe=document.getElementById(conn.from), te=document.getElementById(conn.to);
+    if (!fe||!te) return;
+    const edge=bestEdge(rectOf(fe),rectOf(te));
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',makePath(edge));
+    path.setAttribute('stroke',conn.color);
+    path.setAttribute('stroke-width',conn.w);
+    path.setAttribute('fill','none');
+    if (conn.dash) path.setAttribute('stroke-dasharray',conn.dash);
+    path.setAttribute('marker-end',`url(#${conn.arrow})`);
+    svg.appendChild(path);
+  });
+}
+
+// ── Drag (per-canvas) ───────────────────────────────────────────────────────
+let active = null;
+
+['canvas-1','canvas-2','canvas-3'].forEach(cid => {
+  const canvas = document.getElementById(cid);
+  canvas.querySelectorAll('.tbl').forEach(el => {
+    if (el.classList.contains('t-stub')) return; // stub not draggable
+    ['.tbl-head','.tbl-sub'].forEach(sel=>{
+      const h = el.querySelector(sel);
+      if (!h) return;
+      h.addEventListener('mousedown', e=>{
+        e.preventDefault();
+        const cr = canvas.getBoundingClientRect();
+        active = {
+          el, canvas, cid,
+          ox: e.clientX - cr.left  - (parseInt(el.style.left)||0),
+          oy: e.clientY - cr.top   - (parseInt(el.style.top) ||0)
+        };
+        el.classList.add('dragging');
+        canvas.querySelectorAll('.tbl').forEach(t=>t.style.zIndex=10);
+        el.style.zIndex=999;
+      });
+    });
+  });
+});
+
+document.addEventListener('mousemove', e=>{
+  if (!active) return;
+  const cr = active.canvas.getBoundingClientRect();
+  active.el.style.left = Math.max(0, e.clientX - cr.left - active.ox)+'px';
+  active.el.style.top  = Math.max(0, e.clientY - cr.top  - active.oy)+'px';
+  drawLines(active.cid);
+});
+
+document.addEventListener('mouseup', ()=>{
+  if (active) { active.el.classList.remove('dragging'); active=null; }
+});
+
+// Initial draw
+window.addEventListener('load', ()=>setTimeout(()=>{
+  drawLines('canvas-1');
+  drawLines('canvas-2');
+  drawLines('canvas-3');
+},80));
+</script>
+</body>
+</html>

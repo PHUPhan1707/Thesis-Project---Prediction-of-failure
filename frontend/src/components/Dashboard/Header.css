@@ -52,31 +52,38 @@
 .course-info {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 8px 20px;
+    gap: 6px;
+    padding: 4px 10px;
     background: linear-gradient(135deg, #f8f6f3 0%, #f4f1ed 100%);
-    border-radius: 30px;
+    border-radius: 20px;
     border: 1px solid rgba(0, 0, 0, 0.05);
+    max-width: 30vw;
 }
 
 .course-label {
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     color: #7a7a7a;
+    white-space: nowrap;
 }
 
 .course-name {
     font-weight: 600;
     color: #4a4a4a;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .student-count {
-    padding: 4px 12px;
+    padding: 2px 8px;
     background: linear-gradient(135deg, #e8ddd0 0%, #d4c4b0 100%);
-    border-radius: 20px;
-    font-size: 0.8rem;
+    border-radius: 12px;
+    font-size: 0.68rem;
     font-weight: 600;
     color: #5a4a3a;
+    white-space: nowrap;
 }
 
 .header-right {

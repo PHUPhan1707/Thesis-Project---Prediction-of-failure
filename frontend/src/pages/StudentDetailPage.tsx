@@ -158,15 +158,15 @@ export default function StudentDetailPage() {
                             <div className="metric-card">
                                 <div className="metric-header">
                                     <span className="metric-icon">📝</span>
-                                    <span>Điểm Trung Bình</span>
+                                    <span>Điểm Quiz</span>
                                 </div>
                                 <div className="metric-value">
-                                    {student.mooc_grade_percentage?.toFixed(1) || 'N/A'}%
+                                    {student.h5p_avg_score?.toFixed(1) || 'N/A'}%
                                 </div>
                                 <div className="metric-bar">
                                     <div
                                         className="bar-fill fill-blue"
-                                        style={{ width: `${student.mooc_grade_percentage || 0}%` }}
+                                        style={{ width: `${student.h5p_avg_score || 0}%` }}
                                     ></div>
                                 </div>
                             </div>
@@ -210,8 +210,8 @@ export default function StudentDetailPage() {
                                     <span className="info-value">{student.video_completion_rate?.toFixed(1) || 'N/A'}%</span>
                                 </div>
                                 <div className="info-item">
-                                    <span className="info-label">📝 Quiz TB</span>
-                                    <span className="info-value">{student.quiz_avg_score?.toFixed(1) || 'N/A'}%</span>
+                                    <span className="info-label">🎯 H5P TB</span>
+                                    <span className="info-value">{student.h5p_avg_score?.toFixed(1) || 'N/A'}%</span>
                                 </div>
                                 <div className="info-item">
                                     <span className="info-label">💬 Tương tác Forum</span>
@@ -302,11 +302,7 @@ export default function StudentDetailPage() {
                                 <span className="btn-icon">📧</span>
                                 <span className="btn-text">Gửi Email</span>
                             </button>
-                            <button className="action-btn phone-btn" onClick={handlePhone}>
-                                <span className="btn-icon">📞</span>
-                                <span className="btn-text">Điện Thoại</span>
-                            </button>
-                            <button className="action-btn message-btn" onClick={handleMessage}>
+<button className="action-btn message-btn" onClick={handleMessage}>
                                 <span className="btn-icon">💬</span>
                                 <span className="btn-text">Nhắn Tin</span>
                             </button>

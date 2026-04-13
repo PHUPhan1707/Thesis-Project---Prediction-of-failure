@@ -10,7 +10,8 @@
       "Bash(python3:*)",
       "Bash(ls:*)",
       "Bash(grep:*)",
-      "Bash(npx:*)"
+      "Bash(npx:*)",
+      "Bash(docker ps:*)"
     ]
   }
 }

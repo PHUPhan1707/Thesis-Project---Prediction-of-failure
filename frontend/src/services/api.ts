@@ -20,28 +20,40 @@ function getApiBaseUrl() {
 
 const API_BASE_URL = getApiBaseUrl();
 
-// Generic fetch wrapper with error handling
-async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      ...options,
-    });
+// Generic fetch wrapper with retry + exponential backoff
+async function fetchAPI<T>(endpoint: string, options?: RequestInit, retries = 3): Promise<T> {
+  const delays = [0, 400, 1200]; // ms before each attempt
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+  for (let attempt = 0; attempt < retries; attempt++) {
+    if (attempt > 0) {
+      await new Promise(r => setTimeout(r, delays[attempt]));
     }
 
-    return await response.json();
-  } catch (error) {
-    if (error instanceof Error) {
-      throw error;
+    try {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        headers: { 'Content-Type': 'application/json' },
+        ...options,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const err = new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        // Don't retry on client errors (4xx) except 429 Too Many Requests
+        const status = response.status;
+        if (status >= 400 && status < 500 && status !== 429) throw err;
+        if (attempt === retries - 1) throw err;
+        continue;
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (attempt === retries - 1) {
+        throw error instanceof Error ? error : new Error('An unknown error occurred');
+      }
     }
-    throw new Error('An unknown error occurred');
   }
+
+  throw new Error('Max retries exceeded');
 }
 
 // Health check
@@ -158,6 +170,18 @@ export async function getStudentExplanation(
   return fetchAPI(`/student/${userId}/${encodedCourseId}/explain`);
 }
 
+// Preview bulk email recipients count
+export async function previewEmailRecipients(courseId: string, target: string): Promise<{ total: number; has_email: number }> {
+  const encodedCourseId = encodeURIComponent(courseId);
+  return fetchAPI(`/email/preview/${encodedCourseId}?target=${target}`);
+}
+
+// Get list of recipient emails to build mailto link
+export async function getEmailRecipients(courseId: string, target: string): Promise<{ emails: string[]; total: number }> {
+  const encodedCourseId = encodeURIComponent(courseId);
+  return fetchAPI(`/email/recipients/${encodedCourseId}?target=${target}`);
+}
+
 // Export all API functions
 export const api = {
   checkHealth,
@@ -172,6 +196,8 @@ export const api = {
   getH5PContentDetail,
   getH5PStudentPerformance,
   getStudentExplanation,
+  previewEmailRecipients,
+  getEmailRecipients,
 };
 
 export default api;

@@ -1,0 +1,29 @@
+﻿
+============================================================
+python : Traceback (most recent call last):
+At line:1 char:1
++ python diagnose_stats.py 2>&1 | Out-File -FilePath 
+diagnose_output.tx ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Tracebac 
+   k (most recent call last)::String) [], RemoteExce  
+  ption
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "D:\ProjectThesis\dropout_prediction\backend\di
+agnose_stats.py", line 26, in <module>
+    hr("0. L\u1ea5y course_id t\u1eeb 
+student_features")
+  File "D:\ProjectThesis\dropout_prediction\backend\di
+agnose_stats.py", line 20, in hr
+    print(f"  {title}")
+  File "C:\Program Files\WindowsApps\PythonSoftwareFou
+ndation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib
+\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,enc
+oding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode 
+character '\u1ea5' in position 6: character maps to 
+<undefined>

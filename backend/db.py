@@ -6,17 +6,15 @@ import logging
 from typing import Optional, List, Dict, Any
 import mysql.connector
 from mysql.connector import Error
+from mysql.connector.pooling import MySQLConnectionPool
 
 logger = logging.getLogger(__name__)
 
+# Global connection pool — initialized once on first use
+_pool: Optional[MySQLConnectionPool] = None
+
 
 def get_db_config() -> Dict[str, Any]:
-    """
-    Lấy cấu hình database từ biến môi trường hoặc dùng giá trị mặc định
-    
-    Returns:
-        Dict chứa thông tin kết nối database
-    """
     return {
         "host": os.getenv("DB_HOST", "localhost"),
         "port": int(os.getenv("DB_PORT", "4000")),
@@ -26,37 +24,38 @@ def get_db_config() -> Dict[str, Any]:
     }
 
 
+def _get_pool() -> MySQLConnectionPool:
+    global _pool
+    if _pool is None:
+        config = get_db_config()
+        _pool = MySQLConnectionPool(
+            pool_name="dropout_pool",
+            pool_size=10,
+            pool_reset_session=True,
+            connection_timeout=30,
+            **config,
+        )
+        logger.info("DB connection pool initialized (size=10)")
+    return _pool
+
+
 def get_db_connection():
     """
-    Tạo và trả về một kết nối database mới
-    
-    Returns:
-        Connection object hoặc None nếu lỗi
+    Lấy một connection từ pool.
+    Trả về pooled connection hoặc None nếu lỗi.
     """
-    db_config = get_db_config()
     try:
-        connection = mysql.connector.connect(**db_config)
-        return connection
+        return _get_pool().get_connection()
     except Error as e:
-        logger.error(f"Lỗi kết nối database: {e}")
+        logger.error(f"Lỗi lấy connection từ pool: {e}")
         return None
 
 
 def execute(query: str, params: tuple = None) -> Optional[int]:
-    """
-    Thực thi một query (INSERT, UPDATE, DELETE, CREATE TABLE)
-    
-    Args:
-        query: SQL query string
-        params: Tuple các parameters cho query
-        
-    Returns:
-        Số dòng bị ảnh hưởng hoặc None nếu lỗi
-    """
     connection = get_db_connection()
     if connection is None:
         return None
-    
+
     try:
         cursor = connection.cursor()
         cursor.execute(query, params or ())
@@ -74,20 +73,10 @@ def execute(query: str, params: tuple = None) -> Optional[int]:
 
 
 def fetch_all(query: str, params: tuple = None) -> List[Dict]:
-    """
-    Thực thi một query SELECT và trả về tất cả kết quả
-    
-    Args:
-        query: SQL query string
-        params: Tuple các parameters cho query
-        
-    Returns:
-        List of dictionaries, mỗi dict là một row
-    """
     connection = get_db_connection()
     if connection is None:
         return []
-    
+
     try:
         cursor = connection.cursor(dictionary=True)
         cursor.execute(query, params or ())
@@ -103,20 +92,10 @@ def fetch_all(query: str, params: tuple = None) -> List[Dict]:
 
 
 def fetch_one(query: str, params: tuple = None) -> Optional[Dict]:
-    """
-    Thực thi một query SELECT và trả về một kết quả duy nhất
-    
-    Args:
-        query: SQL query string
-        params: Tuple các parameters cho query
-        
-    Returns:
-        Dictionary của row hoặc None nếu không tìm thấy
-    """
     connection = get_db_connection()
     if connection is None:
         return None
-    
+
     try:
         cursor = connection.cursor(dictionary=True)
         cursor.execute(query, params or ())
@@ -136,16 +115,6 @@ def fetch_one(query: str, params: tuple = None) -> Optional[Dict]:
 # ============================================================================
 
 def get_student_features(user_id: int, course_id: str) -> Optional[Dict]:
-    """
-    Lấy features của một sinh viên
-    
-    Args:
-        user_id: ID sinh viên
-        course_id: ID khóa học
-        
-    Returns:
-        Dictionary chứa features hoặc None
-    """
     return fetch_one(
         "SELECT * FROM student_features WHERE user_id = %s AND course_id = %s",
         (user_id, course_id)
@@ -153,21 +122,10 @@ def get_student_features(user_id: int, course_id: str) -> Optional[Dict]:
 
 
 def get_latest_prediction(user_id: int, course_id: str, model_name: Optional[str] = None) -> Optional[Dict]:
-    """
-    Lấy prediction mới nhất của sinh viên
-    
-    Args:
-        user_id: ID sinh viên
-        course_id: ID khóa học
-        model_name: Tên model (optional, nếu muốn filter theo model)
-        
-    Returns:
-        Dictionary chứa prediction hoặc None
-    """
     if model_name:
         return fetch_one(
             """
-            SELECT * FROM predictions 
+            SELECT * FROM predictions
             WHERE user_id = %s AND course_id = %s AND model_name = %s AND is_latest = TRUE
             ORDER BY predicted_at DESC LIMIT 1
             """,
@@ -176,7 +134,7 @@ def get_latest_prediction(user_id: int, course_id: str, model_name: Optional[str
     else:
         return fetch_one(
             """
-            SELECT * FROM predictions 
+            SELECT * FROM predictions
             WHERE user_id = %s AND course_id = %s AND is_latest = TRUE
             ORDER BY predicted_at DESC LIMIT 1
             """,
@@ -184,46 +142,27 @@ def get_latest_prediction(user_id: int, course_id: str, model_name: Optional[str
         )
 
 
-def save_prediction(user_id: int, course_id: str, model_name: str, 
+def save_prediction(user_id: int, course_id: str, model_name: str,
                    fail_risk_score: float, risk_level: str,
                    model_version: Optional[str] = None, model_path: Optional[str] = None,
                    snapshot_grade: Optional[float] = None,
                    snapshot_completion_rate: Optional[float] = None,
                    snapshot_days_inactive: Optional[int] = None) -> bool:
-    """
-    Lưu prediction mới và mark predictions cũ là not latest
-    
-    Args:
-        user_id: ID sinh viên
-        course_id: ID khóa học
-        model_name: Tên model
-        fail_risk_score: Risk score (0-100)
-        risk_level: 'LOW', 'MEDIUM', 'HIGH'
-        model_version: Version của model
-        model_path: Path to model file
-        snapshot_grade: Grade tại thời điểm predict
-        snapshot_completion_rate: Completion rate tại thời điểm predict
-        snapshot_days_inactive: Days inactive tại thời điểm predict
-        
-    Returns:
-        True nếu thành công, False nếu lỗi
-    """
     connection = get_db_connection()
     if connection is None:
         return False
-    
+
     try:
         cursor = connection.cursor()
-    
+
         cursor.execute(
             """
-            DELETE FROM predictions 
+            DELETE FROM predictions
             WHERE user_id = %s AND course_id = %s
             """,
             (user_id, course_id)
         )
-        
-        # 2. Insert bản ghi mới (luôn is_latest = TRUE)
+
         cursor.execute(
             """
             INSERT INTO predictions (
@@ -237,11 +176,11 @@ def save_prediction(user_id: int, course_id: str, model_name: str,
              fail_risk_score, risk_level,
              snapshot_grade, snapshot_completion_rate, snapshot_days_inactive)
         )
-        
+
         connection.commit()
         cursor.close()
         return True
-        
+
     except Error as e:
         logger.error(f"Error saving prediction: {e}")
         connection.rollback()
@@ -257,20 +196,6 @@ def save_predictions_batch(
     model_version: str,
     model_path: str,
 ) -> int:
-    """
-    Lưu batch predictions trong 1 connection duy nhất — tránh N+1 query.
-
-    Args:
-        predictions: List dict, mỗi phần tử cần có:
-                     user_id, course_id, fail_risk_score, risk_level,
-                     snapshot_grade, snapshot_completion_rate, snapshot_days_inactive
-        model_name:    Tên model chung cho cả batch
-        model_version: Version model
-        model_path:    Đường dẫn model file
-
-    Returns:
-        Số bản ghi đã lưu thành công
-    """
     if not predictions:
         return 0
 
@@ -281,8 +206,6 @@ def save_predictions_batch(
     try:
         cursor = connection.cursor()
 
-        # --- Bước 1: Update raw_data (V1 backward compat) --- #
-        # executemany → 1 roundtrip thay vì N roundtrips
         update_raw_data = [
             (float(p["fail_risk_score"]), int(p["user_id"]), p["course_id"])
             for p in predictions
@@ -292,8 +215,6 @@ def save_predictions_batch(
             update_raw_data,
         )
 
-        # --- Bước 2: Mark tất cả predictions cũ của course là not latest --- #
-        # Dùng 1 UPDATE với IN clause thay vì N UPDATE riêng lẻ
         course_ids = list({p["course_id"] for p in predictions})
         user_ids = [int(p["user_id"]) for p in predictions]
         placeholders_cid = ", ".join(["%s"] * len(course_ids))
@@ -307,7 +228,6 @@ def save_predictions_batch(
             course_ids + user_ids,
         )
 
-        # --- Bước 3: Batch INSERT tất cả predictions mới --- #
         insert_data = [
             (
                 int(p["user_id"]),
@@ -351,15 +271,6 @@ def save_predictions_batch(
 
 
 def get_course_model_mapping(course_id: str) -> Optional[Dict]:
-    """
-    Lấy model mapping cho course
-    
-    Args:
-        course_id: ID khóa học
-        
-    Returns:
-        Dictionary chứa mapping config hoặc None
-    """
     return fetch_one(
         """
         SELECT cmm.*, mr.model_path, mr.features_csv_path, mr.model_type
@@ -374,15 +285,9 @@ def get_course_model_mapping(course_id: str) -> Optional[Dict]:
 
 
 def get_default_model() -> Optional[Dict]:
-    """
-    Lấy default model từ registry
-    
-    Returns:
-        Dictionary chứa model info hoặc None
-    """
     return fetch_one(
         """
-        SELECT * FROM model_registry 
+        SELECT * FROM model_registry
         WHERE is_default = TRUE AND is_active = TRUE
         LIMIT 1
         """
@@ -394,16 +299,6 @@ def get_default_model() -> Optional[Dict]:
 # ============================================================================
 
 def discover_course_groups() -> Dict[str, List[str]]:
-    """
-    Tự động nhóm các khóa học theo base_name (tách từ course_name).
-
-    Logic: "Kinh tế vĩ mô - Thầy A" → base_name = "Kinh tế vĩ mô"
-           "Kinh tế vĩ mô"           → base_name = "Kinh tế vĩ mô"
-
-    Returns:
-        Dict mapping base_name → list of course_ids
-        VD: {"Kinh tế vĩ mô": ["cid1", "cid2", "cid3"]}
-    """
     rows = fetch_all("""
         SELECT DISTINCT course_id, course_name
         FROM enrollments
@@ -418,7 +313,6 @@ def discover_course_groups() -> Dict[str, List[str]]:
         if not course_name or not course_id:
             continue
 
-        # Tách base name: lấy phần trước " - "
         base_name = course_name.split(" - ")[0].strip()
         if base_name not in groups:
             groups[base_name] = []
@@ -429,10 +323,6 @@ def discover_course_groups() -> Dict[str, List[str]]:
 
 
 def count_labeled_students(course_ids: List[str]) -> int:
-    """
-    Đếm số sinh viên đã có kết quả pass/fail
-    (is_passed IS NOT NULL) trong mooc_grades cho các course đã cho.
-    """
     if not course_ids:
         return 0
     placeholders = ", ".join(["%s"] * len(course_ids))
@@ -448,9 +338,6 @@ def count_labeled_students(course_ids: List[str]) -> int:
 
 
 def get_last_training_record(base_name: str) -> Optional[Dict]:
-    """
-    Lấy bản ghi train/retrain thành công gần nhất cho base_name.
-    """
     return fetch_one(
         """
         SELECT * FROM training_history
@@ -478,9 +365,6 @@ def save_training_record(
     started_at: Optional[str] = None,
     completed_at: Optional[str] = None,
 ) -> Optional[int]:
-    """
-    Lưu bản ghi lịch sử vào training_history.
-    """
     import json
     return execute(
         """
@@ -512,9 +396,6 @@ def save_training_record(
 def get_training_history(
     base_name: Optional[str] = None, limit: int = 50
 ) -> List[Dict]:
-    """
-    Lấy lịch sử training_history, có thể filter theo base_name.
-    """
     if base_name:
         return fetch_all(
             """
@@ -536,10 +417,6 @@ def get_training_history(
 
 
 def get_model_for_courses(course_ids: List[str]) -> Optional[Dict]:
-    """
-    Kiểm tra xem bất kỳ course nào trong danh sách đã có model mapping chưa.
-    Trả về model info nếu có.
-    """
     if not course_ids:
         return None
     placeholders = ", ".join(["%s"] * len(course_ids))
@@ -566,10 +443,6 @@ def register_model_for_courses(
     model_type: str = "CatBoost",
     domain: str = "dropout_prediction",
 ) -> bool:
-    """
-    Đăng ký model mới vào model_registry và gán cho tất cả course_ids
-    trong course_model_mapping.
-    """
     connection = get_db_connection()
     if connection is None:
         return False
@@ -577,7 +450,6 @@ def register_model_for_courses(
     try:
         cursor = connection.cursor()
 
-        # Upsert model_registry
         cursor.execute(
             """
             INSERT INTO model_registry
@@ -594,9 +466,7 @@ def register_model_for_courses(
              model_type, domain),
         )
 
-        # Gán model cho tất cả course_ids
         for cid in course_ids:
-            # Deactivate old mappings
             cursor.execute(
                 "UPDATE course_model_mapping SET is_active = FALSE WHERE course_id = %s",
                 (cid,),

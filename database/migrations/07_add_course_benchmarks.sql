@@ -23,16 +23,6 @@ CREATE TABLE IF NOT EXISTS course_stats_benchmarks (
     
     -- Progress benchmarks
     progress_avg_completion DECIMAL(5,2) DEFAULT 0 COMMENT 'Avg completion rate',
-    progress_median_completion DECIMAL(5,2) DEFAULT 0 COMMENT 'Median completion rate',
-    progress_completion_rate DECIMAL(5,2) DEFAULT 0 COMMENT '% students who completed',
-    
-    -- Video benchmarks
-    video_avg_completion DECIMAL(5,2) DEFAULT 0 COMMENT 'Avg video completion',
-    video_avg_watch_time INT DEFAULT 0 COMMENT 'Avg watch time (seconds)',
-    
-    -- Discussion benchmarks
-    discussion_avg_interactions DECIMAL(5,2) DEFAULT 0 COMMENT 'Avg discussion interactions',
-    discussion_participation_rate DECIMAL(5,2) DEFAULT 0 COMMENT '% students with discussions',
     
     -- Metadata
     total_students INT DEFAULT 0 COMMENT 'Total enrolled students',

@@ -1054,12 +1054,6 @@ class MOOCH5PDataFetcher:
                 'assessment_avg_attempts': 0,
                 'assessment_pass_rate': 0,
                 'progress_avg_completion': 0,
-                'progress_median_completion': 0,
-                'progress_completion_rate': 0,
-                'video_avg_completion': 0,
-                'video_avg_watch_time': 0,
-                'discussion_avg_interactions': 0,
-                'discussion_participation_rate': 0,
                 'total_students': 0,
                 'active_students': 0
             }
@@ -1090,7 +1084,6 @@ class MOOCH5PDataFetcher:
             if progress_stats and progress_stats.get('success'):
                 summary = progress_stats.get('summary', {})
                 benchmarks['progress_avg_completion'] = summary.get('avg_progress', 0)
-                benchmarks['progress_completion_rate'] = summary.get('completion_rate', 0)
                 benchmarks['total_students'] = max(
                     benchmarks['total_students'], 
                     summary.get('total_students', 0)
@@ -1104,12 +1097,9 @@ class MOOCH5PDataFetcher:
                 course_id, 
                 activity_avg_score, activity_total_activities, activity_avg_per_user,
                 assessment_avg_score, assessment_avg_attempts, assessment_pass_rate,
-                progress_avg_completion, progress_median_completion, progress_completion_rate,
-                video_avg_completion, video_avg_watch_time,
-                discussion_avg_interactions, discussion_participation_rate,
-                total_students, active_students
+                progress_avg_completion, total_students, active_students
             ) VALUES (
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
             )
             ON DUPLICATE KEY UPDATE
                 activity_avg_score = VALUES(activity_avg_score),
@@ -1118,7 +1108,6 @@ class MOOCH5PDataFetcher:
                 assessment_avg_score = VALUES(assessment_avg_score),
                 assessment_avg_attempts = VALUES(assessment_avg_attempts),
                 progress_avg_completion = VALUES(progress_avg_completion),
-                progress_completion_rate = VALUES(progress_completion_rate),
                 total_students = VALUES(total_students),
                 active_students = VALUES(active_students),
                 updated_at = CURRENT_TIMESTAMP
@@ -1133,12 +1122,6 @@ class MOOCH5PDataFetcher:
                 benchmarks['assessment_avg_attempts'],
                 benchmarks['assessment_pass_rate'],
                 benchmarks['progress_avg_completion'],
-                benchmarks['progress_median_completion'],
-                benchmarks['progress_completion_rate'],
-                benchmarks['video_avg_completion'],
-                benchmarks['video_avg_watch_time'],
-                benchmarks['discussion_avg_interactions'],
-                benchmarks['discussion_participation_rate'],
                 benchmarks['total_students'],
                 benchmarks['active_students']
             )
@@ -1270,17 +1253,15 @@ class MOOCH5PDataFetcher:
             
             # Relative video completion
             user_video_completion = float(user_metrics.get('video_completion_rate', 0) or 0)
-            course_avg_video = float(course_benchmarks.get('video_avg_completion', 0) or 0) or user_video_completion
-            features['relative_to_course_video_completion'] = round(
-                user_video_completion - course_avg_video, 2
-            )
+            # MOOC không cung cấp video benchmark cũ (video_avg_completion), nên bỏ so sánh
+            # để tránh phụ thuộc vào cột legacy đã bị loại.
+            features['relative_to_course_video_completion'] = 0
             
             # Relative discussion
             user_discussion = float(user_metrics.get('discussion_total_interactions', 0) or 0)
-            course_avg_discussion = float(course_benchmarks.get('discussion_avg_interactions', 0) or 0)
-            features['relative_to_course_discussion'] = int(
-                user_discussion - course_avg_discussion
-            )
+            # MOOC không cung cấp discussion benchmark cũ (discussion_avg_interactions),
+            # nên bỏ so sánh, giữ giá trị ổn định.
+            features['relative_to_course_discussion'] = 0
             
             # Calculate composite performance score for percentile
             # Weighted: 40% completion, 30% problem score, 30% engagement
@@ -1293,7 +1274,9 @@ class MOOCH5PDataFetcher:
             course_avg_score = (
                 course_avg_completion * 0.4 +
                 course_avg_problem * 0.3 +
-                course_avg_video * 0.3
+                # Nếu không có video benchmark legacy thì dùng video completion của chính user
+                # (tương đương với course_avg_video = user_video_completion).
+                user_video_completion * 0.3
             )
             
             # Estimate percentile based on deviation from mean
@@ -1492,9 +1475,9 @@ class MOOCH5PDataFetcher:
             discussion_questions_count = mooc_discussions['questions_count'] if mooc_discussions and mooc_discussions.get('questions_count') else 0
             discussion_total_upvotes = mooc_discussions['total_upvotes'] if mooc_discussions and mooc_discussions.get('total_upvotes') else 0
             
-            # Quiz features (từ H5P)
+            # H5P features (bao gồm video + bài tập tương tác, không phải quiz riêng)
             quiz_attempts = h5p_completed_contents
-            quiz_avg_score = h5p_overall_percentage
+            h5p_avg_score = h5p_overall_percentage
             quiz_completion_rate = h5p_completion_rate
             
             # ============================================================
@@ -1610,7 +1593,7 @@ class MOOCH5PDataFetcher:
             
             # Prepare user metrics for comparison
             user_metrics = {
-                'problem_avg_score': quiz_avg_score,  # Using quiz as proxy for problem
+                'problem_avg_score': h5p_avg_score,  # Using H5P overall as proxy for problem
                 'mooc_completion_rate': mooc_completion_rate,
                 'video_completion_rate': video_completion_rate,
                 'discussion_total_interactions': discussion_total_interactions
@@ -1649,7 +1632,7 @@ class MOOCH5PDataFetcher:
                 h5p_overall_percentage, h5p_total_time_spent, h5p_completion_rate,
                 video_total_videos, video_completed_videos, video_in_progress_videos,
                 video_total_duration, video_total_watched_time, video_completion_rate, video_watch_rate,
-                quiz_attempts, quiz_avg_score, quiz_completion_rate,
+                quiz_attempts, h5p_avg_score, quiz_completion_rate,
                 discussion_threads_count, discussion_comments_count, discussion_total_interactions,
                 discussion_questions_count, discussion_total_upvotes,
                 problem_attempts, problem_avg_score, problem_success_rate,
@@ -1703,7 +1686,7 @@ class MOOCH5PDataFetcher:
                 video_completion_rate = VALUES(video_completion_rate),
                 video_watch_rate = VALUES(video_watch_rate),
                 quiz_attempts = VALUES(quiz_attempts),
-                quiz_avg_score = VALUES(quiz_avg_score),
+                h5p_avg_score = VALUES(h5p_avg_score),
                 quiz_completion_rate = VALUES(quiz_completion_rate),
                 discussion_threads_count = VALUES(discussion_threads_count),
                 discussion_comments_count = VALUES(discussion_comments_count),
@@ -1751,7 +1734,7 @@ class MOOCH5PDataFetcher:
                 h5p_overall_percentage, h5p_total_time_spent, h5p_completion_rate,
                 video_total_videos, video_completed_videos, video_in_progress_videos,
                 video_total_duration, video_total_watched_time, video_completion_rate, video_watch_rate,
-                quiz_attempts, quiz_avg_score, quiz_completion_rate,
+                quiz_attempts, h5p_avg_score, quiz_completion_rate,
                 discussion_threads_count, discussion_comments_count, discussion_total_interactions,
                 discussion_questions_count, discussion_total_upvotes,
                 problem_attempts, problem_avg_score, problem_success_rate,

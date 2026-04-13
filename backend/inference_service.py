@@ -406,10 +406,15 @@ class RiskPredictor:
 
     @staticmethod
     def classify_risk_level(risk_score: float) -> str:
-        """Phân loại risk level dựa trên risk score (0–100)."""
-        if risk_score >= 70:
+        """Phân loại risk level dựa trên risk score (0–100).
+        Threshold hạ xuống để bắt minority class (fail) tốt hơn:
+          HIGH   >= 55  (cũ: 70) — ưu tiên recall trên precision
+          MEDIUM >= 30  (cũ: 40)
+          LOW     < 30
+        """
+        if risk_score >= 55:
             return "HIGH"
-        elif risk_score >= 40:
+        elif risk_score >= 30:
             return "MEDIUM"
         else:
             return "LOW"
@@ -644,7 +649,7 @@ class InferenceService:
         completion_rate = student_data.get("mooc_completion_rate", 100)
         discussion_interactions = student_data.get("discussion_total_interactions", 0)
         video_completion_rate = student_data.get("video_completion_rate", 100)
-        quiz_avg_score = student_data.get("quiz_avg_score", 100)
+        h5p_avg_score = student_data.get("h5p_avg_score", 100)
 
         if risk_level == "HIGH":
             suggestions.append({
@@ -715,11 +720,11 @@ class InferenceService:
                 "priority": "medium",
             })
 
-        if quiz_avg_score < 50 and risk_level in ["HIGH", "MEDIUM"]:
+        if h5p_avg_score < 50 and risk_level in ["HIGH", "MEDIUM"]:
             suggestions.append({
                 "icon": "📝",
                 "title": "Hỗ trợ làm bài tập/quiz",
-                "description": f"Điểm quiz trung bình thấp ({quiz_avg_score}%). Cung cấp thêm bài tập hoặc giải đáp thắc mắc.",
+                "description": f"Tỷ lệ H5P trung bình thấp ({h5p_avg_score}%). Cung cấp thêm bài tập hoặc giải đáp thắc mắc.",
                 "priority": "medium",
             })
 

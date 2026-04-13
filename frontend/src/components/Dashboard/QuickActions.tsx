@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDashboard } from '../../context/DashboardContext';
+import { api } from '../../services/api';
 import type { QuickStats } from '../../types';
 import './QuickActions.css';
 
@@ -7,17 +11,91 @@ interface QuickActionsProps {
     isLoading?: boolean;
 }
 
+type EmailTarget = 'HIGH' | 'HIGH_MEDIUM' | 'ALL';
+
 export function QuickActions({ stats, onRefresh, isLoading }: QuickActionsProps) {
-    const handleEmailAll = () => {
-        alert('Tính năng gửi email hàng loạt sẽ được triển khai sau');
+    const navigate = useNavigate();
+    const { selectedCourse } = useDashboard();
+
+    // Modal state
+    const [showModal, setShowModal] = useState(false);
+    const [target, setTarget] = useState<EmailTarget>('HIGH');
+    const [subject, setSubject] = useState('Nhắc nhở học tập - Hãy tiếp tục cố gắng!');
+    const [message, setMessage] = useState(
+        'Kính gửi các bạn sinh viên,\n\n' +
+        'Chúng tôi nhận thấy bạn chưa hoạt động gần đây trên khóa học. ' +
+        'Hãy đăng nhập và tiếp tục học để không bỏ lỡ nội dung quan trọng nhé!\n\n' +
+        'Nếu bạn gặp khó khăn, vui lòng liên hệ giảng viên để được hỗ trợ.\n\n' +
+        'Trân trọng,\nGiảng viên'
+    );
+    const [preview, setPreview] = useState<{ total: number; has_email: number } | null>(null);
+    const [previewError, setPreviewError] = useState(false);
+    const [isOpening, setIsOpening] = useState(false);
+
+    // Load preview count when target changes
+    useEffect(() => {
+        if (!showModal || !selectedCourse) return;
+        setPreview(null);
+        setPreviewError(false);
+        api.previewEmailRecipients(selectedCourse.course_id, target)
+            .then(data => { setPreview(data); setPreviewError(false); })
+            .catch(() => { setPreviewError(true); setPreview({ total: 0, has_email: 0 }); });
+    }, [target, showModal, selectedCourse]);
+
+    const handleOpenModal = () => {
+        setShowModal(true);
     };
 
-    const handleExport = () => {
-        alert('Tính năng export CSV sẽ được triển khai sau');
+    const handleOpenMailClient = async () => {
+        if (!selectedCourse) return;
+        setIsOpening(true);
+        try {
+            const res = await api.getEmailRecipients(selectedCourse.course_id, target);
+            if (!res.emails.length) {
+                alert('Không tìm thấy sinh viên có email.');
+                return;
+            }
+
+            const bcc = res.emails.join(',');
+            const encodedSubject = encodeURIComponent(subject);
+            const encodedBody = encodeURIComponent(message);
+
+            // mailto với BCC để sinh viên không thấy nhau
+            const mailto = `mailto:?bcc=${encodeURIComponent(bcc)}&subject=${encodedSubject}&body=${encodedBody}`;
+
+            // Nếu URL quá dài (>2000 chars), tách nhỏ và cảnh báo
+            if (mailto.length > 8000) {
+                const chunks: string[][] = [];
+                const chunkSize = 50;
+                for (let i = 0; i < res.emails.length; i += chunkSize) {
+                    chunks.push(res.emails.slice(i, i + chunkSize));
+                }
+                alert(
+                    `Có ${res.emails.length} sinh viên — quá nhiều cho 1 email.\n` +
+                    `Hệ thống sẽ mở ${chunks.length} cửa sổ email (mỗi cửa sổ ~${chunkSize} người).\n\n` +
+                    `Vui lòng cho phép popup nếu bị chặn.`
+                );
+                for (const chunk of chunks) {
+                    const bccChunk = encodeURIComponent(chunk.join(','));
+                    window.open(`mailto:?bcc=${bccChunk}&subject=${encodedSubject}&body=${encodedBody}`);
+                    await new Promise(r => setTimeout(r, 300));
+                }
+            } else {
+                window.location.href = mailto;
+            }
+
+            setShowModal(false);
+        } catch (err: any) {
+            alert(err?.message || 'Không thể lấy danh sách email.');
+        } finally {
+            setIsOpening(false);
+        }
     };
 
-    const handleViewReport = () => {
-        alert('Tính năng xem báo cáo sẽ được triển khai sau');
+    const targetLabels: Record<EmailTarget, string> = {
+        HIGH: 'Chỉ sinh viên nguy cơ CAO',
+        HIGH_MEDIUM: 'Sinh viên nguy cơ CAO + TRUNG BÌNH',
+        ALL: 'Tất cả sinh viên chưa hoàn thành',
     };
 
     return (
@@ -27,7 +105,6 @@ export function QuickActions({ stats, onRefresh, isLoading }: QuickActionsProps)
                 <h3>Hành Động Nhanh</h3>
             </div>
 
-            {/* Quick Stats */}
             {stats && (
                 <div className="quick-stats-grid">
                     <div className="quick-stat stat-red">
@@ -54,44 +131,116 @@ export function QuickActions({ stats, onRefresh, isLoading }: QuickActionsProps)
                 </div>
             )}
 
-            {/* Action Buttons */}
             <div className="action-buttons">
-                <button
-                    className="action-btn btn-primary"
-                    onClick={handleEmailAll}
-                    disabled={isLoading}
-                >
+                <button className="action-btn btn-primary" onClick={handleOpenModal} disabled={isLoading || !selectedCourse}>
                     <span className="btn-icon">📧</span>
                     <span className="btn-text">Gửi Email Nhắc Nhở</span>
                 </button>
 
-                <button
-                    className="action-btn btn-secondary"
-                    onClick={onRefresh}
-                    disabled={isLoading}
-                >
+                <button className="action-btn btn-secondary" onClick={onRefresh} disabled={isLoading}>
                     <span className="btn-icon">{isLoading ? '⏳' : '🔄'}</span>
                     <span className="btn-text">{isLoading ? 'Đang tải...' : 'Làm Mới Dữ Liệu'}</span>
                 </button>
 
-                <button
-                    className="action-btn btn-outline"
-                    onClick={handleViewReport}
-                    disabled={isLoading}
-                >
+                <button className="action-btn btn-outline" onClick={() => navigate('/report')} disabled={isLoading}>
                     <span className="btn-icon">📊</span>
                     <span className="btn-text">Xem Báo Cáo</span>
                 </button>
 
-                <button
-                    className="action-btn btn-outline"
-                    onClick={handleExport}
-                    disabled={isLoading}
-                >
-                    <span className="btn-icon">📥</span>
-                    <span className="btn-text">Export CSV</span>
+                <button className="action-btn btn-outline" onClick={() => navigate('/pipeline')} disabled={isLoading}>
+                    <span className="btn-icon">🤖</span>
+                    <span className="btn-text">Chạy Dự Đoán AI</span>
                 </button>
             </div>
+
+            {/* Email Modal */}
+            {showModal && (
+                <div className="email-modal-overlay" onClick={() => !isOpening && setShowModal(false)}>
+                    <div className="email-modal" onClick={e => e.stopPropagation()}>
+                        <div className="email-modal-header">
+                            <h3>📧 Gửi Email Nhắc Nhở Hàng Loạt</h3>
+                            <button className="modal-close-btn" onClick={() => setShowModal(false)} disabled={isOpening}>✕</button>
+                        </div>
+
+                        <div className="email-modal-body">
+                            {/* Target selection */}
+                            <div className="form-group">
+                                <label>Đối tượng gửi</label>
+                                <div className="target-options">
+                                    {(['HIGH', 'HIGH_MEDIUM', 'ALL'] as EmailTarget[]).map(t => (
+                                        <label key={t} className={`target-option ${target === t ? 'selected' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="target"
+                                                value={t}
+                                                checked={target === t}
+                                                onChange={() => setTarget(t)}
+                                            />
+                                            <span>{targetLabels[t]}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                                {preview
+                                    ? previewError
+                                        ? <p className="preview-count" style={{color:'#ef4444'}}>
+                                            Không thể kết nối backend. Hãy kiểm tra server đã chạy chưa.
+                                          </p>
+                                        : <p className="preview-count">
+                                            Tìm thấy <strong>{preview.has_email}</strong> sinh viên có email
+                                            (tổng <strong>{preview.total}</strong> phù hợp)
+                                          </p>
+                                    : <p className="preview-count loading">Đang kiểm tra...</p>
+                                }
+                            </div>
+
+                            {/* Subject */}
+                            <div className="form-group">
+                                <label>Tiêu đề email</label>
+                                <input
+                                    type="text"
+                                    className="form-input"
+                                    value={subject}
+                                    onChange={e => setSubject(e.target.value)}
+                                    placeholder="Nhập tiêu đề..."
+                                />
+                            </div>
+
+                            {/* Message */}
+                            <div className="form-group">
+                                <label>Nội dung email</label>
+                                <textarea
+                                    className="form-textarea"
+                                    rows={5}
+                                    value={message}
+                                    onChange={e => setMessage(e.target.value)}
+                                    placeholder="Nhập nội dung..."
+                                />
+                            </div>
+
+                            <p className="mailto-note">
+                                Hệ thống sẽ mở ứng dụng email (Outlook, Gmail...) với tiêu đề và nội dung đã điền sẵn.
+                                Các sinh viên được thêm vào trường <strong>BCC</strong>.
+                            </p>
+
+                            <div className="email-modal-footer">
+                                <button className="action-btn btn-outline" onClick={() => setShowModal(false)} disabled={isOpening}>
+                                    Hủy
+                                </button>
+                                <button
+                                    className="action-btn btn-primary"
+                                    onClick={handleOpenMailClient}
+                                    disabled={isOpening || !preview?.has_email || !subject.trim()}
+                                >
+                                    <span className="btn-icon">{isOpening ? '⏳' : '📧'}</span>
+                                    <span className="btn-text">
+                                        {isOpening ? 'Đang mở...' : `Mở email cho ${preview?.has_email ?? '...'} sinh viên`}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
