@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "thesis-figures",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-s", "thesis_figures", "-l", "5500"],
+      "port": 5500
+    }
+  ]
+}

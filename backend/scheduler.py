@@ -34,8 +34,8 @@ class CourseLifecycleManager:
     """
 
     def __init__(self):
-        self.min_students = int(os.getenv("MIN_STUDENTS_FOR_TRAINING", "500"))
-        self.retrain_threshold = int(os.getenv("RETRAIN_THRESHOLD", "100"))
+        self.min_students = int(os.getenv("MIN_STUDENTS_FOR_TRAINING", "300"))
+        self.retrain_threshold = int(os.getenv("RETRAIN_THRESHOLD", "50"))
         self._lock = threading.Lock()
 
     # ── Public entry point ──────────────────────────────────────
@@ -246,7 +246,7 @@ class CourseLifecycleManager:
 
                 service = InferenceService(
                     model_path=model_info.get("model_path"),
-                    features_csv=model_info.get("features_csv_path"),
+                    feature_fallback_csv=model_info.get("features_csv_path"),
                 )
 
                 for cid in course_ids:

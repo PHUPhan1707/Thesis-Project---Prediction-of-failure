@@ -219,15 +219,15 @@ export function StudentDetailModal() {
                                 <h4>Thông tin bổ sung</h4>
                                 <div className="additional-grid">
                                     <div className="additional-item">
-                                        <span className="additional-label">🎬 Video hoàn thành</span>
-                                        <span className="additional-value">
-                                            {selectedStudent.video_completion_rate?.toFixed(1) || 'N/A'}%
+                                        <span className="additional-label">🏆 Điểm thi MOOC</span>
+                                        <span className={`additional-value ${(selectedStudent.mooc_grade_percentage || 0) < 50 ? 'value-warning' : ''}`}>
+                                            {selectedStudent.mooc_grade_percentage?.toFixed(1) || 'N/A'}%
                                         </span>
                                     </div>
                                     <div className="additional-item">
-                                        <span className="additional-label">🎯 H5P TB</span>
+                                        <span className="additional-label">🎬 Video hoàn thành</span>
                                         <span className="additional-value">
-                                            {selectedStudent.h5p_avg_score?.toFixed(1) || 'N/A'}%
+                                            {selectedStudent.video_completion_rate?.toFixed(1) || 'N/A'}%
                                         </span>
                                     </div>
                                     <div className="additional-item">

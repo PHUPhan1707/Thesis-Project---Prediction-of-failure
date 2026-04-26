@@ -173,9 +173,6 @@ def get_student_detail(user_id: int, course_id: str):
         if model_service:
             suggestions = model_service.generate_suggestions(student)
 
-        # Calculate the best grade available (since MOOC API sometimes times out)
-        best_grade = max(float(student.get("mooc_grade_percentage") or 0), float(student.get("h5p_avg_score") or 0))
-
         # Build response
         response = {
             "user_id": student["user_id"],
@@ -186,7 +183,7 @@ def get_student_detail(user_id: int, course_id: str):
             "mssv": student.get("mssv"),
             "fail_risk_score": float(student.get("fail_risk_score") or 50),
             "risk_level": student.get("risk_level") or "MEDIUM",
-            "mooc_grade_percentage": best_grade,
+            "mooc_grade_percentage": float(student.get("mooc_grade_percentage") or 0),
             "mooc_completion_rate": float(student.get("overall_completion") or 0),
             "days_since_last_activity": int(student.get("days_since_last_activity") or 0),
             "video_completion_rate": float(student.get("video_completion_rate") or 0),
@@ -231,7 +228,7 @@ def get_statistics(course_id: str):
             SELECT
                 COUNT(*) AS total_students,
                 AVG(COALESCE(p.fail_risk_score, 50)) AS avg_risk_score,
-                AVG(GREATEST(f.mooc_grade_percentage, f.h5p_avg_score)) AS avg_grade,
+                AVG(f.mooc_grade_percentage) AS avg_grade,
                 AVG(f.overall_completion) AS avg_completion_rate,
                 
                 -- Risk counts (chỉ students chưa hoàn thành)

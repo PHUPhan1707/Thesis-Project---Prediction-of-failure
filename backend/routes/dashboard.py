@@ -6,7 +6,7 @@ from datetime import datetime
 from flask import Blueprint, jsonify
 
 from ..db import fetch_all
-from ..utils.helpers import classify_risk_level
+from ..utils.helpers import classify_risk_level, RISK_HIGH_THRESHOLD
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ def get_dashboard_summary(course_id: str):
             LEFT JOIN enrollments e ON f.user_id = e.user_id AND f.course_id = e.course_id
             LEFT JOIN predictions p ON f.user_id = p.user_id AND f.course_id = p.course_id AND p.is_latest = TRUE
             WHERE f.course_id = %s
-              AND (f.mooc_is_passed IS NULL OR f.mooc_is_passed = 0)
+              AND (f.mooc_is_passed IS NULL OR f.mooc_is_passed != 1)
             ORDER BY COALESCE(p.fail_risk_score, 0) DESC, f.days_since_last_activity DESC
             """,
             (course_id,),
@@ -66,42 +66,47 @@ def get_dashboard_summary(course_id: str):
 
         for r in rows:
             score = float(r.get("fail_risk_score") or 50)
-            risk_level = (r.get("risk_level") or "MEDIUM").upper()
-            if risk_level not in ("HIGH", "MEDIUM", "LOW"):
-                risk_level = classify_risk_level(score)
+            # Dùng score-based classification để đảm bảo đồng bộ với statistics endpoint
+            risk_level = classify_risk_level(score)
 
             days_inactive = int(r.get("days_since_last_activity") or 0)
             completion = float(r.get("mooc_completion_rate") or 0)
             predicted_at = r.get("predicted_at")
 
-            if risk_level == "HIGH":
+            # Đếm HIGH risk dựa trên score >= 70 (RISK_HIGH_THRESHOLD)
+            if score >= RISK_HIGH_THRESHOLD:
                 high_risk_count += 1
             if days_inactive >= 7:
                 inactive_count += 1
 
-            # Việc cần làm hôm nay: HIGH risk hoặc MEDIUM + inactive
+            # Việc cần làm hôm nay: CHỈ những sinh viên HIGH risk, MEDIUM risk, hoặc inactive >= 7 ngày
+            should_add_to_tasks = False
+            urgency = None
+            reason = None
+            
             if risk_level == "HIGH":
                 urgency = "critical"
                 reason = "Nguy cơ bỏ học cao"
+                should_add_to_tasks = True
             elif risk_level == "MEDIUM":
                 urgency = "high"
                 reason = "Nguy cơ trung bình"
+                should_add_to_tasks = True
             elif days_inactive >= 7:
                 urgency = "high"
                 reason = "Không hoạt động {} ngày".format(days_inactive)
-            else:
-                urgency = "medium"
-                reason = "Theo dõi tiến độ"
+                should_add_to_tasks = True
 
-            today_tasks.append({
-                "user_id": int(r["user_id"]),
-                "full_name": r.get("full_name") or "Sinh viên",
-                "email": r.get("email") or "",
-                "risk_level": risk_level,
-                "fail_risk_score": round(score, 1),
-                "reason": reason,
-                "urgency": urgency,
-            })
+            if should_add_to_tasks:
+                today_tasks.append({
+                    "user_id": int(r["user_id"]),
+                    "full_name": r.get("full_name") or "Sinh viên",
+                    "email": r.get("email") or "",
+                    "risk_level": risk_level,
+                    "fail_risk_score": round(score, 1),
+                    "reason": reason,
+                    "urgency": urgency,
+                })
 
             # Cảnh báo gần đây: risk_increase (HIGH), inactive, low_progress
             if risk_level == "HIGH":

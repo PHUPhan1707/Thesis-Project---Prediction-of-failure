@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "D:\ProjectThesis\dropout_prediction\backend\run_debug.py", line 10, in <module>
-    InferenceService(model_path=m['model_path'], features_csv=m['features_csv_path'])
-TypeError: InferenceService.__init__() got an unexpected keyword argument 'features_csv'

@@ -17,22 +17,22 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 32px;
+  padding: 10px 20px;
   background: var(--card-bg);
   border-bottom: 1px solid var(--border-color);
-  box-shadow: 0 2px 8px var(--card-shadow);
-  gap: 16px;
+  box-shadow: 0 1px 4px var(--card-shadow);
+  gap: 12px;
 }
 
 .app-content {
   flex: 1;
-  padding: 24px 0;
+  padding: 12px 0;
 }
 
 .dashboard-container {
-  max-width: 1600px;
+  max-width: 1800px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 16px;
 }
 
 /* Error Banner */
@@ -76,7 +76,7 @@
 
 /* Footer */
 .dashboard-footer {
-  padding: 28px 20px;
+  padding: 14px 16px;
   text-align: center;
   background: var(--card-bg);
   backdrop-filter: blur(10px);
@@ -85,14 +85,14 @@
 
 .dashboard-footer p {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
 }
 
 .footer-subtitle {
-  font-size: 0.85rem !important;
+  font-size: 0.7rem !important;
   color: var(--text-tertiary) !important;
-  margin-top: 6px !important;
+  margin-top: 4px !important;
 }
 
 /* Utility states (shared between pages) */
@@ -101,30 +101,30 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 80px 20px;
+  padding: 40px 16px;
   text-align: center;
   background: var(--card-bg);
-  border-radius: 24px;
-  border: 2px dashed var(--border-color);
+  border-radius: 14px;
+  border: 1px dashed var(--border-color);
 }
 
 .no-course-icon {
-  font-size: 4rem;
-  margin-bottom: 20px;
+  font-size: 2.5rem;
+  margin-bottom: 12px;
   opacity: 0.8;
 }
 
 .no-course-selected h3 {
-  font-size: 1.4rem;
+  font-size: 1rem;
   color: #3a3a3a;
-  margin: 0 0 12px;
+  margin: 0 0 8px;
 }
 
 .no-course-selected p {
-  font-size: 1rem;
+  font-size: 0.8rem;
   color: #7a7a7a;
   margin: 0;
-  max-width: 460px;
+  max-width: 360px;
 }
 
 /* Responsive */

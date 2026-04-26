@@ -1,7 +1,7 @@
 """
 Model Comparison for Dropout Prediction - Thesis Evaluation
 Compare multiple ML models using identical K-fold splits for fair comparison.
-Models: Logistic Regression, Random Forest, SVM, XGBoost, CatBoost
+Models: Logistic Regression, Random Forest, SVM, Gradient Boosting, LightGBM, XGBoost, CatBoost
 """
 import sys
 import logging
@@ -16,8 +16,9 @@ import warnings
 # ML Libraries
 from catboost import CatBoostClassifier
 from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.svm import SVC
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler, OrdinalEncoder
@@ -87,11 +88,24 @@ class ModelComparisonEvaluator:
         )
 
         # Define feature columns (same exclusions as kfold_evaluation.py)
+        # IMPORTANT: Exclude ALL columns that could cause data leakage
         exclude_cols = [
+            # Identity columns
             'id', 'user_id', 'course_id', 'username', 'email', 'full_name',
-            'is_passed', 'is_dropout', 'fail_risk_score',
+            
+            # Target and prediction columns
+            'is_passed', 'is_dropout', 'fail_risk_score', 'dropout_risk_score',
+            
+            # GRADE LEAKAGE - direct correlation with target
             'mooc_grade_percentage', 'mooc_letter_grade', 'mooc_is_passed',
+            'relative_grade', 'performance_gap',  # derived from grades
+            'performance_percentile',  # derived from grades
+            'is_top_performer', 'is_bottom_performer',  # derived from grades
+            
+            # POSITIONAL LEAKAGE - extracted at end-of-course
             'current_chapter', 'current_section', 'current_unit',
+            
+            # Timestamps & metadata
             'extracted_at', 'extraction_batch_id', 'fetched_at', 'updated_at',
             'created', 'enrollment_id', 'all_attributes',
             'enrollment_date', 'last_activity'
@@ -122,18 +136,30 @@ class ModelComparisonEvaluator:
         return X, y
 
     def _get_models(self) -> Dict:
-        """Return configured model instances."""
+        """Return configured model instances.
+        
+        Models included:
+        - Logistic Regression: Linear baseline
+        - Random Forest: Ensemble (Bagging)
+        - SVM: Kernel-based
+        - Gradient Boosting: Classic sklearn implementation
+        - LightGBM: Microsoft's gradient boosting
+        - XGBoost: Popular gradient boosting
+        - CatBoost: Yandex's gradient boosting (handles categoricals natively)
+        """
         return {
             'Logistic Regression': LogisticRegression(
                 max_iter=1000,
                 random_state=self.random_state,
                 solver='lbfgs',
                 C=1.0,
+                class_weight='balanced',
             ),
             'Random Forest': RandomForestClassifier(
                 n_estimators=500,
                 max_depth=10,
                 random_state=self.random_state,
+                class_weight='balanced',
                 n_jobs=-1,
             ),
             'SVM': SVC(
@@ -141,7 +167,26 @@ class ModelComparisonEvaluator:
                 C=1.0,
                 gamma='scale',
                 probability=True,
+                class_weight='balanced',
                 random_state=self.random_state,
+            ),
+            'Gradient Boosting': GradientBoostingClassifier(
+                n_estimators=500,
+                learning_rate=0.05,
+                max_depth=6,
+                random_state=self.random_state,
+                validation_fraction=0.1,
+                n_iter_no_change=50,
+            ),
+            'LightGBM': LGBMClassifier(
+                n_estimators=1000,
+                learning_rate=0.05,
+                max_depth=6,
+                num_leaves=31,
+                random_state=self.random_state,
+                class_weight='balanced',
+                verbosity=-1,
+                force_col_wise=True,
             ),
             'XGBoost': XGBClassifier(
                 n_estimators=1000,
@@ -159,6 +204,7 @@ class ModelComparisonEvaluator:
                 l2_leaf_reg=3,
                 loss_function='Logloss',
                 eval_metric='AUC',
+                auto_class_weights='Balanced',
                 random_seed=self.random_state,
                 verbose=False,
             ),
@@ -205,8 +251,11 @@ class ModelComparisonEvaluator:
 
     def run_comparison(self, X: pd.DataFrame, y: pd.Series) -> List[Dict]:
         """Run all models on identical K-fold splits."""
+        models_dict = self._get_models()
+        n_models = len(models_dict)
+        
         logger.info(f"\n{'=' * 60}")
-        logger.info(f"Starting Model Comparison ({self.n_splits}-Fold CV, 5 models)")
+        logger.info(f"Starting Model Comparison ({self.n_splits}-Fold CV, {n_models} models)")
         logger.info(f"{'=' * 60}\n")
 
         # Store for summarize_comparison dataset_info
@@ -220,7 +269,6 @@ class ModelComparisonEvaluator:
         )
         folds = list(skf.split(X, y))
 
-        models_dict = self._get_models()
         self.fold_results = []
 
         for model_name, model_template in models_dict.items():
@@ -256,6 +304,16 @@ class ModelComparisonEvaluator:
                         eval_set=[(X_te_proc, y_test)],
                         verbose=False,
                     )
+                elif model_name == 'LightGBM':
+                    from lightgbm import early_stopping, log_evaluation
+                    model = clone(model_template)
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore")
+                        model.fit(
+                            X_tr_proc, y_train,
+                            eval_set=[(X_te_proc, y_test)],
+                            callbacks=[early_stopping(50), log_evaluation(0)],
+                        )
                 else:
                     model = clone(model_template)
                     model.fit(X_tr_proc, y_train)
@@ -326,21 +384,33 @@ class ModelComparisonEvaluator:
         }
 
         # Log comparison table
-        logger.info(f"\n{'=' * 80}")
+        logger.info(f"\n{'=' * 95}")
         logger.info("MODEL COMPARISON SUMMARY")
-        logger.info(f"{'=' * 80}")
+        logger.info(f"{'=' * 95}")
         header = f"{'Model':<25}" + "".join(f"{m.upper():>14}" for m in metric_names)
         logger.info(header)
-        logger.info("-" * 80)
+        logger.info("-" * 95)
         for model_name in model_names:
             s = summary['models'][model_name]
             row = f"{model_name:<25}"
             for m in metric_names:
                 row += f"  {s[f'{m}_mean']:.4f}±{s[f'{m}_std']:.3f}"
             logger.info(row)
-        logger.info("-" * 80)
-        logger.info(f"Best by AUC-ROC: {summary['best_model']['by_auc_roc']}")
-        logger.info(f"Best by F1:      {summary['best_model']['by_f1_score']}")
+        logger.info("-" * 95)
+        
+        # Ranking table
+        logger.info("\nMODEL RANKINGS (by mean score):")
+        for m in metric_names:
+            ranked = sorted(
+                summary['models'].items(),
+                key=lambda x: x[1][f'{m}_mean'],
+                reverse=True
+            )
+            ranking_str = " > ".join([f"{name}" for name, _ in ranked[:3]])
+            logger.info(f"  {m.upper():<12}: {ranking_str}")
+        
+        logger.info(f"\n>>> Best by AUC-ROC: {summary['best_model']['by_auc_roc']}")
+        logger.info(f">>> Best by F1:      {summary['best_model']['by_f1_score']}")
 
         return summary
 
@@ -360,10 +430,12 @@ class ModelComparisonEvaluator:
         model_names = list(df['model'].unique())
 
         # ── 1. Grouped bar chart (main thesis figure) ──
-        fig, ax = plt.subplots(figsize=(12, 6))
+        fig, ax = plt.subplots(figsize=(14, 7))
         x = np.arange(len(metric_names))
-        width = 0.15
-        colors = ['#4C72B0', '#55A868', '#C44E52', '#8172B2', '#CCB974']
+        n_models = len(model_names)
+        width = 0.12 if n_models > 5 else 0.15
+        # Extended color palette for 7 models
+        colors = ['#4C72B0', '#55A868', '#C44E52', '#8172B2', '#CCB974', '#64B5CD', '#E377C2'][:n_models]
 
         for i, model_name in enumerate(model_names):
             model_df = df[df['model'] == model_name]
@@ -380,9 +452,9 @@ class ModelComparisonEvaluator:
         ax.set_xticks(x)
         ax.set_xticklabels(metric_labels, fontsize=11)
         ax.set_ylabel('Score', fontsize=12)
-        ax.set_title('Model Comparison - All Metrics (10-Fold CV)', fontsize=14, fontweight='bold')
-        ax.set_ylim([0, 1.12])
-        ax.legend(loc='lower right', fontsize=9)
+        ax.set_title(f'Model Comparison - All Metrics ({self.n_splits}-Fold CV)', fontsize=14, fontweight='bold')
+        ax.set_ylim([0, 1.15])
+        ax.legend(loc='lower right', fontsize=8, ncol=2)
         ax.grid(True, alpha=0.3, axis='y')
         plt.tight_layout()
         chart_path = save_path / f"comparison_chart_{timestamp}.png"
@@ -391,21 +463,28 @@ class ModelComparisonEvaluator:
         logger.info(f"Grouped bar chart saved: {chart_path}")
 
         # ── 2. Box plots per metric ──
-        fig, axes = plt.subplots(1, 5, figsize=(20, 5), sharey=True)
+        fig, axes = plt.subplots(1, 5, figsize=(22, 6), sharey=True)
+        # Shortened labels for box plot x-axis
+        short_labels = [mn.replace('Logistic Regression', 'LogReg')
+                         .replace('Random Forest', 'RF')
+                         .replace('Gradient Boosting', 'GradBoost')
+                         .replace('LightGBM', 'LGBM')
+                       for mn in model_names]
+        
         for idx, (m, label) in enumerate(zip(metric_names, metric_labels)):
             ax = axes[idx]
             data_for_box = [df[df['model'] == mn][m].values for mn in model_names]
-            bp = ax.boxplot(data_for_box, labels=model_names, patch_artist=True, widths=0.6)
+            bp = ax.boxplot(data_for_box, labels=short_labels, patch_artist=True, widths=0.6)
             for patch, color in zip(bp['boxes'], colors):
                 patch.set_facecolor(color)
                 patch.set_alpha(0.7)
             ax.set_title(label, fontsize=12, fontweight='bold')
-            ax.tick_params(axis='x', rotation=45)
+            ax.tick_params(axis='x', rotation=60, labelsize=8)
             ax.grid(True, alpha=0.3, axis='y')
             if idx == 0:
                 ax.set_ylabel('Score', fontsize=11)
 
-        fig.suptitle('Metric Distribution by Model (10-Fold CV)', fontsize=14, fontweight='bold', y=1.02)
+        fig.suptitle(f'Metric Distribution by Model ({self.n_splits}-Fold CV)', fontsize=14, fontweight='bold', y=1.02)
         plt.tight_layout()
         box_path = save_path / f"comparison_boxplot_{timestamp}.png"
         plt.savefig(box_path, dpi=300, bbox_inches='tight')
@@ -413,7 +492,7 @@ class ModelComparisonEvaluator:
         logger.info(f"Box plot saved: {box_path}")
 
         # ── 3. Radar / Spider chart ──
-        fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+        fig, ax = plt.subplots(figsize=(10, 9), subplot_kw=dict(polar=True))
         angles = np.linspace(0, 2 * np.pi, len(metric_names), endpoint=False).tolist()
         angles += angles[:1]  # close polygon
 
@@ -422,13 +501,13 @@ class ModelComparisonEvaluator:
             values = [model_df[m].mean() for m in metric_names]
             values += values[:1]
             ax.plot(angles, values, 'o-', linewidth=2, label=model_name, color=colors[i])
-            ax.fill(angles, values, alpha=0.1, color=colors[i])
+            ax.fill(angles, values, alpha=0.08, color=colors[i])
 
         ax.set_xticks(angles[:-1])
         ax.set_xticklabels(metric_labels, fontsize=10)
-        ax.set_ylim([0, 1.0])
-        ax.set_title('Model Profiles', fontsize=14, fontweight='bold', pad=20)
-        ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1), fontsize=9)
+        ax.set_ylim([0.5, 1.0])  # Start from 0.5 for better visualization
+        ax.set_title(f'Model Performance Profiles ({self.n_splits}-Fold CV)', fontsize=14, fontweight='bold', pad=20)
+        ax.legend(loc='upper right', bbox_to_anchor=(1.35, 1.15), fontsize=8)
         plt.tight_layout()
         radar_path = save_path / f"comparison_radar_{timestamp}.png"
         plt.savefig(radar_path, dpi=300, bbox_inches='tight')
@@ -436,7 +515,7 @@ class ModelComparisonEvaluator:
         logger.info(f"Radar chart saved: {radar_path}")
 
         # ── 4. Heatmap ──
-        fig, ax = plt.subplots(figsize=(10, 5))
+        fig, ax = plt.subplots(figsize=(12, 6))
         heatmap_data = []
         for model_name in model_names:
             model_df = df[df['model'] == model_name]
@@ -445,13 +524,17 @@ class ModelComparisonEvaluator:
 
         sns.heatmap(heatmap_df, annot=True, fmt='.4f', cmap='YlGnBu', ax=ax,
                     linewidths=0.5, vmin=0.5, vmax=1.0, cbar_kws={'label': 'Score'})
-        ax.set_title('Model x Metric Heatmap (Mean Scores)', fontsize=14, fontweight='bold')
+        ax.set_title(f'Model x Metric Heatmap ({self.n_splits}-Fold CV Mean Scores)', fontsize=14, fontweight='bold')
         ax.set_ylabel('')
+        ax.tick_params(axis='y', rotation=0)
         plt.tight_layout()
         heatmap_path = save_path / f"comparison_heatmap_{timestamp}.png"
         plt.savefig(heatmap_path, dpi=300, bbox_inches='tight')
         plt.close(fig)
         logger.info(f"Heatmap saved: {heatmap_path}")
+        
+        # ── 5. Training Time Comparison (if available) ──
+        # Future enhancement: track and plot training times per model
 
     def save_results(self, output_dir: str = "results/model_comparison") -> Dict:
         """Save comparison results to JSON and CSV."""
@@ -483,7 +566,10 @@ def main():
     parser = argparse.ArgumentParser(description='Model Comparison for Dropout Prediction (Thesis)')
     parser.add_argument('--input', type=str, required=True, help='Input features CSV file')
     parser.add_argument('--output-dir', type=str, default='results/model_comparison', help='Output directory')
-    parser.add_argument('--n-folds', type=int, default=10, help='Number of CV folds (default: 10)')
+    parser.add_argument('--n-folds', type=int, default=5, help='Number of CV folds (default: 5)')
+    parser.add_argument('--models', type=str, default=None, 
+                       help='Comma-separated list of models to compare (default: all). '
+                            'Options: LogReg,RF,SVM,GradBoost,LightGBM,XGBoost,CatBoost')
     args = parser.parse_args()
 
     logger.info(f"Loading data from {args.input}...")
@@ -493,6 +579,25 @@ def main():
     evaluator = ModelComparisonEvaluator(n_splits=args.n_folds)
 
     X, y = evaluator.prepare_data(df)
+
+    # Filter models if specified
+    if args.models:
+        model_map = {
+            'LogReg': 'Logistic Regression',
+            'RF': 'Random Forest', 
+            'SVM': 'SVM',
+            'GradBoost': 'Gradient Boosting',
+            'LightGBM': 'LightGBM',
+            'XGBoost': 'XGBoost',
+            'CatBoost': 'CatBoost',
+        }
+        selected = [model_map.get(m.strip(), m.strip()) for m in args.models.split(',')]
+        original_get_models = evaluator._get_models
+        def filtered_get_models():
+            all_models = original_get_models()
+            return {k: v for k, v in all_models.items() if k in selected}
+        evaluator._get_models = filtered_get_models
+        logger.info(f"Selected models: {selected}")
 
     evaluator.run_comparison(X, y)
 

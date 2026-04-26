@@ -399,7 +399,7 @@ class PipelineService:
         self.emit_log("Bước 3: Populate student_features từ raw data")
 
         try:
-            from populate_student_features import populate_student_features
+            from backend.populate_student_features import populate_student_features
 
             total = len(courses)
             total_affected = 0

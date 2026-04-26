@@ -210,8 +210,10 @@ export default function StudentDetailPage() {
                                     <span className="info-value">{student.video_completion_rate?.toFixed(1) || 'N/A'}%</span>
                                 </div>
                                 <div className="info-item">
-                                    <span className="info-label">🎯 H5P TB</span>
-                                    <span className="info-value">{student.h5p_avg_score?.toFixed(1) || 'N/A'}%</span>
+                                    <span className="info-label">🏆 Điểm thi MOOC</span>
+                                    <span className={`info-value ${(student.mooc_grade_percentage || 0) < 50 ? 'value-warning' : ''}`}>
+                                        {student.mooc_grade_percentage?.toFixed(1) || 'N/A'}%
+                                    </span>
                                 </div>
                                 <div className="info-item">
                                     <span className="info-label">💬 Tương tác Forum</span>

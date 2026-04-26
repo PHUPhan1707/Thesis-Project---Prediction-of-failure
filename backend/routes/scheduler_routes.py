@@ -19,8 +19,8 @@ def get_scheduler_status():
         from ..db import discover_course_groups, fetch_all
         import os
 
-        min_students = int(os.getenv("MIN_STUDENTS_FOR_TRAINING", "500"))
-        retrain_threshold = int(os.getenv("RETRAIN_THRESHOLD", "100"))
+        min_students = int(os.getenv("MIN_STUDENTS_FOR_TRAINING", "300"))
+        retrain_threshold = int(os.getenv("RETRAIN_THRESHOLD", "50"))
 
         groups = discover_course_groups()
         statuses = []

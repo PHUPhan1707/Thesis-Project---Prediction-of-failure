@@ -11,7 +11,23 @@
       "Bash(ls:*)",
       "Bash(grep:*)",
       "Bash(npx:*)",
-      "Bash(docker ps:*)"
+      "Bash(docker ps:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(xargs -I {} basename {})",
+      "Bash(xargs cat:*)",
+      "Bash(mysql -h 127.0.0.1 -P 4000 -u dropout_user -pdropout_pass_123 dropout_prediction_db -e ' *)",
+      "Bash(docker exec dropout_prediction_mysql mysql -u dropout_user -pdropout_pass_123 dropout_prediction_db -e ' *)",
+      "Read(//mnt/**)",
+      "Read(//mnt/c/**)",
+      "Bash(mount)",
+      "Bash(docker exec *)",
+      "Bash(docker info *)",
+      "Bash(docker-compose ps *)",
+      "Bash(pandoc \"C:\\\\Users\\\\Asus\\\\OneDrive - VietNam National University - HCM INTERNATIONAL UNIVERSITY\\\\Phan An Phu-ITITIU21280 - ReportThesis.docx\" -t markdown --wrap=none)",
+      "PowerShell(python \"D:\\\\ProjectThesis\\\\dropout_prediction\\\\scripts\\\\office\\\\unpack.py\" $docPath $outDir 2>&1)",
+      "PowerShell($docPath = \"C:\\\\Users\\\\Asus\\\\OneDrive - VietNam National University - HCM INTERNATIONAL UNIVERSITY\\\\Phan An Phu-ITITIU21280 - ReportThesis.docx\")",
+      "PowerShell($outDir = \"D:\\\\ProjectThesis\\\\dropout_prediction\\\\tmp_docx_unpacked\")",
+      "PowerShell(head)"
     ]
   }
 }

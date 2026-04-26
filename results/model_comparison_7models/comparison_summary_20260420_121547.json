@@ -1,0 +1,101 @@
+{
+  "models": {
+    "Logistic Regression": {
+      "accuracy_mean": 1.0,
+      "accuracy_std": 0.0,
+      "auc_roc_mean": 1.0,
+      "auc_roc_std": 0.0,
+      "precision_mean": 1.0,
+      "precision_std": 0.0,
+      "recall_mean": 1.0,
+      "recall_std": 0.0,
+      "f1_score_mean": 1.0,
+      "f1_score_std": 0.0
+    },
+    "Random Forest": {
+      "accuracy_mean": 1.0,
+      "accuracy_std": 0.0,
+      "auc_roc_mean": 1.0,
+      "auc_roc_std": 0.0,
+      "precision_mean": 1.0,
+      "precision_std": 0.0,
+      "recall_mean": 1.0,
+      "recall_std": 0.0,
+      "f1_score_mean": 1.0,
+      "f1_score_std": 0.0
+    },
+    "SVM": {
+      "accuracy_mean": 0.9891363102232666,
+      "accuracy_std": 0.009417568049773988,
+      "auc_roc_mean": 0.9996053558844256,
+      "auc_roc_std": 0.0007350756764146626,
+      "precision_mean": 0.9855750487329434,
+      "precision_std": 0.01976419782555413,
+      "recall_mean": 0.9782467532467531,
+      "recall_std": 0.019932526595027054,
+      "f1_score_mean": 0.981782732929522,
+      "f1_score_std": 0.01591565014835162
+    },
+    "Gradient Boosting": {
+      "accuracy_mean": 1.0,
+      "accuracy_std": 0.0,
+      "auc_roc_mean": 1.0,
+      "auc_roc_std": 0.0,
+      "precision_mean": 1.0,
+      "precision_std": 0.0,
+      "recall_mean": 1.0,
+      "recall_std": 0.0,
+      "f1_score_mean": 1.0,
+      "f1_score_std": 0.0
+    },
+    "LightGBM": {
+      "accuracy_mean": 1.0,
+      "accuracy_std": 0.0,
+      "auc_roc_mean": 1.0,
+      "auc_roc_std": 5.551115123125783e-17,
+      "precision_mean": 1.0,
+      "precision_std": 0.0,
+      "recall_mean": 1.0,
+      "recall_std": 0.0,
+      "f1_score_mean": 1.0,
+      "f1_score_std": 0.0
+    },
+    "XGBoost": {
+      "accuracy_mean": 0.998918918918919,
+      "accuracy_std": 0.0024173707864862345,
+      "auc_roc_mean": 0.9982142857142857,
+      "auc_roc_std": 0.003992978531249611,
+      "precision_mean": 1.0,
+      "precision_std": 0.0,
+      "recall_mean": 0.9964285714285716,
+      "recall_std": 0.00798595706249927,
+      "f1_score_mean": 0.9981981981981981,
+      "f1_score_std": 0.00402895131081044
+    },
+    "CatBoost": {
+      "accuracy_mean": 0.9989130434782609,
+      "accuracy_std": 0.002430508671195434,
+      "auc_roc_mean": 1.0,
+      "auc_roc_std": 0.0,
+      "precision_mean": 0.9964285714285716,
+      "precision_std": 0.00798595706249927,
+      "recall_mean": 1.0,
+      "recall_std": 0.0,
+      "f1_score_mean": 0.9981981981981981,
+      "f1_score_std": 0.00402895131081044
+    }
+  },
+  "best_model": {
+    "by_accuracy": "Logistic Regression",
+    "by_auc_roc": "Logistic Regression",
+    "by_precision": "Logistic Regression",
+    "by_recall": "Logistic Regression",
+    "by_f1_score": "Logistic Regression"
+  },
+  "dataset_info": {
+    "total_samples": 921,
+    "n_features": 59,
+    "fail_rate": 0.2997,
+    "n_folds": 5
+  }
+}
