@@ -4,8 +4,8 @@ Shared helper functions for backend routes
 from typing import List, Dict, Any
 
 # Risk threshold constants
-RISK_HIGH_THRESHOLD = 70
-RISK_MEDIUM_THRESHOLD = 40
+RISK_HIGH_THRESHOLD = 55
+RISK_MEDIUM_THRESHOLD = 30
 
 # Allowed sort parameters (whitelist for SQL injection prevention)
 ALLOWED_SORT_COLUMNS = {

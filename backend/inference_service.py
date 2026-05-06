@@ -23,9 +23,11 @@ if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[1]))
     from backend.db import fetch_one, fetch_all, execute, save_prediction, save_predictions_batch  # type: ignore
     from backend.utils.feature_labels import get_vi_label                                          # type: ignore
+    from backend.utils.helpers import classify_risk_level as _classify_risk_level                  # type: ignore
 else:
     from .db import fetch_one, fetch_all, execute, save_prediction, save_predictions_batch
     from .utils.feature_labels import get_vi_label
+    from .utils.helpers import classify_risk_level as _classify_risk_level
 
 logger = logging.getLogger(__name__)
 
@@ -407,17 +409,11 @@ class RiskPredictor:
     @staticmethod
     def classify_risk_level(risk_score: float) -> str:
         """Phân loại risk level dựa trên risk score (0–100).
-        Threshold hạ xuống để bắt minority class (fail) tốt hơn:
-          HIGH   >= 55  (cũ: 70) — ưu tiên recall trên precision
-          MEDIUM >= 30  (cũ: 40)
-          LOW     < 30
+
+        Single source of truth: backend.utils.helpers.classify_risk_level
+        (HIGH >= 55, MEDIUM >= 30, LOW < 30).
         """
-        if risk_score >= 55:
-            return "HIGH"
-        elif risk_score >= 30:
-            return "MEDIUM"
-        else:
-            return "LOW"
+        return _classify_risk_level(float(risk_score))
 
 
 # ─────────────────────────────────────────────────────────────

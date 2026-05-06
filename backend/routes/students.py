@@ -45,11 +45,11 @@ def get_students(course_id: str):
 
     risk_where = ""
     if risk_level == "HIGH":
-        risk_where = "AND p.fail_risk_score >= 70"
+        risk_where = "AND p.fail_risk_score >= 55"
     elif risk_level == "MEDIUM":
-        risk_where = "AND p.fail_risk_score >= 40 AND p.fail_risk_score < 70"
+        risk_where = "AND p.fail_risk_score >= 30 AND p.fail_risk_score < 55"
     elif risk_level == "LOW":
-        risk_where = "AND p.fail_risk_score < 40"
+        risk_where = "AND p.fail_risk_score < 30"
 
     base_query = f"""
         FROM student_features f
@@ -113,7 +113,10 @@ def get_students(course_id: str):
 def get_student_detail(user_id: int, course_id: str):
     """Lấy thông tin chi tiết của sinh viên"""
     try:
-        # Get student features
+        # Get student features.
+        # Lưu ý: KHÔNG select p.risk_level từ DB — risk_level luôn được tính lại
+        # ở runtime từ fail_risk_score qua classify_risk_level() để đảm bảo nhất
+        # quán giữa list endpoint và detail endpoint (single source of truth).
         student = fetch_one(
             """
             SELECT
@@ -123,7 +126,6 @@ def get_student_detail(user_id: int, course_id: str):
                 e.username,
                 e.mssv,
                 p.fail_risk_score,
-                p.risk_level,
                 p.model_name,
                 p.predicted_at
             FROM student_features f
@@ -158,14 +160,16 @@ def get_student_detail(user_id: int, course_id: str):
                 
                 if pred_result:
                     student["fail_risk_score"] = pred_result["fail_risk_score"]
-                    student["risk_level"] = pred_result["risk_level"]
                     student["model_name"] = model_service.model_name
                 else:
                     student["fail_risk_score"] = 50.0
-                    student["risk_level"] = "MEDIUM"
             else:
                 student["fail_risk_score"] = 50.0
-                student["risk_level"] = "MEDIUM"
+
+        # Tính risk_level runtime từ fail_risk_score (single source of truth)
+        fail_risk_score = float(student.get("fail_risk_score") or 50)
+        risk_level = classify_risk_level(fail_risk_score)
+        student["risk_level"] = risk_level  # đồng bộ cho generate_suggestions()
 
         # Generate suggestions
         suggestions = []
@@ -181,8 +185,8 @@ def get_student_detail(user_id: int, course_id: str):
             "email": student.get("email"),
             "username": student.get("username"),
             "mssv": student.get("mssv"),
-            "fail_risk_score": float(student.get("fail_risk_score") or 50),
-            "risk_level": student.get("risk_level") or "MEDIUM",
+            "fail_risk_score": fail_risk_score,
+            "risk_level": risk_level,
             "mooc_grade_percentage": float(student.get("mooc_grade_percentage") or 0),
             "mooc_completion_rate": float(student.get("overall_completion") or 0),
             "days_since_last_activity": int(student.get("days_since_last_activity") or 0),
@@ -231,10 +235,10 @@ def get_statistics(course_id: str):
                 AVG(f.mooc_grade_percentage) AS avg_grade,
                 AVG(f.overall_completion) AS avg_completion_rate,
                 
-                -- Risk counts (chỉ students chưa hoàn thành)
-                SUM(CASE WHEN p.fail_risk_score >= 70 AND (f.mooc_is_passed IS NULL OR f.mooc_is_passed != 1) THEN 1 ELSE 0 END) AS high_risk_count,
-                SUM(CASE WHEN p.fail_risk_score >= 40 AND p.fail_risk_score < 70 AND (f.mooc_is_passed IS NULL OR f.mooc_is_passed != 1) THEN 1 ELSE 0 END) AS medium_risk_count,
-                SUM(CASE WHEN p.fail_risk_score < 40 AND (f.mooc_is_passed IS NULL OR f.mooc_is_passed != 1) THEN 1 ELSE 0 END) AS low_risk_count,
+                -- Risk counts (chỉ students chưa hoàn thành) — HIGH >= 55, MEDIUM >= 30
+                SUM(CASE WHEN p.fail_risk_score >= 55 AND (f.mooc_is_passed IS NULL OR f.mooc_is_passed != 1) THEN 1 ELSE 0 END) AS high_risk_count,
+                SUM(CASE WHEN p.fail_risk_score >= 30 AND p.fail_risk_score < 55 AND (f.mooc_is_passed IS NULL OR f.mooc_is_passed != 1) THEN 1 ELSE 0 END) AS medium_risk_count,
+                SUM(CASE WHEN p.fail_risk_score < 30 AND (f.mooc_is_passed IS NULL OR f.mooc_is_passed != 1) THEN 1 ELSE 0 END) AS low_risk_count,
                 
                 -- Completion status counts
                 SUM(CASE WHEN f.mooc_is_passed = 1 THEN 1 ELSE 0 END) AS completed_count,

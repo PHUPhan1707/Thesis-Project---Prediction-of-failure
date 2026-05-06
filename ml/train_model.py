@@ -201,7 +201,7 @@ class DropoutModelTrainer:
         """Evaluate model performance"""
         logger.info("Evaluating model...")
         
-        # Predictions — dùng threshold 0.55 khớp với classify_risk_level (HIGH >= 55)
+        # Predictions — dùng threshold 0.55 khớp với classify_risk_level (HIGH >= 55, MEDIUM >= 30)
         y_pred_proba = self.model.predict_proba(X_test)[:, 1]
         y_pred = (y_pred_proba >= 0.55).astype(int)
         
@@ -312,21 +312,7 @@ def train_for_courses(
     course_ids: List[str],
     model_dir: str = "models",
 ) -> Optional[Dict]:
-    """
-    Train model tự động cho một nhóm khóa học (dùng bởi scheduler).
-
-    Pipeline: load data từ DB → feature engineering → train → evaluate → save.
-
-    Args:
-        base_name:  Tên môn gốc (VD: "Kinh tế vĩ mô")
-        course_ids: Danh sách course_ids cùng nhóm
-        model_dir:  Thư mục lưu model
-
-    Returns:
-        Dict metrics nếu thành công, None nếu thất bại.
-        Keys: model_name, model_path, features_csv_path, accuracy, f1_score,
-              auc_roc, student_count, model_version
-    """
+    
     import re
     from dotenv import load_dotenv
     load_dotenv()

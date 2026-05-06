@@ -694,7 +694,7 @@ class PipelineService:
                         if result_df is not None and not result_df.empty:
                             predicted_count += len(result_df)
                             high_risk += int(
-                                (result_df["fail_risk_score"] >= 70).sum()
+                                (result_df["fail_risk_score"] >= 55).sum()
                             )
 
                     if predicted_count > 0:

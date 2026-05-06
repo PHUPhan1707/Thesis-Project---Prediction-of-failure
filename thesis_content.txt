@@ -1,0 +1,160 @@
+--- 408 [Heading 1] ---
+CHAPTER 4
+--- 409 [Heading 1] ---
+IMPLEMENTATION AND RESULTS
+--- 410 [Heading 2] ---
+4.1. Implementation
+--- 411 [Heading 3] ---
+4.1.1. Development Setup and Deployment Configuration
+--- 412 [Normal] ---
+The system is deployed as a multi-service application managed through Docker Compose, which orchestrates the database layer and provides a consistent runtime environment across development machines. The full application stack comprises three independently running processes communicating over a shared internal network (dropout_network, bridge driver).
+--- 413 [Normal] ---
+The MySQL 8.0 database service is containerized and mapped to host port 4000 (container internal port 3306), with data persisted to a named volume mysql_data. An initialization sequence automatically applies two SQL scripts on first run: database/schema.sql (schema creation) and database/init-data.sql (seed data). A health check polls mysqladmin ping at 10-second intervals with a 5-second timeout and 5 retries before marking the service as healthy. The phpMyAdmin web administration interface is exposed on port 8081 and waits for the database health condition before starting.
+--- 414 [Caption] ---
+Table 5 Service Port Mapping
+--- 416 [Normal] ---
+The Flask backend is initialized via a factory function create_app() in backend/app.py. On startup, it registers 10 Flask Blueprints (health, courses, students, dashboard, predictions, h5p, interventions, pipeline, scheduler, email), configures CORS to allow origins from http://localhost:5173, http://localhost:5174, and http://localhost:3000, and instantiates the InferenceService singleton stored in app.config['model_service'] for shared access across all request handlers.
+--- 417 [Normal] ---
+Runtime configuration is fully externalized to a .env file. Key configuration groups are summarized below:
+--- 419 [Heading 3] ---
+4.1.2. Data Acquisition Implementation
+--- 420 [Normal] ---
+The data acquisition layer is implemented in the MOOCH5PDataFetcher class (backend/services/fetch_mooc_h5p_data.py). This class handles all communication with both external platforms and orchestrates the full extract-load cycle into the MySQL database.
+--- 422 [Normal] ---
+Authentication: Access to the Open edX platform uses session-based authentication. The fetcher accepts either an authenticated requests.Session (with JWT, CSRF, and cookies) or a raw session ID, which is used to construct the required cookies. This supports both automated pipelines (via MoocAuthService login) and manual testing.
+--- 423 [Normal] ---
+Concurrency model: Since fetching H5P scores and video progress requires one API call per student per item, the system uses a ThreadPoolExecutor with configurable workers (default: 8 via H5P_FETCH_WORKERS) to parallelize requests and improve performance.
+--- 424 [Normal] ---
+Timeout strategy: Two timeout levels are applied: 30 seconds (MOOC_API_TIMEOUT) for standard API calls and 600 seconds (MOOC_EXPORT_TIMEOUT) for bulk export requests that handle large datasets.
+--- 425 [Normal] ---
+Idempotent loading: Data writes use MySQL INSERT ... ON DUPLICATE KEY UPDATE with unique keys (e.g., user_id, course_id), ensuring repeated runs update existing records without duplication, making the process safely repeatable.
+--- 426 [Heading 3] ---
+4.1.3. Feature Engineering Implementation
+--- 427 [Caption] ---
+Feature engineering is centralized within the FeatureEngineer class, which is utilized during both training and inference to effectively eliminate training-serving skew. The pipeline employs a priority ordered COALESCE strategy, favoring live activity and H5P data over historical snapshots to ensure the highest data accuracy. Furthermore, to reflect actual mastery rather than simple access, H5P content is only marked as "completed" when a student’s score reaches a threshold of ≥ 70%. Finally, to maintain predictive integrity and prevent data leakage, all features related to final academic outcomes are strictly excluded, ensuring the model relies solely on information available at the time of prediction.
+--- 428 [Caption] ---
+Table 6 Columns Excluded to Prevent Data Leakage
+--- 429 [Heading 2] ---
+4.1.4. Machine Learning Model Training Implementation
+--- 430 [Normal] ---
+Model training is implemented in ml/train_model.py via the DropoutModelTrainer class. The training pipeline executes the following sequence: load the labeled student feature dataset → apply exclusion rules → split data → train CatBoost classifier → evaluate → serialize the model.
+--- 431 [Normal] ---
+Dataset split. The labeled dataset is partitioned into 80% training and 20% test sets using stratified splitting (stratify=True, random_state=42) to preserve the class distribution in both partitions, which is important given the class imbalance between passing and at-risk students.
+--- 432 [Normal] ---
+CatBoost hyperparameters. The model is configured with the following hyperparameter set:
+--- 433 [Caption] ---
+Table 7 CatBoost Hyperparameter Configuration
+--- 435 [Normal] ---
+Figure 11 Log in system after training
+--- 438 [Caption] ---
+Figure 12 MLops Scheduler
+--- 439 [Normal] ---
+Model versioning and registration. Upon successful training, the serialized model (.cbm format) is saved to the models/ directory and registered in the model_registry database table, which records the model name, file path, feature CSV path, and domain. The course_model_mapping table maps each course ID to its active model, enabling multiple course sections sharing the same subject to be served by a single shared model. At any time, only one model per domain is flagged is_default = True.
+--- 440 [Normal] ---
+Retraining thresholds. The system distinguishes between two training scenarios, governed by environment-configured thresholds:
+--- 441 [Normal] ---
+Initial training: requires a minimum of 300 labeled students (students with a known is_passed outcome)
+--- 442 [Normal] ---
+Retraining trigger: requires at least 100 new labeled students since the last training run
+--- 443 [Normal] ---
+4.1.5 Frontend Implementation
+--- 444 [Normal] ---
+The frontend is a Single-Page Application (SPA) built with React 19.2.0 and TypeScript (strict mode enabled), bundled by Vite 7.2.4, and served on port 3000.
+--- 445 [Normal] ---
+State management. Application-wide state is managed through two React Contexts. DashboardContext holds the selected course ID, student list, prediction results, and loading/error states, and exposes data-fetching actions consumed by all dashboard pages. ThemeContext manages dark/light mode preference, persisting the user's selection to localStorage to survive page reloads.
+--- 446 [Normal] ---
+API client with retry logic. All HTTP communication is centralized in frontend/src/services/api.ts. The fetchAPI<T> () function implements a 3-attempt retry policy with exponential backoff delays of [0 ms, 400 ms, 1200 ms]. Retry logic is selective: 4xx client errors (except HTTP 429 Too Many Requests) are not retried since they indicate caller-side issues; 5xx server errors and network failures trigger retries.
+--- 460 [Caption] ---
+Figure 18 MLops Scheduler page
+--- 462 [Heading 2] ---
+4.2. Results
+--- 463 [Heading 3] ---
+4.2.1. Experimental Dataset Overview
+--- 465 [Normal] ---
+The evaluation is conducted on labeled student data collected from the Open edX MOOC platform at mooc.vnuhcm.edu.vn and the H5P interactive content platform at h5p.itp.vn, through the automated ETL pipeline described in Section 4.1.2. Four courses from the academic year 2025–2026 were selected for evaluation, representing distinct academic disciplines and varying enrollment sizes. Courses where all students share the same label value (e.g., all is_passed = 0 due to incomplete grading) were excluded from the evaluation set, as they provide no discriminative signal for binary classification.
+--- 466 [Normal] ---
+For the “Kinh tế vĩ mô” group, seven parallel course sections taught by different instructors (course codes 252BEE1038_01 through 252BEE1038_07) were merged into a single dataset, as they share identical course content, H5P materials, and video resources on the same platform. This merging strategy increases the training sample size and allows the model to generalize across instructor-specific grading variations.
+--- 468 [Caption] ---
+Table 8 Dataset Summary Statistics
+--- 469 [Normal] ---
+The per-course breakdown of labeled records is presented in Table 4.X+1. Each course group maintains an independent student cohort with no overlap across groups, and a separate CatBoost model is trained per group to capture domain-specific behavioral patterns.
+--- 470 [Caption] ---
+Table 9 Per-Course Dataset Statistics
+--- 472 [Normal] ---
+For hold-out evaluation, each course dataset is partitioned using stratified random sampling with an 80/20 train-test split (random_state = 42), preserving the original class distribution in both partitions. Additionally, 5-fold stratified cross-validation is applied to provide a robust, low-variance performance estimate
+--- 474 [Heading 3] ---
+4.2.2. Model Performance Evaluation
+--- 475 [Normal] ---
+The trained CatBoost classifier for each course is evaluated on the 20% hold-out test set that the model has never encountered during training. Six classification metrics are reported to provide a comprehensive view of predictive quality: Accuracy, Precision, Recall, F1-Score, ROC-AUC, and PR-AUC (Precision-Recall AUC). PR-AUC is additionally included as it is more informative than ROC-AUC under class imbalance conditions, since it focuses exclusively on the minority (at-risk) class. Log Loss is further reported as a calibration measure of the model's probability outputs.
+--- 476 [Caption] ---
+Table 10 Hold-out Test Set Performance Metrics — All Courses
+--- 478 [Normal] ---
+FM101 — Nguyên lý Thị trường Tài chính achieves a strong F1-Score of 0.8387 and ROC-AUC of 0.9469, demonstrating reliable discriminative capability on the largest dataset (186 test samples). The high Recall of 0.9123 indicates that the model successfully identifies 91.2% of genuinely at-risk students — a critical property for early intervention systems where missing an at-risk student (false negative) is considerably more costly than a false alarm. Among 186 test samples, the confusion matrix records TN=114, FP=15, FN=5, TP=52, confirming that only 5 at-risk students were missed by the model.
+--- 479 [Normal] ---
+ST101 — Thống kê trong Kinh doanh delivers the strongest results across all metrics, with an F1-Score of 0.9565, ROC-AUC of 0.9981, and a perfect Recall of 1.0000 — meaning zero at-risk students were missed in the test set (FN=0). The extremely low Log Loss of 0.0855 confirms that the model's probability estimates are well-calibrated for this course. This outstanding performance reflects the strong alignment between the course's digital-first pedagogy and the behavioral features captured by the platform.
+--- 480 [Normal] ---
+QTH101 — Quản trị học achieves an acceptable F1-Score of 0.7222 and ROC-AUC of 0.8359 on the smallest test set (55 samples). Precision of 0.6842 and Recall of 0.7647 indicate a balanced trade-off between false alarms and missed detections, though both are lower than the other courses. The relatively higher Log Loss (0.6696) suggests that the model's probability estimates are less confident, likely due to the limited training data (219 samples) and the possibility that management course outcomes depend on factors not fully captured by digital behavioral signals alone.
+--- 482 [Normal] ---
+KTVM — Kinh tế vĩ mô presents a distinctive performance profile. While Accuracy (0.8818) and ROC-AUC (0.9265) remain strong, Precision is notably low at 0.4889, meaning that approximately half of the students flagged as high-risk are in fact passing. This is a direct consequence of the severe class imbalance in this course (only 11.5% fail rate): even with auto_class_weights = Balanced, the model compensates by increasing sensitivity (Recall = 0.8800) at the cost of specificity. In practice, this trade-off is acceptable for an early warning system — it is preferable to over-alert instructors about borderline students than to miss genuine dropout cases. The confusion matrix (TN=172, FP=23, FN=3, TP=22) confirms that only 3 at-risk students were missed out of 25 actual failures.
+--- 483 [Heading 3] ---
+4.2.3 Threshold Analysis and Risk Tier Distribution
+--- 485 [Normal] ---
+The CatBoost classifier outputs a continuous probability score gp∈[0,1] representing each student's likelihood of failing. Rather than applying a single binary cut-off, the system maps this probability to three risk tiers using two decision thresholds
+--- 486 [Normal] ---
+HIGH risk:  — immediate instructor intervention recommended
+--- 487 [Normal] ---
+MEDIUM risk:  — passive monitoring and proactive outreach
+--- 488 [Normal] ---
+LOW risk:  — student is on track, no immediate action required
+--- 489 [Normal] ---
+Threshold Selection. Table 4.10 reports Precision, Recall, and F1-Score at seven threshold values on the FM101 hold-out test set (n = 186) to justify the chosen boundaries.
+--- 490 [Caption] ---
+Table 11 Threshold Analysis — KTVM Hold-out Test Set (n = 220, fail rate = 11.4%)
+--- 491 [Normal] ---
+The table clearly illustrates the Precision–Recall trade-off as the threshold increases. At , the model captures 24 out of 25 at-risk students (Recall = 0.96) with only 1 missed — establishing a highly sensitive lower boundary for the monitoring pool. At , Precision improves to 0.5405 while Recall remains at 0.80, meaning 80% of genuinely at-risk students receive a HIGH alert while limiting false alarms to 17 students. Although threshold 0.60 achieves a marginally higher F1 (0.6545 vs 0.6452),  is preferred because the additional 2 true positives recovered (20 vs 18) outweigh the cost of 5 extra false alarms in the context of an early warning system, where missing an at-risk student is more costly than a low-cost instructor review.
+--- 492 [Normal] ---
+The 5 false negatives at  are not entirely overlooked — they fall into the MEDIUM tier (probability 0.30–0.55) and remain visible to instructors for follow-up, functioning as a second-level safety net.
+--- 493 [Heading 3] ---
+4.2.4 Comparative Model Evaluation
+--- 494 [Normal] ---
+To justify the selection of CatBoost as the primary classifier, five machine learning algorithms were benchmarked on the FM101 dataset — the largest available course group (928 labeled students, 30.5% fail rate) and thus the most statistically reliable basis for comparison. All models were trained on the same 80% stratified training partition and evaluated on the identical 20% hold-out test set (n = 186), ensuring a controlled comparison. The auto_class_weights = Balanced setting was applied uniformly to all tree-based models to address class imbalance on equivalent terms.
+--- 496 [Normal] ---
+The evaluated algorithms are: (1) CatBoost — the production model; (2) LightGBM — gradient boosting with histogram-based leaf splitting; (3) XGBoost — gradient boosting with second-order gradient approximation; (4) Random Forest — bagging ensemble with decision trees; and (5) Logistic Regression — linear baseline with L2 regularization.
+--- 497 [Caption] ---
+Table 12 Model Comparison — FM101 Hold-out Test Set (n = 186)
+--- 498 [Heading 1] ---
+CHAPTER 5
+--- 499 [Heading 1] ---
+DISCUSSION AND EVALUATION
+--- 500 [Heading 2] ---
+Discussion
+--- 501 [Normal] ---
+The system design was driven by a core constraint: the lack of a native analytics API in Open edX and restricted database access. This necessitated an API-first ETL strategy, building a custom data acquisition layer that normalizes data from both MOOC and H5P platforms. We opted for a three-tier architecture (React, Flask, MySQL) to prioritize maintainability and transparency over unnecessary microservice complexity, which is ideal for institutional deployments managed by small teams.
+--- 502 [Normal] ---
+To handle the engineering challenge of heterogeneous data, the pipeline utilizes a ThreadPoolExecutor with 8 parallel workers. This optimization is critical, reducing data collection time from hours to minutes. Furthermore, the system strictly enforces data leakage prevention by excluding performance-based indicators (like final grades) at the pipeline level, ensuring the model relies solely on behavioral engagement for its "early warning" function.
+--- 503 [Normal] ---
+A key highlight is the MLOps automation layer. By implementing a state-machine-driven retraining pipeline via the CourseLifecycleManager, the system addresses "model drift." It ensures that the CatBoost classifier remains accurate as student cohorts evolve across academic cycles. Additionally, by integrating SHAP (SHapley Additive exPlanations), we move beyond "black-box" predictions. The system provides instructors with specific behavioral drivers—such as low H5P engagement or inactivity—allowing for targeted pedagogical
+--- 505 [Heading 2] ---
+5.2. Evaluation
+--- 506 [Heading 3] ---
+5.2.1. Achievement of Research Objectives
+--- 507 [Normal] ---
+Data Collection: Fully achieved. The automated ETL pipeline successfully processes data from 11 API groups across four course groups, handling over 2,700 student records with idempotent operations.
+--- 508 [Normal] ---
+Classification & Early Warning: Fully achieved. The CatBoost model effectively maps dropout probabilities to a three-tier risk system (High, Medium, Low), providing actionable alerts before the course ends.
+--- 509 [Normal] ---
+Dashboard Visualization: Fully achieved. The React-based SPA provides eight functional views, including a real-time Pipeline Monitor using Server-Sent Events (SSE).
+--- 510 [Normal] ---
+Actionable Recommendations: Substantially achieved. While SHAP explanations provide the "why" behind the risk, the fully automated generation of intervention templates remains a target for future development.
+--- 511 [Heading 3] ---
+5.2.2. Functional Evaluation
+--- 513 [Normal] ---
+The system demonstrates high idempotency; repeated executions produce identical feature vectors, ensuring data integrity. On the frontend, the React application implements a 3-attempt retry policy with exponential backoff and Error Boundaries, ensuring resilience against transient backend downtime.
+--- 514 [Heading 3] ---
+5.2.3. Limitations of the Current System
+--- 516 [Normal] ---
+Despite its strengths, the system currently operates in batch mode, leading to potential latency in identifying students who disengage abruptly between cycles. Additionally, the system is heavily dependent on API availability; the lack of an offline fallback means stale data could be used during platform maintenance. Finally, while predictive accuracy is high, a longitudinal study is still required to measure the actual impact of these alerts on student retention rates.
+--- 517 [Heading 3] ---
+5.2.4. Comparison with Existing Approaches
+--- 519 [Normal] ---
+Unlike standard tools like Open edX Insights, which offer only descriptive analytics (what happened), this system provides predictive and prescriptive analytics (what will happen and why). By combining automated MLOps, real-time pipeline monitoring, and explainable AI, this project bridges the gap between theoretical research prototypes and production-ready institutional tools.

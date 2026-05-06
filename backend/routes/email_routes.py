@@ -6,6 +6,11 @@ import threading
 from flask import Blueprint, jsonify, request
 from ..db import fetch_all
 from ..email_notifier import _send_email, _get_smtp_config
+from ..utils.helpers import (
+    classify_risk_level,
+    RISK_HIGH_THRESHOLD,
+    RISK_MEDIUM_THRESHOLD,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -96,11 +101,11 @@ def send_bulk_email(course_id: str):
         'Hãy đăng nhập và tiếp tục học để không bỏ lỡ nội dung quan trọng nhé!'
     )
 
-    # Build risk filter
+    # Build risk filter dựa trên fail_risk_score (đồng bộ với helpers.classify_risk_level)
     if target == 'HIGH':
-        risk_filter = "AND p.risk_level = 'HIGH'"
+        risk_filter = f"AND p.fail_risk_score >= {RISK_HIGH_THRESHOLD}"
     elif target == 'HIGH_MEDIUM':
-        risk_filter = "AND p.risk_level IN ('HIGH', 'MEDIUM')"
+        risk_filter = f"AND p.fail_risk_score >= {RISK_MEDIUM_THRESHOLD}"
     else:
         risk_filter = ""
 
@@ -111,7 +116,7 @@ def send_bulk_email(course_id: str):
                 f.user_id,
                 COALESCE(NULLIF(e.email,''), g.email) AS email,
                 COALESCE(NULLIF(e.full_name_vn,''), NULLIF(e.full_name,''), g.full_name) AS full_name,
-                p.risk_level,
+                p.fail_risk_score,
                 f.days_since_last_activity,
                 f.h5p_avg_score,
                 f.mooc_completion_rate,
@@ -125,7 +130,7 @@ def send_bulk_email(course_id: str):
               AND COALESCE(NULLIF(e.email,''), g.email) IS NOT NULL
               AND f.mooc_is_passed IS NOT TRUE
               {risk_filter}
-            ORDER BY p.risk_level DESC, f.days_since_last_activity DESC
+            ORDER BY COALESCE(p.fail_risk_score, 0) DESC, f.days_since_last_activity DESC
             """,
             (course_id,)
         )
@@ -135,6 +140,11 @@ def send_bulk_email(course_id: str):
 
     if not students:
         return jsonify({"success": True, "sent": 0, "failed": 0, "message": "Không có sinh viên phù hợp"}), 200
+
+    # Tính risk_level runtime cho từng sinh viên (dùng cho _build_student_email)
+    for s in students:
+        score = float(s.get('fail_risk_score') or 50)
+        s['risk_level'] = classify_risk_level(score)
 
     course_name = students[0].get('course_name') or course_id
     smtp_config = _get_smtp_config()
@@ -179,9 +189,9 @@ def preview_recipients(course_id: str):
     target = request.args.get('target', 'HIGH')
 
     if target == 'HIGH':
-        risk_filter = "AND p.risk_level = 'HIGH'"
+        risk_filter = f"AND p.fail_risk_score >= {RISK_HIGH_THRESHOLD}"
     elif target == 'HIGH_MEDIUM':
-        risk_filter = "AND p.risk_level IN ('HIGH', 'MEDIUM')"
+        risk_filter = f"AND p.fail_risk_score >= {RISK_MEDIUM_THRESHOLD}"
     else:
         risk_filter = ""
 
@@ -214,9 +224,9 @@ def get_recipients(course_id: str):
     target = request.args.get('target', 'HIGH')
 
     if target == 'HIGH':
-        risk_filter = "AND p.risk_level = 'HIGH'"
+        risk_filter = f"AND p.fail_risk_score >= {RISK_HIGH_THRESHOLD}"
     elif target == 'HIGH_MEDIUM':
-        risk_filter = "AND p.risk_level IN ('HIGH', 'MEDIUM')"
+        risk_filter = f"AND p.fail_risk_score >= {RISK_MEDIUM_THRESHOLD}"
     else:
         risk_filter = ""
 
@@ -226,7 +236,7 @@ def get_recipients(course_id: str):
             SELECT
                 COALESCE(NULLIF(e.email,''), g.email) AS email,
                 COALESCE(NULLIF(e.full_name_vn,''), NULLIF(e.full_name,''), g.full_name) AS full_name,
-                p.risk_level,
+                p.fail_risk_score,
                 f.days_since_last_activity,
                 f.h5p_avg_score,
                 f.mooc_completion_rate
@@ -239,7 +249,7 @@ def get_recipients(course_id: str):
               AND COALESCE(NULLIF(e.email,''), g.email) IS NOT NULL
               AND f.mooc_is_passed IS NOT TRUE
               {risk_filter}
-            ORDER BY p.risk_level DESC, f.days_since_last_activity DESC
+            ORDER BY COALESCE(p.fail_risk_score, 0) DESC, f.days_since_last_activity DESC
             """,
             (course_id,)
         )

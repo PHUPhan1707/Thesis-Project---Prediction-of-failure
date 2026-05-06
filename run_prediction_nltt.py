@@ -76,13 +76,13 @@ try:
     # Show risk distribution
     if len(result_df) > 0:
         print(f"\n📊 Phân bố risk score:")
-        high = len(result_df[result_df['fail_risk_score'] >= 70])
-        medium = len(result_df[(result_df['fail_risk_score'] >= 40) & (result_df['fail_risk_score'] < 70)])
-        low = len(result_df[result_df['fail_risk_score'] < 40])
+        high = len(result_df[result_df['fail_risk_score'] >= 55])
+        medium = len(result_df[(result_df['fail_risk_score'] >= 30) & (result_df['fail_risk_score'] < 55)])
+        low = len(result_df[result_df['fail_risk_score'] < 30])
         
-        print(f"   - HIGH (>=70%): {high} students")
-        print(f"   - MEDIUM (40-69%): {medium} students")
-        print(f"   - LOW (<40%): {low} students")
+        print(f"   - HIGH (>=55%): {high} students")
+        print(f"   - MEDIUM (30-54%): {medium} students")
+        print(f"   - LOW (<30%): {low} students")
         print(f"   - Avg risk: {result_df['fail_risk_score'].mean():.1f}%")
         
         # Top 5 at-risk

@@ -73,7 +73,7 @@ def get_dashboard_summary(course_id: str):
             completion = float(r.get("mooc_completion_rate") or 0)
             predicted_at = r.get("predicted_at")
 
-            # Đếm HIGH risk dựa trên score >= 70 (RISK_HIGH_THRESHOLD)
+            # Đếm HIGH risk dựa trên score >= 55 (RISK_HIGH_THRESHOLD)
             if score >= RISK_HIGH_THRESHOLD:
                 high_risk_count += 1
             if days_inactive >= 7:

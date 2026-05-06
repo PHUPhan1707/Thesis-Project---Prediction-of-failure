@@ -63,8 +63,8 @@ try:
             './models/fm101_model_v5.cbm' as model_path,
             fail_risk_score,
             CASE 
-                WHEN fail_risk_score >= 70 THEN 'HIGH'
-                WHEN fail_risk_score >= 40 THEN 'MEDIUM'
+                WHEN fail_risk_score >= 55 THEN 'HIGH'
+                WHEN fail_risk_score >= 30 THEN 'MEDIUM'
                 ELSE 'LOW'
             END as risk_level,
             mooc_grade_percentage as snapshot_grade,

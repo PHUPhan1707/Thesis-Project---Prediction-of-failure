@@ -85,7 +85,7 @@ export function RiskDistributionChart() {
             <div className="risk-bars">
                 <div className="bar-group bar-high">
                     <div className="bar-header">
-                        <span className="bar-label">🚨 Nguy cơ cao (≥70%)</span>
+                        <span className="bar-label">🚨 Nguy cơ cao (≥55%)</span>
                         <span className="bar-value">{statistics.high_risk_count} SV</span>
                     </div>
                     <div className="bar-track">
@@ -101,7 +101,7 @@ export function RiskDistributionChart() {
 
                 <div className="bar-group bar-medium">
                     <div className="bar-header">
-                        <span className="bar-label">⚠️ Nguy cơ TB (40-70%)</span>
+                        <span className="bar-label">⚠️ Nguy cơ TB (30-55%)</span>
                         <span className="bar-value">{statistics.medium_risk_count} SV</span>
                     </div>
                     <div className="bar-track">
@@ -117,7 +117,7 @@ export function RiskDistributionChart() {
 
                 <div className="bar-group bar-low">
                     <div className="bar-header">
-                        <span className="bar-label">✅ Nguy cơ thấp (&lt;40%)</span>
+                        <span className="bar-label">✅ Nguy cơ thấp (&lt;30%)</span>
                         <span className="bar-value">{statistics.low_risk_count} SV</span>
                     </div>
                     <div className="bar-track">

@@ -56,14 +56,25 @@ export function QuickActions({ stats, onRefresh, isLoading }: QuickActionsProps)
                 return;
             }
 
-            const bcc = res.emails.join(',');
             const encodedSubject = encodeURIComponent(subject);
             const encodedBody = encodeURIComponent(message);
 
-            // mailto với BCC để sinh viên không thấy nhau
-            const mailto = `mailto:?bcc=${encodeURIComponent(bcc)}&subject=${encodedSubject}&body=${encodedBody}`;
+            // Trường "to" PHẢI được điền (dù chỉ 1 email) thì OS/trình duyệt mới
+            // hiện hộp thoại chọn ứng dụng email (Outlook / Gmail / …) — giống như
+            // luồng gửi cho từng cá nhân. Nếu để "to" trống và chỉ có "bcc" thì
+            // nhiều handler sẽ bị bỏ qua và không bật dialog chọn.
+            const buildMailto = (emails: string[]) => {
+                const to = encodeURIComponent(emails[0]);
+                const rest = emails.slice(1);
+                const bccPart = rest.length
+                    ? `bcc=${encodeURIComponent(rest.join(','))}&`
+                    : '';
+                return `mailto:${to}?${bccPart}subject=${encodedSubject}&body=${encodedBody}`;
+            };
 
-            // Nếu URL quá dài (>2000 chars), tách nhỏ và cảnh báo
+            const mailto = buildMailto(res.emails);
+
+            // Nếu URL quá dài, tách nhỏ và cảnh báo
             if (mailto.length > 8000) {
                 const chunks: string[][] = [];
                 const chunkSize = 50;
@@ -76,8 +87,7 @@ export function QuickActions({ stats, onRefresh, isLoading }: QuickActionsProps)
                     `Vui lòng cho phép popup nếu bị chặn.`
                 );
                 for (const chunk of chunks) {
-                    const bccChunk = encodeURIComponent(chunk.join(','));
-                    window.open(`mailto:?bcc=${bccChunk}&subject=${encodedSubject}&body=${encodedBody}`);
+                    window.open(buildMailto(chunk));
                     await new Promise(r => setTimeout(r, 300));
                 }
             } else {
@@ -218,8 +228,9 @@ export function QuickActions({ stats, onRefresh, isLoading }: QuickActionsProps)
                             </div>
 
                             <p className="mailto-note">
-                                Hệ thống sẽ mở ứng dụng email (Outlook, Gmail...) với tiêu đề và nội dung đã điền sẵn.
-                                Các sinh viên được thêm vào trường <strong>BCC</strong>.
+                                Hệ thống sẽ hỏi bạn chọn ứng dụng email (Outlook, Gmail…) rồi mở sẵn email với
+                                tiêu đề và nội dung đã nhập. Sinh viên đầu tiên ở trường <strong>To</strong>,
+                                các sinh viên còn lại ở trường <strong>BCC</strong> để bảo mật.
                             </p>
 
                             <div className="email-modal-footer">

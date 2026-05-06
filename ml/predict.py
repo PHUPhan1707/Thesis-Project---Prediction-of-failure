@@ -83,9 +83,9 @@ class DropoutPredictor:
     
     def classify_risk_level(self, risk_score: float) -> str:
         """Phân loại risk level dựa trên risk score"""
-        if risk_score >= 70:
+        if risk_score >= 55:
             return 'HIGH'
-        elif risk_score >= 40:
+        elif risk_score >= 30:
             return 'MEDIUM'
         else:
             return 'LOW'
@@ -126,7 +126,7 @@ class DropoutPredictor:
             suggestions.append("📖 Cung cấp bài tập luyện tập thêm")
         
         # General high risk
-        if student_data.get('fail_risk_score', 0) >= 70:
+        if student_data.get('fail_risk_score', 0) >= 55:
             suggestions.append("🚨 Ưu tiên can thiệp ngay - Nguy cơ rất cao")
             suggestions.append("📊 Lập kế hoạch học tập cá nhân hóa")
         

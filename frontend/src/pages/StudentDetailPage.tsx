@@ -54,9 +54,7 @@ export default function StudentDetailPage() {
         alert('Tính năng gọi điện sẽ được tích hợp sau');
     };
 
-    const handleMessage = () => {
-        alert('Tính năng nhắn tin sẽ được tích hợp sau');
-    };
+
 
     if (!selectedCourse) {
         return (
@@ -188,16 +186,21 @@ export default function StudentDetailPage() {
                                 </div>
                             </div>
 
-                            {/* Last Activity Card */}
+                            {/* MOOC Grade Card */}
                             <div className="metric-card">
                                 <div className="metric-header">
-                                    <span className="metric-icon">📅</span>
-                                    <span>Hoạt Động Cuối</span>
+                                    <span className="metric-icon">🏆</span>
+                                    <span>Điểm thi MOOC</span>
                                 </div>
                                 <div className="metric-value">
-                                    {student.days_since_last_activity || 0} ngày
+                                    {student.mooc_grade_percentage?.toFixed(1) || 'N/A'}%
                                 </div>
-                                <span className="metric-note">trước</span>
+                                <div className="metric-bar">
+                                    <div
+                                        className="bar-fill fill-teal"
+                                        style={{ width: `${student.mooc_grade_percentage || 0}%` }}
+                                    ></div>
+                                </div>
                             </div>
                         </div>
 
@@ -210,10 +213,8 @@ export default function StudentDetailPage() {
                                     <span className="info-value">{student.video_completion_rate?.toFixed(1) || 'N/A'}%</span>
                                 </div>
                                 <div className="info-item">
-                                    <span className="info-label">🏆 Điểm thi MOOC</span>
-                                    <span className={`info-value ${(student.mooc_grade_percentage || 0) < 50 ? 'value-warning' : ''}`}>
-                                        {student.mooc_grade_percentage?.toFixed(1) || 'N/A'}%
-                                    </span>
+                                    <span className="info-label">📅 Hoạt động cuối</span>
+                                    <span className="info-value">{student.days_since_last_activity || 0} ngày trước</span>
                                 </div>
                                 <div className="info-item">
                                     <span className="info-label">💬 Tương tác Forum</span>
@@ -304,10 +305,7 @@ export default function StudentDetailPage() {
                                 <span className="btn-icon">📧</span>
                                 <span className="btn-text">Gửi Email</span>
                             </button>
-<button className="action-btn message-btn" onClick={handleMessage}>
-                                <span className="btn-icon">💬</span>
-                                <span className="btn-text">Nhắn Tin</span>
-                            </button>
+
                         </div>
                     </section>
                 </aside>
